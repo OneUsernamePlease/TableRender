@@ -10,7 +10,7 @@ element
 .pixel {
     width: 10px;
     height: 10px;
-    background-color: rgb(194, 46, 46);
+    background-color: rgb(125, 125, 125);
 }
 
 .inputContainer {
@@ -45,8 +45,6 @@ element
     display: flex;
     justify-content: center;
     align-items: center;
-
-    background-color: rgb(173, 173, 78);
 }
 
 body {
@@ -55,3 +53,17 @@ body {
     margin-top: 0px;
     margin-left: 0px;
 }
+
+table {
+    border-collapse: collapse;
+}
+
+
+
+
+
+
+
+
+
+
