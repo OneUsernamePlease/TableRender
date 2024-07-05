@@ -34,7 +34,7 @@ element
 
 #headerInput {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 }
 
 #tableContainer {
