@@ -3,28 +3,27 @@ document.addEventListener("DOMContentLoaded", initialise);
 function initialise() {
     document.getElementById!("testBtn")?.addEventListener("click", testfunction);
     document.getElementById!("btnGenerateTable")?.addEventListener("click", regenerateTable);
-    generateTable();
+    generateTable(getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"),getInputNumber("pixelWidthInput"));
 }
 
 //+++++
 let tableId = "mainTable";
 //+++++
 
-function generateTable() {
+function generateTable(tableWidth: number, tableHeight: number, pixelWidth: number) {
     let table = document.createElement("table");
     let cellClassName = "pixel";
     let tableContainerId = "tableContainer";
-    let rowCnt = getInputNumber("tableHeightInput");
-    let colCnt = getInputNumber("tableWidthInput");
 
     table.setAttribute("id", tableId);
-    for (let i = 0; i < rowCnt; i++) {
+    for (let i = 0; i < tableHeight; i++) {
         let row = document.createElement("tr");
         row.classList.add("r" + i);
-        for(let j = 0; j < colCnt; j++) {
+        for(let j = 0; j < tableWidth; j++) {
             let cell = document.createElement("td");
             cell.classList.add(cellClassName);
             cell.classList.add("c" + j);
+            cell.setAttribute("style", `width: ${pixelWidth}; height: ${pixelWidth}`); //no but i dont want inline style. i want to change main.css
             row.appendChild(cell);
         }
         table.appendChild(row);
@@ -34,7 +33,7 @@ function generateTable() {
 
 function regenerateTable() {
     removeTable(tableId);
-    generateTable();
+    generateTable(getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"),getInputNumber("pixelWidthInput"));
 }
 
 function removeTable(tableId: string) {

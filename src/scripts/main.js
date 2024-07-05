@@ -3,25 +3,24 @@ function initialise() {
     var _a, _b;
     (_a = document.getElementById("testBtn")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", testfunction);
     (_b = document.getElementById("btnGenerateTable")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", regenerateTable);
-    generateTable();
+    generateTable(getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"), getInputNumber("pixelWidthInput"));
 }
 //+++++
 var tableId = "mainTable";
 //+++++
-function generateTable() {
+function generateTable(tableWidth, tableHeight, pixelWidth) {
     var table = document.createElement("table");
     var cellClassName = "pixel";
     var tableContainerId = "tableContainer";
-    var rowCnt = getInputNumber("tableHeightInput");
-    var colCnt = getInputNumber("tableWidthInput");
     table.setAttribute("id", tableId);
-    for (var i = 0; i < rowCnt; i++) {
+    for (var i = 0; i < tableHeight; i++) {
         var row = document.createElement("tr");
         row.classList.add("r" + i);
-        for (var j = 0; j < colCnt; j++) {
+        for (var j = 0; j < tableWidth; j++) {
             var cell = document.createElement("td");
             cell.classList.add(cellClassName);
             cell.classList.add("c" + j);
+            cell.setAttribute("style", "width: ".concat(pixelWidth, "; height: ").concat(pixelWidth)); //no but i dont want inline style. i want to change main.css
             row.appendChild(cell);
         }
         table.appendChild(row);
@@ -30,7 +29,7 @@ function generateTable() {
 }
 function regenerateTable() {
     removeTable(tableId);
-    generateTable();
+    generateTable(getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"), getInputNumber("pixelWidthInput"));
 }
 function removeTable(tableId) {
     var _a;
