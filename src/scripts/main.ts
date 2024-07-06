@@ -4,10 +4,13 @@ function initialise() {
     document.getElementById!("testBtn")?.addEventListener("click", testfunction);
     document.getElementById!("btnGenerateTable")?.addEventListener("click", regenerateTable);
     generateTable(getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"),getInputNumber("pixelWidthInput"));
+    
+    document.removeEventListener("DOMContentLoaded", initialise);
 }
 
 //+++++
 let tableId = "mainTable";
+let tableWidth: number, tableHeight: number;
 //+++++
 
 function generateTable(tableWidth: number, tableHeight: number, pixelWidth: number) {
@@ -23,7 +26,7 @@ function generateTable(tableWidth: number, tableHeight: number, pixelWidth: numb
             let cell = document.createElement("td");
             cell.classList.add(cellClassName);
             cell.classList.add("c" + j);
-            cell.setAttribute("style", `width: ${pixelWidth}; height: ${pixelWidth}`); //no but i dont want inline style. i want to change main.css
+            //cell.setAttribute("style", `width: ${pixelWidth}; height: ${pixelWidth}`); //no but i dont want inline style. i want to change main.css
             row.appendChild(cell);
         }
         table.appendChild(row);
@@ -33,7 +36,7 @@ function generateTable(tableWidth: number, tableHeight: number, pixelWidth: numb
 
 function regenerateTable() {
     removeTable(tableId);
-    generateTable(getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"),getInputNumber("pixelWidthInput"));
+    generateTable(getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"), getInputNumber("pixelWidthInput"));
 }
 
 function removeTable(tableId: string) {
@@ -48,6 +51,7 @@ function getInputString(inputId: string): string {
 }
 
 function getInputNumber(inputId: string): number {
+    //returns value of input element by id
     //returns 0 if input's value is not numeric
     let inputValue: string = getInputString(inputId);
     //because i will forget:
