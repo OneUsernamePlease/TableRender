@@ -26,4 +26,9 @@ class TableRender {
             document.getElementById(tableId)?.remove();
     }
     
+    static draw(tableData: TableData, tableId: string) {
+        
+
+
+    }
 }

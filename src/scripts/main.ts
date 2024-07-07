@@ -6,8 +6,9 @@ document.addEventListener("DOMContentLoaded", initialise);
 
 function initialise() {
     document.getElementById!("testBtn")?.addEventListener("click", testFunction);
-    //document.getElementById!("btnGenerateTable")?.addEventListener("click", regenerateTable);
-    //generateTable(getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"), getInputNumber("pixelWidthInput"));
+    document.getElementById!("btnGenerateTable")?.addEventListener("click", regenerateTable);
+    
+    initialRender(data);
     
     document.removeEventListener("DOMContentLoaded", initialise);
 }
@@ -25,8 +26,15 @@ function testFunction() {
 }
 
 function initialRender(data: TableData) {
-    data = new TableData(tableId, getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
+    data = new TableData(tableId, getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"));
     TableRender.initTable(data, tableContainerId);
+}
+
+function regenerateTable() {
+    //remove table w/ id tableId
+    //draw a new table, according to spec
+    TableRender.removeTable(tableId);
+    initialRender(data);
 }
 
 //#region functional version - to be replaced by objects
@@ -50,16 +58,6 @@ function initialRender(data: TableData) {
 //    }
 //    document.getElementById(tableContainerId)!.appendChild(table);
 //}
-
-//function regenerateTable() {
-//    removeTable(tableId);
-//    generateTable(getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"), getInputNumber("pixelWidthInput"));
-//}
-
-//function removeTable(tableId: string) {
-//    document.getElementById(tableId)?.remove();
-//}
-//#endregion
 
 function getInputString(inputId: string): string {
     //return value of input element by id

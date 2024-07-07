@@ -6,7 +6,6 @@ class TableData {
         this.tableHeight = tableHeight;
         this.tableWidth = tableWidth;
         this.pixels = this.initTableData();
-        //this.initTableData();
     }
     getId() {
         return this.elementId;
@@ -36,7 +35,7 @@ class TableData {
     initTableData() {
         let pixels = [];
         for (let i = 0; i < this.tableHeight; i++) {
-            pixels[i] = []; //needed?
+            pixels[i] = [];
             for (let j = 0; j < this.tableWidth; j++) {
                 pixels[i][j] = new Pixel();
             }
