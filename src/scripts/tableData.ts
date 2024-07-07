@@ -1,16 +1,16 @@
+
 class TableData {
     private elementId: string;
     private tableHeight: number;
     private tableWidth: number;
-    private pixels!: Pixel[][]; // ! is needed, otherwise -> problem bs its not initialized directy in the constructor
+    private pixels!: Pixel[][]; // ! is needed, otherwise -> problem bc its not initialized directy in the constructor
 
 //#region constructor, get, set
     public constructor(elementId: string, tableWidth: number, tableHeight: number) {
         this.elementId = elementId;
         this.tableHeight = tableHeight;
         this.tableWidth = tableWidth;
-        //this.pixels = [tableWidth][tableHeight]
-        this.initTable();
+        this.initTableData();
         }
 
     public getId(): string {
@@ -23,6 +23,14 @@ class TableData {
 
     public getTableWidth(): number {
         return this.tableWidth;
+    }
+
+    public getAllPixels(): Pixel[][] {
+        return this.pixels;
+    }
+
+    public getPixel(x: number, y: number): Pixel {
+        return this.pixels[x][y];
     }
 
     public setId(id: string) {
@@ -38,9 +46,9 @@ class TableData {
     }
 //#endregion
 
-    public initTable() {
-        for(let i = 0; i < this.tableWidth; i++){
-            for(let j = 0; j < this.tableHeight; j++){
+    public initTableData() {
+        for(let i = 0; i < this.tableHeight; i++){
+            for(let j = 0; j < this.tableWidth; j++){
                 this.pixels[i][j] = new Pixel()
             }
         }
@@ -49,5 +57,4 @@ class TableData {
     public colorPixel(x: number, y: number, color: string) {
         this.pixels[x][y].setColor(color);
     }
-
 }

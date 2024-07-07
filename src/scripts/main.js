@@ -1,5 +1,8 @@
 "use strict";
 document.addEventListener("DOMContentLoaded", initialise);
+//0,0 is top left
+//0,1 is row 0, col 1
+//standardize!!!!!!
 function initialise() {
     var _a, _b;
     (_a = document.getElementById("testBtn")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", testfunction);
@@ -53,5 +56,6 @@ function getInputNumber(inputId) {
     return (!isNaN(+inputValue)) ? +inputValue : 0;
 }
 function testfunction() {
-    removeTable(tableId);
+    let screen = new TableData(tableId, tableWidth, tableHeight);
+    console.log(screen.getTableHeight());
 }

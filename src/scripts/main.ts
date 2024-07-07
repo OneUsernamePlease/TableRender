@@ -1,9 +1,13 @@
 document.addEventListener("DOMContentLoaded", initialise);
 
+//0,0 is top left
+//0,1 is row 0, col 1
+//standardize!!!!!!
+
 function initialise() {
     document.getElementById!("testBtn")?.addEventListener("click", testfunction);
     document.getElementById!("btnGenerateTable")?.addEventListener("click", regenerateTable);
-    generateTable(getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"),getInputNumber("pixelWidthInput"));
+    generateTable(getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"), getInputNumber("pixelWidthInput"));
     
     document.removeEventListener("DOMContentLoaded", initialise);
 }
@@ -60,5 +64,6 @@ function getInputNumber(inputId: string): number {
 }
 
 function testfunction() {
-    removeTable(tableId);
+    let screen = new TableData(tableId, tableWidth, tableHeight);
+    console.log(screen.getTableHeight());
 }

@@ -1,7 +1,8 @@
 "use strict";
+//export module?? what and how and why
 class Pixel {
     constructor() {
-        this.color = "#ffffff";
+        this.color = "#000000";
     }
     setColor(hexCode) {
         //if hexCode is not a valid rgb hex code, this.color is set to #000000

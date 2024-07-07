@@ -5,8 +5,7 @@ class TableData {
         this.elementId = elementId;
         this.tableHeight = tableHeight;
         this.tableWidth = tableWidth;
-        //this.pixels = [tableWidth][tableHeight]
-        this.initTable();
+        this.initTableData();
     }
     getId() {
         return this.elementId;
@@ -16,6 +15,12 @@ class TableData {
     }
     getTableWidth() {
         return this.tableWidth;
+    }
+    getAllPixels() {
+        return this.pixels;
+    }
+    getPixel(x, y) {
+        return this.pixels[x][y];
     }
     setId(id) {
         this.elementId = id;
@@ -27,9 +32,9 @@ class TableData {
         this.tableHeight = tableHeight;
     }
     //#endregion
-    initTable() {
-        for (let i = 0; i < this.tableWidth; i++) {
-            for (let j = 0; j < this.tableHeight; j++) {
+    initTableData() {
+        for (let i = 0; i < this.tableHeight; i++) {
+            for (let j = 0; j < this.tableWidth; j++) {
                 this.pixels[i][j] = new Pixel();
             }
         }
