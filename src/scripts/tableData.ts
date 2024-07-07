@@ -3,14 +3,14 @@ class TableData {
     private elementId: string;
     private tableHeight: number;
     private tableWidth: number;
-    private pixels!: Pixel[][]; // ! is needed, otherwise -> problem bc its not initialized directy in the constructor
+    private pixels: Pixel[][];
 
 //#region constructor, get, set
     public constructor(elementId: string, tableWidth: number, tableHeight: number) {
         this.elementId = elementId;
         this.tableHeight = tableHeight;
         this.tableWidth = tableWidth;
-        this.initTableData();
+        this.pixels = this.initTableData();
         }
 
     public getId(): string {
@@ -46,12 +46,15 @@ class TableData {
     }
 //#endregion
 
-    public initTableData() {
+    private initTableData(): Pixel[][] {
+        let pixels: Pixel[][] = [];
         for(let i = 0; i < this.tableHeight; i++){
+            pixels[i] = [];
             for(let j = 0; j < this.tableWidth; j++){
-                this.pixels[i][j] = new Pixel()
+                pixels[i][j] = new Pixel()
             }
         }
+        return pixels;
     }
 
     public colorPixel(x: number, y: number, color: string) {

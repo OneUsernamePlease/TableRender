@@ -3,6 +3,8 @@ class TableRender {
     static initTable(tableData, tableContainerId) {
         let htmlTable = document.createElement("table");
         let cellClassName = "pixel";
+        let tableHeight = tableData.getTableHeight();
+        let tableWidth = tableData.getTableWidth();
         htmlTable.setAttribute("id", tableId);
         for (let i = 0; i < tableHeight; i++) {
             let row = document.createElement("tr");
@@ -17,5 +19,9 @@ class TableRender {
             htmlTable.appendChild(row);
         }
         document.getElementById(tableContainerId).appendChild(htmlTable);
+    }
+    static removeTable(tableId) {
+        var _a;
+        (_a = document.getElementById(tableId)) === null || _a === void 0 ? void 0 : _a.remove();
     }
 }
