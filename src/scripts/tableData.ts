@@ -2,14 +2,14 @@ class TableData {
     private readonly elementId: string;
     private readonly tableHeight: number;
     private readonly tableWidth: number;
-    private pixels: Pixel[][];
+    private screenData: Pixel[][];
 
 //#region constructor, get, set
     public constructor(elementId: string, tableWidth: number, tableHeight: number) {
         this.elementId = elementId;
         this.tableHeight = tableHeight;
         this.tableWidth = tableWidth;
-        this.pixels = this.initTableData();
+        this.screenData = this.initTableData();
         }
 
     public getId(): string {
@@ -25,27 +25,34 @@ class TableData {
     }
 
     public getAllPixels(): Pixel[][] {
-        return this.pixels;
+        return this.screenData;
     }
 
     public getPixel(x: number, y: number): Pixel {
-        return this.pixels[x][y];
+        return this.screenData[x][y];
     }
-
 //#endregion
 
     private initTableData(): Pixel[][] {
-        let pixels: Pixel[][] = [];
+        let pixel: Pixel[][] = [];
         for(let i = 0; i < this.tableHeight; i++){
-            pixels[i] = [];
+            pixel[i] = [];
             for(let j = 0; j < this.tableWidth; j++){
-                pixels[i][j] = new Pixel()
+                pixel[i][j] = new Pixel();
             }
         }
-        return pixels;
+        return pixel;
     }
 
-    public colorPixel(x: number, y: number, color: string) {
-        this.pixels[x][y].setColor(color);
+    public setPixelColor(x: number, y: number, color: string) {
+        this.screenData[x][y].setColor(color);
+    }
+
+    public newFrame() {
+        for(let i = 0; i < this.tableHeight; i++){
+            for(let j = 0; j < this.tableWidth; j++){
+                this.setPixelColor(i, j, "#aa0000");
+            }
+        }
     }
 }

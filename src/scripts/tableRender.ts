@@ -1,4 +1,7 @@
 class TableRender {
+    //should the renderer (this) store a ref to the actual table?
+    //should it inherit from htmltableele, and "be" the table and draw itself?
+    //atm, it retrieves the table whenever a frame is to be painted
 
     static initTable(tableData: TableData, tableContainerId: string) {
         let htmlTable = document.createElement("table");
@@ -6,7 +9,7 @@ class TableRender {
         let tableHeight = tableData.getTableHeight();
         let tableWidth = tableData.getTableWidth();
 
-        htmlTable.setAttribute("id", tableId);
+        htmlTable.setAttribute("id", tableData.getId());
         for (let i = 0; i < tableHeight; i++) {
             let row = document.createElement("tr");
             row.classList.add("r" + i);
@@ -26,9 +29,19 @@ class TableRender {
             document.getElementById(tableId)?.remove();
     }
     
-    static draw(tableData: TableData, tableId: string) {
+    static draw(tableData: TableData) {
+        let htmlTable: HTMLTableElement = document.getElementById(tableData.getId()) as HTMLTableElement;
+        let pixels: Pixel[][] = tableData.getAllPixels();
+        let color: string;
         
-
+        for (let row = 0; row < tableData.getTableHeight(); row++) {
+            const curRow: HTMLTableRowElement = htmlTable.rows[row];
+            for (let cell = 0; cell < tableData.getTableWidth(); cell++) {
+                curRow.cells[cell].removeAttribute("style");
+                color = pixels[row][cell].getColor();
+                curRow.cells[cell].setAttribute("style", "background-color: " + color);
+            }
+        }
 
     }
 }

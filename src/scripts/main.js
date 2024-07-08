@@ -13,12 +13,12 @@ function initialise() {
 //+++++
 let tableId = "mainTable";
 let tableContainerId = "tableContainer";
-//let tableWidth: number, tableHeight: number;
-let data;
+let data; //new TableData... breaks everything
 //+++++
 function testFunction() {
-    TableRender.removeTable(tableId);
-    initialRender(data);
+    data = new TableData(tableId, getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput")); //i need a way to keep track of and update data
+    data.newFrame(); //...
+    TableRender.draw(data);
 }
 function initialRender(data) {
     data = new TableData(tableId, getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"));
@@ -30,27 +30,6 @@ function regenerateTable() {
     TableRender.removeTable(tableId);
     initialRender(data);
 }
-//#region functional version - to be replaced by objects
-//function generateTable(tableWidth: number, tableHeight: number, pixelWidth: number) {
-//    let table = document.createElement("table");
-//    let cellClassName = "pixel";
-//    let tableContainerId = "tableContainer";
-//
-//    table.setAttribute("id", tableId);
-//    for (let i = 0; i < tableHeight; i++) {
-//        let row = document.createElement("tr");
-//        row.classList.add("r" + i);
-//        for(let j = 0; j < tableWidth; j++) {
-//            let cell = document.createElement("td");
-//            cell.classList.add(cellClassName);
-//            cell.classList.add("c" + j);
-//            //cell.setAttribute("style", `width: ${pixelWidth}; height: ${pixelWidth}`); //no but i dont want inline style. i want to change main.css
-//            row.appendChild(cell);
-//        }
-//        table.appendChild(row);
-//    }
-//    document.getElementById(tableContainerId)!.appendChild(table);
-//}
 function getInputString(inputId) {
     //return value of input element by id
     let input;

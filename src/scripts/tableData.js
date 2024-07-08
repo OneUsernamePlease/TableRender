@@ -5,7 +5,7 @@ class TableData {
         this.elementId = elementId;
         this.tableHeight = tableHeight;
         this.tableWidth = tableWidth;
-        this.pixels = this.initTableData();
+        this.screenData = this.initTableData();
     }
     getId() {
         return this.elementId;
@@ -17,23 +17,30 @@ class TableData {
         return this.tableWidth;
     }
     getAllPixels() {
-        return this.pixels;
+        return this.screenData;
     }
     getPixel(x, y) {
-        return this.pixels[x][y];
+        return this.screenData[x][y];
     }
     //#endregion
     initTableData() {
-        let pixels = [];
+        let pixel = [];
         for (let i = 0; i < this.tableHeight; i++) {
-            pixels[i] = [];
+            pixel[i] = [];
             for (let j = 0; j < this.tableWidth; j++) {
-                pixels[i][j] = new Pixel();
+                pixel[i][j] = new Pixel();
             }
         }
-        return pixels;
+        return pixel;
     }
-    colorPixel(x, y, color) {
-        this.pixels[x][y].setColor(color);
+    setPixelColor(x, y, color) {
+        this.screenData[x][y].setColor(color);
+    }
+    newFrame() {
+        for (let i = 0; i < this.tableHeight; i++) {
+            for (let j = 0; j < this.tableWidth; j++) {
+                this.setPixelColor(i, j, "#aa0000");
+            }
+        }
     }
 }
