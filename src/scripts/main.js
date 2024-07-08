@@ -1,26 +1,22 @@
 "use strict";
 document.addEventListener("DOMContentLoaded", initialise);
-//0,0 is top left
-//0,1 is row 0, col 1
-//standardize!!!!!!
 function initialise() {
     var _a, _b;
     (_a = document.getElementById("testBtn")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", testFunction);
     (_b = document.getElementById("btnGenerateTable")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", regenerateTable);
-    initialRender(data);
+    initialRender();
     document.removeEventListener("DOMContentLoaded", initialise);
 }
 //+++++
 let tableId = "mainTable";
 let tableContainerId = "tableContainer";
-let data; //new TableData... breaks everything
+let data;
 //+++++
 function testFunction() {
-    data = new TableData(tableId, getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput")); //i need a way to keep track of and update data
-    data.newFrame(); //...
+    data.newFrame();
     TableRender.draw(data);
 }
-function initialRender(data) {
+function initialRender() {
     data = new TableData(tableId, getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"));
     TableRender.initTable(data, tableContainerId);
 }
@@ -28,7 +24,7 @@ function regenerateTable() {
     //remove table w/ id tableId
     //draw a new table, according to spec
     TableRender.removeTable(tableId);
-    initialRender(data);
+    initialRender();
 }
 function getInputString(inputId) {
     //return value of input element by id

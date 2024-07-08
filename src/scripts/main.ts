@@ -1,14 +1,10 @@
 document.addEventListener("DOMContentLoaded", initialise);
 
-//0,0 is top left
-//0,1 is row 0, col 1
-//standardize!!!!!!
-
 function initialise() {
     document.getElementById!("testBtn")?.addEventListener("click", testFunction);
     document.getElementById!("btnGenerateTable")?.addEventListener("click", regenerateTable);
-    
-    initialRender(data);
+
+    initialRender();
     
     document.removeEventListener("DOMContentLoaded", initialise);
 }
@@ -16,25 +12,24 @@ function initialise() {
 //+++++
 let tableId = "mainTable";
 let tableContainerId = "tableContainer";
-let data: TableData; //new TableData... breaks everything
+let data: TableData; 
 //+++++
 
 function testFunction() {
-    data = new TableData(tableId, getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput")); //i need a way to keep track of and update data
-    data.newFrame(); //...
+    data.newFrame();
     TableRender.draw(data);
 }
 
-function initialRender(data: TableData) {
+function initialRender() {
     data = new TableData(tableId, getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"));
-    TableRender.initTable(data, tableContainerId);
+    TableRender.initTable(data, tableContainerId);  
 }
 
 function regenerateTable() {
     //remove table w/ id tableId
     //draw a new table, according to spec
     TableRender.removeTable(tableId);
-    initialRender(data);
+    initialRender();
 }
 
 function getInputString(inputId: string): string {
