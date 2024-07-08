@@ -1,8 +1,7 @@
-
 class TableData {
-    private elementId: string;
-    private tableHeight: number;
-    private tableWidth: number;
+    private readonly elementId: string;
+    private readonly tableHeight: number;
+    private readonly tableWidth: number;
     private pixels: Pixel[][];
 
 //#region constructor, get, set
@@ -33,17 +32,6 @@ class TableData {
         return this.pixels[x][y];
     }
 
-    public setId(id: string) {
-        this.elementId = id;
-    }
-
-    public setTableWidth(tableWidth: number) {
-        this.tableWidth = tableWidth;
-    }
-
-    public setTableHeight(tableHeight: number) {
-        this.tableHeight = tableHeight;
-    }
 //#endregion
 
     private initTableData(): Pixel[][] {

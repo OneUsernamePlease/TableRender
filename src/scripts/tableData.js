@@ -22,15 +22,6 @@ class TableData {
     getPixel(x, y) {
         return this.pixels[x][y];
     }
-    setId(id) {
-        this.elementId = id;
-    }
-    setTableWidth(tableWidth) {
-        this.tableWidth = tableWidth;
-    }
-    setTableHeight(tableHeight) {
-        this.tableHeight = tableHeight;
-    }
     //#endregion
     initTableData() {
         let pixels = [];
