@@ -1,14 +1,13 @@
 "use strict";
 class TableRender {
-    //should the renderer (this) store a ref to the actual table?
-    //should it inherit from htmltableele, and "be" the table and draw itself?
-    //atm, it retrieves the table whenever a frame is to be painted
-    static initTable(tableData, tableContainerId) {
-        let htmlTable = document.createElement("table");
+    constructor() {
+        this.htmlTable = document.createElement("table");
+    }
+    initTable(tableData, tableContainerId) {
         let cellClassName = "pixel";
         let tableHeight = tableData.getTableHeight();
         let tableWidth = tableData.getTableWidth();
-        htmlTable.setAttribute("id", tableData.getId());
+        this.htmlTable.setAttribute("id", tableData.getId());
         for (let i = 0; i < tableHeight; i++) {
             let row = document.createElement("tr");
             row.classList.add("r" + i);
@@ -19,20 +18,20 @@ class TableRender {
                 //cell.setAttribute("style", `width: ${pixelWidth}; height: ${pixelWidth}`); //no but i dont want inline style. i want to change main.css
                 row.appendChild(cell);
             }
-            htmlTable.appendChild(row);
+            this.htmlTable.appendChild(row);
         }
-        document.getElementById(tableContainerId).appendChild(htmlTable);
+        document.getElementById(tableContainerId).appendChild(this.htmlTable);
     }
-    static removeTable(tableId) {
-        var _a;
-        (_a = document.getElementById(tableId)) === null || _a === void 0 ? void 0 : _a.remove();
+    removeTable(tableId) {
+        //document.getElementById(tableId)?.remove();
+        this.htmlTable.remove();
     }
-    static draw(tableData) {
-        let htmlTable = document.getElementById(tableData.getId());
+    draw(tableData) {
+        //let htmlTable: HTMLTableElement = document.getElementById(tableData.getId()) as HTMLTableElement;
         let pixels = tableData.getAllPixels();
         let color;
         for (let row = 0; row < tableData.getTableHeight(); row++) {
-            const curRow = htmlTable.rows[row];
+            const curRow = this.htmlTable.rows[row];
             for (let cell = 0; cell < tableData.getTableWidth(); cell++) {
                 curRow.cells[cell].removeAttribute("style");
                 color = pixels[row][cell].getColor();

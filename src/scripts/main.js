@@ -11,19 +11,21 @@ function initialise() {
 let tableId = "mainTable";
 let tableContainerId = "tableContainer";
 let data;
+let rederer;
 //+++++
 function testFunction() {
     data.newFrame();
-    TableRender.draw(data);
+    rederer.draw(data);
 }
 function initialRender() {
     data = new TableData(tableId, getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"));
-    TableRender.initTable(data, tableContainerId);
+    rederer = new TableRender();
+    rederer.initTable(data, tableContainerId);
 }
 function regenerateTable() {
     //remove table w/ id tableId
     //draw a new table, according to spec
-    TableRender.removeTable(tableId);
+    rederer.removeTable(tableId);
     initialRender();
 }
 function getInputString(inputId) {
