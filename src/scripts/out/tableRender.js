@@ -22,7 +22,7 @@ class TableRender {
         }
         document.getElementById(tableContainerId).appendChild(this.htmlTable);
     }
-    removeTable(tableId) {
+    removeTable() {
         //document.getElementById(tableId)?.remove();
         this.htmlTable.remove();
     }

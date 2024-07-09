@@ -25,7 +25,7 @@ function initialRender() {
 function regenerateTable() {
     //remove table w/ id tableId
     //draw a new table, according to spec
-    rederer.removeTable(tableId);
+    rederer.removeTable();
     initialRender();
 }
 function getInputString(inputId) {
