@@ -41,17 +41,28 @@ class TableRender {
             this.htmlTable.remove();
     }
     
+    public resizeTable(newHeight: number, newWidth: number) {
+        
+    }
+
     public draw(tableData: TableData) {
         let pixels: Pixel[][] = tableData.getAllPixels();
         let color: string;
+        let height = tableData.getTableHeight();
+        let width = tableData.getTableWidth();
         
-        for (let row = 0; row < tableData.getTableHeight(); row++) {
+        this.resizeTable(height, width);
+
+        for (let row = 0; row < height; row++) {
             const curRow: HTMLTableRowElement = this.htmlTable.rows[row];
             for (let cell = 0; cell < tableData.getTableWidth(); cell++) {
-                curRow.cells[cell].removeAttribute("style");
-                color = pixels[row][cell].getColor();
-                curRow.cells[cell].setAttribute("style", "background-color: " + color);
+                this.setColor(curRow.cells[cell], pixels[row][cell].getColor());
             }
         }
-    }    
+    }
+    
+    public setColor(pixel: HTMLTableCellElement, color: string) {
+        pixel.removeAttribute("style");
+        pixel.setAttribute("style", "background-color: " + color);
+    }
 }
