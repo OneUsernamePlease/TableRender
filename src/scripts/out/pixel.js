@@ -14,3 +14,4 @@ class Pixel {
         return this.color;
     }
 }
+//# sourceMappingURL=pixel.js.map

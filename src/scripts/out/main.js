@@ -42,3 +42,4 @@ function getInputNumber(inputId) {
     //+stringA converts stringA to number, if stringA is not numeric result = NaN, if it is numeric, result is stringA as number. "!isNan(+stringA)" is true if stringA is numeric, otherwise false
     return (!isNaN(+inputValue)) ? +inputValue : 0;
 }
+//# sourceMappingURL=main.js.map

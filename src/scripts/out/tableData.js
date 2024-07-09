@@ -44,3 +44,4 @@ class TableData {
         }
     }
 }
+//# sourceMappingURL=tableData.js.map
