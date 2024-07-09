@@ -1,15 +1,16 @@
 "use strict";
 class TableRender {
     //#region constructor, get, set
-    constructor(elementId) {
-        this.elementId = elementId;
+    constructor(parentElementId) {
+        this.parentElementId = parentElementId;
+        this.elementId = "tableRender" + Math.floor(Math.random() * 1000);
         this.htmlTable = document.createElement("table");
     }
-    getId() {
-        return this.elementId;
+    setParentElementId() {
+        return this.parentElementId;
     }
     //#endregion
-    initTable(tableData, tableContainerId) {
+    initTable(tableData) {
         let cellClassName = "pixel";
         let tableHeight = tableData.getTableHeight();
         let tableWidth = tableData.getTableWidth();
@@ -27,7 +28,7 @@ class TableRender {
             }
             this.htmlTable.appendChild(row);
         }
-        document.getElementById(tableContainerId).appendChild(this.htmlTable);
+        document.getElementById(this.parentElementId).appendChild(this.htmlTable);
     }
     removeTable() {
         this.htmlTable.remove();

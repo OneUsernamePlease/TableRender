@@ -41,8 +41,8 @@ class TableData {
         }
     }
     setPixels(newFrame) {
-        let height = Math.min(this.tableHeight, newFrame.length);
-        let width = Math.min(this.tableWidth, newFrame[0].length);
+        const height = Math.min(this.tableHeight, newFrame.length);
+        const width = Math.min(this.tableWidth, newFrame[0].length);
         for (let i = 0; i < height; i++) {
             for (let j = 0; j < width; j++) {
                 this.setPixelColor(i, j, newFrame[i][j].getColor());

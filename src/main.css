@@ -10,6 +10,8 @@ element
 .pixel {
     width: 5px;
     height: 5px;
+    margin: 0;
+    padding: 0;
     background-color: rgb(125, 125, 125);
 }
 

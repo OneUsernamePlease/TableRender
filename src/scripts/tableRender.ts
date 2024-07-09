@@ -1,19 +1,21 @@
 class TableRender {
     private elementId: string;
+    private parentElementId: string;
     public htmlTable: HTMLTableElement;
 
 //#region constructor, get, set
-    constructor(elementId: string) {
-        this.elementId = elementId;
+    constructor(parentElementId: string) {
+        this.parentElementId = parentElementId;
+        this.elementId = "tableRender" + Math.floor(Math.random() * 1000)
         this.htmlTable = document.createElement("table");
     }
 
-    public getId(): string {
-        return this.elementId;
+    public setParentElementId(): string {
+        return this.parentElementId;
     }
 //#endregion
 
-    public initTable(tableData: TableData, tableContainerId: string) {
+    public initTable(tableData: TableData) {
         let cellClassName = "pixel";
         let tableHeight = tableData.getTableHeight();
         let tableWidth = tableData.getTableWidth();
@@ -32,7 +34,7 @@ class TableRender {
             }
             this.htmlTable.appendChild(row);
         }
-        document.getElementById(tableContainerId)!.appendChild(this.htmlTable);
+        document.getElementById(this.parentElementId)!.appendChild(this.htmlTable);
     }
 
     public removeTable() {

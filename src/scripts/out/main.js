@@ -8,7 +8,6 @@ function initialise() {
     document.removeEventListener("DOMContentLoaded", initialise);
 }
 //+++++
-let tableId = "mainTable";
 let tableContainerId = "tableContainer";
 let data;
 let rederer;
@@ -19,8 +18,8 @@ function testFunction() {
 }
 function initialRender() {
     data = new TableData(getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"));
-    rederer = new TableRender(tableId);
-    rederer.initTable(data, tableContainerId);
+    rederer = new TableRender(tableContainerId);
+    rederer.initTable(data);
 }
 function regenerateTable() {
     //remove table w/ id tableId
