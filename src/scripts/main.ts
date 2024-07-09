@@ -17,7 +17,7 @@ let rederer: TableRender;
 //+++++
 
 function testFunction() {
-    data.newFrame();
+    data.testFrame();
     rederer.draw(data);
 }
 

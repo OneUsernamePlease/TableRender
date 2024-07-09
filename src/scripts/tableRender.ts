@@ -43,6 +43,7 @@ class TableRender {
                 curRow.cells[cell].setAttribute("style", "background-color: " + color);
             }
         }
-
     }
+
+    
 }

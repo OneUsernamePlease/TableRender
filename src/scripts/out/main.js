@@ -14,7 +14,7 @@ let data;
 let rederer;
 //+++++
 function testFunction() {
-    data.newFrame();
+    data.testFrame();
     rederer.draw(data);
 }
 function initialRender() {

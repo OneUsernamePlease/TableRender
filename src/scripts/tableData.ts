@@ -48,15 +48,23 @@ class TableData {
         this.pixels[x][y].setColor(color);
     }
 
-    public newFrame() {
+    public testFrame() {
+        //this is a testfunction, going to be deleted at some point
         for(let i = 0; i < this.tableHeight; i++){
-            for(let j = 0; j < this.tableWidth; j++){
+            for(let j = 0; j < this.tableWidth; j++) {
                 this.setPixelColor(i, j, "#aa0000");
             }
         }
     }
 
-    public updateFrame() {
-
+    public setPixels(newFrame: Pixel[][]) {
+        let height: number = Math.min(this.tableHeight, newFrame.length);
+        let width: number = Math.min(this.tableWidth, newFrame[0].length);
+        
+        for(let i = 0; i < height; i++) {
+            for(let j = 0; j < width; j++) {
+                this.setPixelColor(i, j, newFrame[i][j].getColor());
+            }
+        }
     }
 }
