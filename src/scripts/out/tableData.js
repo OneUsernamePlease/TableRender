@@ -5,7 +5,7 @@ class TableData {
         this.elementId = elementId;
         this.tableHeight = tableHeight;
         this.tableWidth = tableWidth;
-        this.screenData = this.initTableData();
+        this.pixels = this.initTableData();
     }
     getId() {
         return this.elementId;
@@ -17,10 +17,10 @@ class TableData {
         return this.tableWidth;
     }
     getAllPixels() {
-        return this.screenData;
+        return this.pixels;
     }
     getPixel(x, y) {
-        return this.screenData[x][y];
+        return this.pixels[x][y];
     }
     //#endregion
     initTableData() {
@@ -34,7 +34,7 @@ class TableData {
         return pixel;
     }
     setPixelColor(x, y, color) {
-        this.screenData[x][y].setColor(color);
+        this.pixels[x][y].setColor(color);
     }
     newFrame() {
         for (let i = 0; i < this.tableHeight; i++) {
@@ -42,6 +42,8 @@ class TableData {
                 this.setPixelColor(i, j, "#aa0000");
             }
         }
+    }
+    updateFrame() {
     }
 }
 //# sourceMappingURL=tableData.js.map

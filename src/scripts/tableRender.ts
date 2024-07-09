@@ -18,7 +18,8 @@ class TableRender {
                 let cell = document.createElement("td");
                 cell.classList.add(cellClassName);
                 cell.classList.add("c" + j);
-                //cell.setAttribute("style", `width: ${pixelWidth}; height: ${pixelWidth}`); //no but i dont want inline style. i want to change main.css
+                //cell.setAttribute("style", `width: ${pixelWidth}; height: ${pixelWidth}`); //no but i dont want inline style for height and width. i want to change main.css
+                cell.setAttribute("style", "background-color: " + tableData.getPixel(i, j).getColor());
                 row.appendChild(cell);
             }
             this.htmlTable.appendChild(row);
@@ -27,12 +28,10 @@ class TableRender {
     }
 
     public removeTable() {
-            //document.getElementById(tableId)?.remove();
             this.htmlTable.remove();
     }
     
     public draw(tableData: TableData) {
-        //let htmlTable: HTMLTableElement = document.getElementById(tableData.getId()) as HTMLTableElement;
         let pixels: Pixel[][] = tableData.getAllPixels();
         let color: string;
         

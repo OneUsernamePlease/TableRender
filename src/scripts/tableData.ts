@@ -2,14 +2,14 @@ class TableData {
     private readonly elementId: string;
     private readonly tableHeight: number;
     private readonly tableWidth: number;
-    private screenData: Pixel[][];
+    private pixels: Pixel[][];
 
 //#region constructor, get, set
     public constructor(elementId: string, tableWidth: number, tableHeight: number) {
         this.elementId = elementId;
         this.tableHeight = tableHeight;
         this.tableWidth = tableWidth;
-        this.screenData = this.initTableData();
+        this.pixels = this.initTableData();
         }
 
     public getId(): string {
@@ -25,11 +25,11 @@ class TableData {
     }
 
     public getAllPixels(): Pixel[][] {
-        return this.screenData;
+        return this.pixels;
     }
 
     public getPixel(x: number, y: number): Pixel {
-        return this.screenData[x][y];
+        return this.pixels[x][y];
     }
 //#endregion
 
@@ -45,7 +45,7 @@ class TableData {
     }
 
     public setPixelColor(x: number, y: number, color: string) {
-        this.screenData[x][y].setColor(color);
+        this.pixels[x][y].setColor(color);
     }
 
     public newFrame() {
@@ -54,5 +54,9 @@ class TableData {
                 this.setPixelColor(i, j, "#aa0000");
             }
         }
+    }
+
+    public updateFrame() {
+
     }
 }
