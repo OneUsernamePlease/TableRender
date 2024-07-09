@@ -1,16 +1,24 @@
 class TableRender {
+    private elementId: string;
     public htmlTable: HTMLTableElement;
 
-    constructor() {
+//#region constructor, get, set
+    constructor(elementId: string) {
+        this.elementId = elementId;
         this.htmlTable = document.createElement("table");
     }
+
+    public getId(): string {
+        return this.elementId;
+    }
+//#endregion
 
     public initTable(tableData: TableData, tableContainerId: string) {
         let cellClassName = "pixel";
         let tableHeight = tableData.getTableHeight();
         let tableWidth = tableData.getTableWidth();
 
-        this.htmlTable.setAttribute("id", tableData.getId());
+        this.htmlTable.setAttribute("id", this.elementId);
         for (let i = 0; i < tableHeight; i++) {
             let row = document.createElement("tr");
             row.classList.add("r" + i);
@@ -43,7 +51,5 @@ class TableRender {
                 curRow.cells[cell].setAttribute("style", "background-color: " + color);
             }
         }
-    }
-
-    
+    }    
 }

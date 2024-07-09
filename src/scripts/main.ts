@@ -22,8 +22,8 @@ function testFunction() {
 }
 
 function initialRender() {
-    data = new TableData(tableId, getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"));
-    rederer = new TableRender();
+    data = new TableData(getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"));
+    rederer = new TableRender(tableId);
     rederer.initTable(data, tableContainerId);  
 }
 

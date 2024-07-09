@@ -1,14 +1,10 @@
 "use strict";
 class TableData {
     //#region constructor, get, set
-    constructor(elementId, tableWidth, tableHeight) {
-        this.elementId = elementId;
+    constructor(tableWidth, tableHeight) {
         this.tableHeight = tableHeight;
         this.tableWidth = tableWidth;
         this.pixels = this.initTableData();
-    }
-    getId() {
-        return this.elementId;
     }
     getTableHeight() {
         return this.tableHeight;
