@@ -22,17 +22,21 @@
                         <input type="number" id="tableHeightInput" value="80" autocomplete="off" min="1" max="60">
                     </div>
                 </div>
-                <div>
-                    <div class="inputContainer">
-                        <label for="pixelWidthInput">Größe Pixel (px):</label>
-                        <input type="number" id="pixelWidthInput" value="5" autocomplete="off" min="1" max="15" disabled>
-                        <p>disabled, bc i dont want to use inline styles</p>
-                    </div>
+                <div class="inputContainer">
+                    <label for="imgInput">DATEI:</label>
+                    <input id="imgInput" type="file">
                 </div>
                 <div>
                     <button id="btnGenerateTable">Generate Table</button>
                     <button id="Save" disabled>Speichern</button>
                     <button id="testBtn">test</button>
+                </div>
+                <div>
+                    <!--div class="inputContainer" style="visibility:hidden">
+                        <label for="pixelWidthInput">Größe Pixel (px):</label>
+                        <input type="number" id="pixelWidthInput" value="5" autocomplete="off" min="1" max="15" disabled>
+                        <p>disabled, bc i dont want to use inline styles</p>
+                    </div-->
                 </div>
             </div>
             <div id="tableContainer">
