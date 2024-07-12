@@ -1,4 +1,9 @@
 "use strict";
+/* TODO
+get rid of height, width property of tableData
+
+*/
+//#region initialisation
 document.addEventListener("DOMContentLoaded", initialise);
 function initialise() {
     var _a, _b;
@@ -7,14 +12,17 @@ function initialise() {
     initialRender();
     document.removeEventListener("DOMContentLoaded", initialise);
 }
-//+++++
 let tableContainerId = "tableContainer";
 let data;
 let rederer;
-//+++++
+//#endregion
+//#region load/save
+//#endregion
+//#region drawing table
 function testFunction() {
     data.testFrame();
     rederer.draw(data);
+    console.log(data.encode("mf1"));
 }
 function initialRender() {
     data = new TableData(getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"));
@@ -26,6 +34,10 @@ function regenerateTable() {
     //draw a new table, according to spec
     rederer.removeTable();
     initialRender();
+}
+//#endregion
+//#region inputs
+function getInputFile(inputId) {
 }
 function getInputString(inputId) {
     //return value of input element by id
@@ -41,4 +53,5 @@ function getInputNumber(inputId) {
     //+stringA converts stringA to number, if stringA is not numeric result = NaN, if it is numeric, result is stringA as number. "!isNan(+stringA)" is true if stringA is numeric, otherwise false
     return (!isNaN(+inputValue)) ? +inputValue : 0;
 }
+//#endregion
 //# sourceMappingURL=main.js.map

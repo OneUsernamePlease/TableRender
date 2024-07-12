@@ -29,6 +29,54 @@ class TableData {
         }
         return pixel;
     }
+    testFrame() {
+        //this is a testfunction, going to be deleted at some point
+        this.setDimensions(50, 100);
+        for (let i = 0; i < this.tableHeight; i++) {
+            for (let j = 0; j < this.tableWidth; j++) {
+                this.setPixelColor(i, j, "#aa0000");
+            }
+        }
+    }
+    //#region en/decode
+    fromJson(json) {
+        //let data: string[][] = json.imgdata;
+    }
+    encode(format) {
+        let encoded = new Object;
+        switch (format) {
+            case "mf1":
+                encoded = this.encodeMf1();
+                break;
+            default:
+                break;
+        }
+        return encoded;
+    }
+    encodeMf1() {
+        let encoded = "";
+        const start = '{"meta":{"format":"pf1"},"imgdata":';
+        const end = '}';
+        let data = this.dataAsString();
+        encoded = start + data + end;
+        return JSON.parse(encoded);
+    }
+    dataAsString() {
+        let s = "[";
+        this.pixels.forEach(row => {
+            s += "[";
+            row.forEach(cell => {
+                s += "\"" + cell.getColor() + "\",";
+            });
+            s = s.slice(0, -1);
+            s += "],";
+        });
+        s = s.slice(0, -1);
+        s += "]";
+        return s;
+    }
+    //#endregion
+    //#region everyting related to drawing/updating image data
     setPixelColor(x, y, color) {
         if (this.pixels[x][y] === undefined) {
             return;
@@ -92,15 +140,6 @@ class TableData {
         //removes n rows from pixels
         for (let i = 0; i < n; i++) {
             this.pixels.pop();
-        }
-    }
-    testFrame() {
-        //this is a testfunction, going to be deleted at some point
-        this.setDimensions(100, 150);
-        for (let i = 0; i < this.tableHeight; i++) {
-            for (let j = 0; j < this.tableWidth; j++) {
-                this.setPixelColor(i, j, "#aa0000");
-            }
         }
     }
 }
