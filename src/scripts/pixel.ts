@@ -2,8 +2,8 @@
 class Pixel {
         private color: string;
 
-        public constructor() {
-            this.color = "#000000"
+        public constructor(color: string = "#000000") {
+            this.color = color;
         }
 
         public setColor(hexCode: string) {
