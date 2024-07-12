@@ -4,7 +4,7 @@ class TableData {
     private pixels: Pixel[][];
 
 //#region constructor, get, set
-    public constructor(tableWidth: number, tableHeight: number) {
+    public constructor(tableHeight: number, tableWidth: number) {
         this.tableHeight = tableHeight;
         this.tableWidth = tableWidth;
         this.pixels = this.initTableData();
@@ -50,10 +50,18 @@ class TableData {
 
 //#region en/decode
 
-    public fromJson(json: object) {
-        //let data: string[][] = json.imgdata;
-        
+    public fromJson(json: {imgData: string[][]}) {
+        let height = Math.max(json.imgData.length, 1);
+        let widths: number[] = json.imgData.map((x) => x.length);
+        let width = Math.max(...widths, 1);
 
+        this.setDimensions(height, width);
+        for (let i = 0; i < height; i++) {
+            for (let j = 0; j < width; j++) {
+                this.setPixelColor(i, j, json.imgData[i][j]);
+            };
+            
+        }
     }
 
     public encode(format: string): object {
@@ -69,7 +77,6 @@ class TableData {
         }
         return encoded;
     }
-
     public encodeMf1(): object {
         let encoded: string = "";
         const start = '{"meta":{"format":"pf1"},"imgdata":';
@@ -100,9 +107,9 @@ class TableData {
 
 //#region everyting related to drawing/updating image data
 
-    public setPixelColor(x: number, y: number, color: string) {
-        if (this.pixels[x][y] === undefined) {return;}
-        this.pixels[x][y].setColor(color);
+    public setPixelColor(row: number, col: number, color: string) {
+        if (this.pixels[row][col] === undefined) {return;}
+        this.pixels[row][col].setColor(color);
     }
 
     public setDimensions(height: number, width: number) {

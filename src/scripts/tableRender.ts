@@ -10,9 +10,6 @@ class TableRender {
         this.htmlTable = document.createElement("table");
     }
 
-    public setParentElementId(): string {
-        return this.parentElementId;
-    }
 //#endregion
 
     public initTable(tableData: TableData) {
@@ -39,14 +36,12 @@ class TableRender {
             this.htmlTable.remove();
     }
     
-    
     public draw(tableData: TableData) {
         let pixels: Pixel[][] = tableData.getAllPixels();
         let height = tableData.getTableHeight();
         let width = tableData.getTableWidth();
         
         this.resizeTable(height, width);
-
         for (let row = 0; row < height; row++) {
             const curRow: HTMLTableRowElement = this.htmlTable.rows[row];
             for (let cell = 0; cell < tableData.getTableWidth(); cell++) {

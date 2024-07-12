@@ -1,7 +1,7 @@
 "use strict";
 class TableData {
     //#region constructor, get, set
-    constructor(tableWidth, tableHeight) {
+    constructor(tableHeight, tableWidth) {
         this.tableHeight = tableHeight;
         this.tableWidth = tableWidth;
         this.pixels = this.initTableData();
@@ -40,7 +40,16 @@ class TableData {
     }
     //#region en/decode
     fromJson(json) {
-        //let data: string[][] = json.imgdata;
+        let height = Math.max(json.imgData.length, 1);
+        let widths = json.imgData.map((x) => x.length);
+        let width = Math.max(...widths, 1);
+        this.setDimensions(height, width);
+        for (let i = 0; i < height; i++) {
+            for (let j = 0; j < width; j++) {
+                this.setPixelColor(i, j, json.imgData[i][j]);
+            }
+            ;
+        }
     }
     encode(format) {
         let encoded = new Object;
@@ -77,11 +86,11 @@ class TableData {
     }
     //#endregion
     //#region everyting related to drawing/updating image data
-    setPixelColor(x, y, color) {
-        if (this.pixels[x][y] === undefined) {
+    setPixelColor(row, col, color) {
+        if (this.pixels[row][col] === undefined) {
             return;
         }
-        this.pixels[x][y].setColor(color);
+        this.pixels[row][col].setColor(color);
     }
     setDimensions(height, width) {
         this.setHeight(height);

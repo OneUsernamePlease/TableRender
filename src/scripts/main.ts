@@ -1,11 +1,14 @@
 /* TODO
 get rid of height, width property of tableData
-
+reading file does not work yet
 */
 
 //#region initialisation
-document.addEventListener("DOMContentLoaded", initialise);
+let tableContainerId = "tableContainer";
+let data: TableData; 
+let rederer: TableRender;
 
+document.addEventListener("DOMContentLoaded", initialise);
 function initialise() {
     document.getElementById!("testBtn")?.addEventListener("click", testFunction);
     document.getElementById!("btnGenerateTable")?.addEventListener("click", regenerateTable);
@@ -15,25 +18,35 @@ function initialise() {
     document.removeEventListener("DOMContentLoaded", initialise);
 }
 
-let tableContainerId = "tableContainer";
-let data: TableData; 
-let rederer: TableRender;
 //#endregion
 
-//#region load/save
+//#region tests
+function testFunction() { test2(); }
 
+function test2() {
+    const stringData: string | null = getInputFile("imgInput")
+    if (stringData === null) {
+        console.log("cannot load string data from fileInput");
+        return;
+    }
+    const jsonData: {imgData: string[][]} = JSON.parse(stringData);
+    data.fromJson(jsonData);
+    rederer.draw(data);
+}
 
-//#endregion
-
-//#region drawing table
-function testFunction() {
+function test1() {
     data.testFrame();
     rederer.draw(data);
     console.log(data.encode("mf1"));
 }
 
+//#endregion
+
+//#region drawing table
+
+
 function initialRender() {
-    data = new TableData(getInputNumber("tableWidthInput"), getInputNumber("tableHeightInput"));
+    data = new TableData(getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
     rederer = new TableRender(tableContainerId);
     rederer.initTable(data);  
 }
@@ -47,8 +60,19 @@ function regenerateTable() {
 //#endregion
 
 //#region inputs
-function getInputFile(inputId: string) {
+function getInputFile(inputId: string): string | null {
+    //returns the content of file selected in input (json only) as a string
+    //let reader = new FileReader; // mgl 2
+    let files: FileList | null= (<HTMLInputElement>document.getElementById(inputId)!).files;
 
+    if (files === null) {return null;}
+    
+    for (const file of files) {
+    let content = file.text; //mgl 1 ? //funktioniert NICHT.....
+    return content.toString();
+    }
+    return null;
+    //reader.readAsText(files[0]); //mgl 2 ?
 }
 
 function getInputString(inputId: string): string {

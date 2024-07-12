@@ -6,9 +6,6 @@ class TableRender {
         this.elementId = "tableRender" + Math.floor(Math.random() * 1000);
         this.htmlTable = document.createElement("table");
     }
-    setParentElementId() {
-        return this.parentElementId;
-    }
     //#endregion
     initTable(tableData) {
         let cellClassName = "pixel";
