@@ -30,29 +30,31 @@ class TableData {
         return pixel;
     }
     setPixelColor(x, y, color) {
-        //add pixel if nexessary
+        if (this.pixels[x][y] === undefined) {
+            return;
+        }
         this.pixels[x][y].setColor(color);
     }
     setDimensions(height, width) {
         this.setHeight(height);
         this.setWidth(width);
     }
-    setWidth(width) {
+    setWidth(newWidth) {
         //add/remove pixels to/from every row in this.pixels
         //set property this.tableWidth
-        if (width < 1) {
+        if (newWidth < 1) {
             return;
         }
         for (let i = 0; i < this.tableHeight; i++) {
             const curRowWidth = this.pixels[i].length;
-            if (curRowWidth < width) {
-                this.removePixels(i, this.tableWidth - width);
+            if (curRowWidth < newWidth) {
+                this.addPixels(i, newWidth - curRowWidth);
             }
-            else if (true) {
-                this.addPixels(i, this.tableWidth - width);
+            else if (curRowWidth > newWidth) {
+                this.removePixels(i, curRowWidth - newWidth);
             }
         }
-        this.tableWidth = width;
+        this.tableWidth = newWidth;
     }
     addPixels(rowIdx, n) {
         //adds n pixels to this.pixels, to row at rowIdx
@@ -67,17 +69,17 @@ class TableData {
             this.pixels[rowIdx].pop();
         }
     }
-    setHeight(height) {
-        if (height < 1) {
+    setHeight(newHeight) {
+        if (newHeight < 1) {
             return;
         }
-        if (height < this.tableHeight) {
-            this.addRows(this.tableHeight - height);
+        if (newHeight < this.tableHeight) {
+            this.removeRows(this.tableHeight - newHeight);
         }
-        else if (height > this.tableHeight) {
-            this.removeRows(this.tableHeight - height);
+        else if (newHeight > this.tableHeight) {
+            this.addRows(newHeight - this.tableHeight);
         }
-        this.tableHeight = height;
+        this.tableHeight = newHeight;
     }
     addRows(n) {
         //adds n rows to pixels, these new rows are empty arrays
@@ -94,6 +96,7 @@ class TableData {
     }
     testFrame() {
         //this is a testfunction, going to be deleted at some point
+        this.setDimensions(100, 150);
         for (let i = 0; i < this.tableHeight; i++) {
             for (let j = 0; j < this.tableWidth; j++) {
                 this.setPixelColor(i, j, "#aa0000");

@@ -48,19 +48,19 @@ class TableData {
         this.setWidth(width);
     }
 
-    public setWidth(width: number) {
+    public setWidth(newWidth: number) {
         //add/remove pixels to/from every row in this.pixels
         //set property this.tableWidth
-        if (width < 1) {return;}
+        if (newWidth < 1) {return;}
         for (let i = 0; i < this.tableHeight; i++) {
             const curRowWidth = this.pixels[i].length;
-            if (curRowWidth < width) {
-                this.removePixels(i, this.tableWidth - width);
-            } else if (true) {
-                this.addPixels(i, this.tableWidth - width);
+            if (curRowWidth < newWidth) {
+                this.addPixels(i, newWidth - curRowWidth);
+            } else if (curRowWidth > newWidth) {
+                this.removePixels(i, curRowWidth - newWidth);
             }
         }
-        this.tableWidth = width;
+        this.tableWidth = newWidth;
     }
     
     public addPixels(rowIdx: number, n: number) {
@@ -78,14 +78,14 @@ class TableData {
         }
     }
 
-    public setHeight(height: number) {
-        if (height < 1) {return;}
-        if (height < this.tableHeight) {
-            this.addRows(this.tableHeight - height);
-        } else if (height > this.tableHeight) {
-            this.removeRows(this.tableHeight - height);
+    public setHeight(newHeight: number) {
+        if (newHeight < 1) {return;}
+        if (newHeight < this.tableHeight) {
+            this.removeRows(this.tableHeight - newHeight);
+        } else if (newHeight > this.tableHeight) {
+            this.addRows(newHeight - this.tableHeight);
         }
-        this.tableHeight = height;
+        this.tableHeight = newHeight;
     }
 
     public addRows(n: number) {
@@ -105,6 +105,7 @@ class TableData {
 
     public testFrame() {
         //this is a testfunction, going to be deleted at some point
+        this.setDimensions(100, 150);
         for(let i = 0; i < this.tableHeight; i++){
             for(let j = 0; j < this.tableWidth; j++) {
                 this.setPixelColor(i, j, "#aa0000");
