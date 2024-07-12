@@ -23,11 +23,9 @@ class TableRender {
         this.htmlTable.setAttribute("id", this.elementId);
         for (let i = 0; i < tableHeight; i++) {
             let row = document.createElement("tr");
-            row.classList.add("r" + i);
             for(let j = 0; j < tableWidth; j++) {
                 let cell = document.createElement("td");
                 cell.classList.add(cellClassName);
-                cell.classList.add("c" + j);
                 //cell.setAttribute("style", `width: ${pixelWidth}; height: ${pixelWidth}`); //no but i dont want inline style for height and width. i want to change main.css
                 cell.setAttribute("style", "background-color: " + tableData.getPixel(i, j).getColor());
                 row.appendChild(cell);
@@ -41,13 +39,9 @@ class TableRender {
             this.htmlTable.remove();
     }
     
-    public resizeTable(newHeight: number, newWidth: number) {
-        
-    }
-
+    
     public draw(tableData: TableData) {
         let pixels: Pixel[][] = tableData.getAllPixels();
-        let color: string;
         let height = tableData.getTableHeight();
         let width = tableData.getTableWidth();
         
@@ -65,4 +59,59 @@ class TableRender {
         pixel.removeAttribute("style");
         pixel.setAttribute("style", "background-color: " + color);
     }
+    public resizeTable(newHeight: number, newWidth: number) {
+        this.setHeight(newHeight);
+        this.setWidth(newWidth);
+    }
+
+    public setHeight(newHeight: number) {
+        let rowCnt = this.htmlTable.rows.length;
+
+        if (rowCnt < newHeight) {
+            this.addRows(newHeight - rowCnt);
+        } else if (rowCnt > newHeight) {
+            this.removeRows(rowCnt - newHeight);
+        }
+    }
+
+
+    public addRows(diff: number) {
+        for (let i = 0; i < diff; i++) {
+            this.htmlTable.insertRow(-1);
+        }
+    }
+
+    public removeRows(diff: number) {
+        for (let i = 0; i < diff; i++) {
+            this.htmlTable.deleteRow(-1);
+        }
+    }
+
+    public setWidth(newWidth: number) {
+        for (let curRowIdx = 0; curRowIdx < this.htmlTable.rows.length; curRowIdx++) {
+            const row = this.htmlTable.rows[curRowIdx];
+            const cellCnt = row.cells.length;
+            if(cellCnt < newWidth) {
+                this.addCells(row, newWidth - cellCnt);
+            }
+            else if (cellCnt > newWidth) {
+                this.removeCells(row, cellCnt - newWidth);
+            }
+        }
+    }
+
+    public addCells(row: HTMLTableRowElement, diff: number) {
+        let cellClassName = "pixel";
+        for (let i = 0; i < diff; i++) {
+            const cell: HTMLTableCellElement = row.insertCell(-1);
+            cell.classList.add(cellClassName);
+        }
+    }
+
+    public removeCells(row: HTMLTableRowElement, diff: number) {
+        for (let i = 0; i < diff; i++) {
+            row.deleteCell(-1);
+        }
+    }
 }
+
