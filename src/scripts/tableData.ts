@@ -9,24 +9,19 @@ class TableData {
         this.tableWidth = tableWidth;
         this.pixels = this.initTableData();
     }
-
     public getTableHeight(): number {
         return this.tableHeight;
     }
-
     public getTableWidth(): number {
         return this.tableWidth;
     }
-
     public getAllPixels(): Pixel[][] {
         return this.pixels;
     }
-
     public getPixel(x: number, y: number): Pixel {
         return this.pixels[x][y];
     }
 //#endregion
-
     private initTableData(): Pixel[][] {
         let pixel: Pixel[][] = [];
         for(let i = 0; i < this.tableHeight; i++){
@@ -37,7 +32,6 @@ class TableData {
         }
         return pixel;
     }
-
     public testFrame() {
         //this is a testfunction, going to be deleted at some point
         this.setDimensions(50, 100);
@@ -47,9 +41,7 @@ class TableData {
             }
         }
     }
-
 //#region en/decode
-
     public fromJson(json: {imgdata: string[][]}) {
         let data = json.imgdata;
         let height = Math.max(data.length, 1);
@@ -64,7 +56,6 @@ class TableData {
             
         }
     }
-
     public encode(format: string): object {
         //returns a json object containing tableData encoded with format
         let encoded: object = new Object;
@@ -81,7 +72,7 @@ class TableData {
     }
     public encodePf1(): object {
         //returns a pf1-json object
-        //(containing tableData as string[][])
+        //(containing tableData as string[][] named imgdata)
         let encoded: string = "";
         const start = '{"meta":{"format":"pf1"},"imgdata":';
         const end = '}';
@@ -92,7 +83,7 @@ class TableData {
         return JSON.parse(encoded);
     }
     public dataAsString(): string {
-        //returns a string representing a string[][] containing Pixel colors
+        //returns a string representing a string[][] containing Pixel colors in hex
         let s = "["; 
         this.pixels.forEach(row => {
             s += "["
@@ -107,17 +98,14 @@ class TableData {
 
         return s;
     }
-
-    public createFile(obj: JSON): Blob {
+    public createBlob(obj: JSON): Blob {
         let content = JSON.stringify(obj);
         let file: Blob = new Blob([content], {type: "text"});
         return file;
     }
-
 //#endregion
 
 //#region everyting related to drawing/updating image data
-
     public setPixelColor(row: number, col: number, color: string) {
         if (this.pixels[row][col] === undefined) {return;}
         this.pixels[row][col].setColor(color);

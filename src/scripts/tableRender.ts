@@ -1,6 +1,6 @@
 class TableRender {
     private elementId: string;
-    private parentElementId: string;
+    private parentElementId: string; //parentElementId could/should? be eliminated from this class
     public htmlTable: HTMLTableElement;
 
 //#region constructor, get, set
@@ -9,7 +9,6 @@ class TableRender {
         this.elementId = "tableRender" + Math.floor(Math.random() * 1000)
         this.htmlTable = document.createElement("table");
     }
-
 //#endregion
 
     public initTable(tableData: TableData) {
@@ -31,11 +30,9 @@ class TableRender {
         }
         document.getElementById(this.parentElementId)!.appendChild(this.htmlTable);
     }
-
     public removeTable() {
             this.htmlTable.remove();
     }
-    
     public draw(tableData: TableData) {
         let pixels: Pixel[][] = tableData.getAllPixels();
         let height = tableData.getTableHeight();
@@ -49,7 +46,6 @@ class TableRender {
             }
         }
     }
-    
     public setColor(pixel: HTMLTableCellElement, color: string) {
         pixel.removeAttribute("style");
         pixel.setAttribute("style", "background-color: " + color);
@@ -58,7 +54,6 @@ class TableRender {
         this.setHeight(newHeight);
         this.setWidth(newWidth);
     }
-
     public setHeight(newHeight: number) {
         let rowCnt = this.htmlTable.rows.length;
 
@@ -68,20 +63,16 @@ class TableRender {
             this.removeRows(rowCnt - newHeight);
         }
     }
-
-
     public addRows(diff: number) {
         for (let i = 0; i < diff; i++) {
             this.htmlTable.insertRow(-1);
         }
     }
-
     public removeRows(diff: number) {
         for (let i = 0; i < diff; i++) {
             this.htmlTable.deleteRow(-1);
         }
     }
-
     public setWidth(newWidth: number) {
         for (let curRowIdx = 0; curRowIdx < this.htmlTable.rows.length; curRowIdx++) {
             const row = this.htmlTable.rows[curRowIdx];
@@ -94,7 +85,6 @@ class TableRender {
             }
         }
     }
-
     public addCells(row: HTMLTableRowElement, diff: number) {
         let cellClassName = "pixel";
         for (let i = 0; i < diff; i++) {
@@ -102,7 +92,6 @@ class TableRender {
             cell.classList.add(cellClassName);
         }
     }
-
     public removeCells(row: HTMLTableRowElement, diff: number) {
         for (let i = 0; i < diff; i++) {
             row.deleteCell(-1);

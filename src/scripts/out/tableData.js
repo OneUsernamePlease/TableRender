@@ -66,7 +66,7 @@ class TableData {
     }
     encodePf1() {
         //returns a pf1-json object
-        //(containing tableData as string[][])
+        //(containing tableData as string[][] named imgdata)
         let encoded = "";
         const start = '{"meta":{"format":"pf1"},"imgdata":';
         const end = '}';
@@ -75,7 +75,7 @@ class TableData {
         return JSON.parse(encoded);
     }
     dataAsString() {
-        //returns a string representing a string[][] containing Pixel colors
+        //returns a string representing a string[][] containing Pixel colors in hex
         let s = "[";
         this.pixels.forEach(row => {
             s += "[";
@@ -89,7 +89,7 @@ class TableData {
         s += "]";
         return s;
     }
-    createFile(obj) {
+    createBlob(obj) {
         let content = JSON.stringify(obj);
         let file = new Blob([content], { type: "text" });
         return file;

@@ -24,6 +24,7 @@ function initialise() {
 //#region tests
 function testFunction() { test2(); }
 function test2() {
+    //display selected file
     const stringData = fileContent;
     if (!stringData) {
         console.log("fileContent has not been read successfully");
@@ -34,6 +35,7 @@ function test2() {
     rederer.draw(data);
 }
 function test1() {
+    //log pf1-encoded tableData
     data.testFrame();
     rederer.draw(data);
     console.log(data.encode("pf1"));
@@ -41,6 +43,7 @@ function test1() {
 //#endregion
 //#region drawing table
 function initialRender() {
+    //creates new TableData (from inputs) and TableRender
     data = new TableData(getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
     rederer = new TableRender(tableContainerId);
     rederer.initTable(data);
@@ -54,9 +57,8 @@ function regenerateTable() {
 //#endregion
 //#region inputs/outputs
 function save(ev) {
-    const date = new Date;
-    const name = date.getFullYear() + date.getMonth() + date.getDate() + "_data.json";
-    const file = data.createFile(data.encode("pf1"));
+    const name = newFilename();
+    const file = data.createBlob(data.encode("pf1"));
     var dlink = document.createElement('a');
     dlink.download = name;
     dlink.href = window.URL.createObjectURL(file);
@@ -70,9 +72,10 @@ function save(ev) {
     dlink.click();
     dlink.remove();
 }
-function saveAsPf1() {
-    let encoded = JSON.stringify(data.encode("pf1"));
-    const mime = "text/plain";
+function newFilename() {
+    const date = new Date;
+    const name = "" + date.getFullYear() + date.getMonth() + date.getDate() + "_data.json";
+    return name;
 }
 //inputs below
 function readInputFile() {
