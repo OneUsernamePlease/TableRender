@@ -55,15 +55,15 @@ class TableData {
     encode(format) {
         let encoded = new Object;
         switch (format) {
-            case "mf1":
-                encoded = this.encodeMf1();
+            case "pf1":
+                encoded = this.encodePf1();
                 break;
             default:
                 break;
         }
         return encoded;
     }
-    encodeMf1() {
+    encodePf1() {
         let encoded = "";
         const start = '{"meta":{"format":"pf1"},"imgdata":';
         const end = '}';
@@ -84,6 +84,11 @@ class TableData {
         s = s.slice(0, -1);
         s += "]";
         return s;
+    }
+    createFile(obj) {
+        let content = JSON.stringify(obj);
+        let file = new Blob([content], { type: "json" });
+        return file;
     }
     //#endregion
     //#region everyting related to drawing/updating image data

@@ -1,8 +1,8 @@
 "use strict";
 /* TODO
 get rid of height, width property of tableData
-reading file does not work yet
 in tableData, create a second table, same size, of booleans, keeping track of whether a cell was updated. then use this info when drawing
+img format enums and interfaces
 */
 //#region initialisation
 let tableContainerId = "tableContainer";
@@ -11,10 +11,11 @@ let rederer;
 let fileContent;
 document.addEventListener("DOMContentLoaded", initialise);
 function initialise() {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     (_a = document.getElementById("testBtn")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", testFunction);
     (_b = document.getElementById("btnGenerateTable")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", regenerateTable);
-    (_c = document.getElementById("imgInput")) === null || _c === void 0 ? void 0 : _c.addEventListener("change", readInputFile);
+    (_c = document.getElementById("save")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", save);
+    (_d = document.getElementById("imgInput")) === null || _d === void 0 ? void 0 : _d.addEventListener("change", readInputFile);
     initialRender();
     readInputFile();
     document.removeEventListener("DOMContentLoaded", initialise);
@@ -35,7 +36,7 @@ function test2() {
 function test1() {
     data.testFrame();
     rederer.draw(data);
-    console.log(data.encode("mf1"));
+    console.log(data.encode("pf1"));
 }
 //#endregion
 //#region drawing table
@@ -51,7 +52,13 @@ function regenerateTable() {
     initialRender();
 }
 //#endregion
-//#region inputs
+//#region inputs/outputs
+function save(ev) {
+    saveAsPf1();
+}
+function saveAsPf1() {
+    let encoded = JSON.stringify(data.encode("pf1"));
+}
 function readInputFile() {
     //read the content of file selected in input (json only) as a string
     //loads the content to global fileContent
@@ -61,16 +68,15 @@ function readInputFile() {
         return null;
     }
     const file = files[0];
-    // I HAVE ZERO CLUE WHAT THE SUPER HORNY GRANNY FUCK IS GOING ON IN HERE AND DEBUGGING DOES NOT HELP AT ALL...
-    // setting a breakpoint inside onload can be reached, but breaking outside and trying to step in does not work
-    if (!!file) {
+    // setting a breakpoint inside onload can be reached, but breaking outside and trying to step in does not work ??
+    if (file) {
         const reader = new FileReader;
+        reader.readAsText(file);
         reader.onload = () => {
             const content = reader.result;
             console.log(content);
             fileContent = content;
         };
-        reader.readAsText(file);
     }
 }
 function getInputString(inputId) {

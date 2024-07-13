@@ -69,8 +69,8 @@ class TableData {
         let encoded: object = new Object;
 
         switch (format) {
-            case "mf1":
-                encoded = this.encodeMf1();            
+            case "pf1":
+                encoded = this.encodePf1();            
                 break;
         
             default:
@@ -78,7 +78,7 @@ class TableData {
         }
         return encoded;
     }
-    public encodeMf1(): object {
+    public encodePf1(): object {
         let encoded: string = "";
         const start = '{"meta":{"format":"pf1"},"imgdata":';
         const end = '}';
@@ -102,6 +102,12 @@ class TableData {
         s += "]";
 
         return s;
+    }
+
+    public createFile(obj: JSON): Blob {
+        let content = JSON.stringify(obj);
+        let file: Blob = new Blob([content], {type: "json"});
+        return file;
     }
 
 //#endregion
