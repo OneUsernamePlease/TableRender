@@ -50,10 +50,10 @@ class TableData {
 
 //#region en/decode
 
-    public fromJson(json: {imgData: string[][]}) {
-        let data: string[][] = json.imgData;
+    public fromJson(json: {imgdata: string[][]}) {
+        let data = json.imgdata;
         let height = Math.max(data.length, 1);
-        let widths: number[] = data.map((x) => x.length); //get array of the string-arrays' lengths in imgData
+        let widths: number[] = data.map((x) => x.length); //get array of the string-arrays' lengths in imgdata
         let width = Math.max(...widths, 1);
 
         this.setDimensions(height, width);

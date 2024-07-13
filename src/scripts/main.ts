@@ -33,7 +33,7 @@ function test2() {
         console.log("fileContent has not been read successfully");
         return;
     }
-    const jsonData: {imgData: string[][]} = JSON.parse(stringData);
+    const jsonData: {imgdata: string[][]} = JSON.parse(stringData);
     data.fromJson(jsonData);
     rederer.draw(data);
 }
