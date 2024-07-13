@@ -1,20 +1,24 @@
 /* TODO
 get rid of height, width property of tableData
 reading file does not work yet
+in tableData, create a second table, same size, of booleans, keeping track of whether a cell was updated. then use this info when drawing
 */
 
 //#region initialisation
 let tableContainerId = "tableContainer";
 let data: TableData; 
 let rederer: TableRender;
+let fileContent: string;
 
 document.addEventListener("DOMContentLoaded", initialise);
 function initialise() {
     document.getElementById!("testBtn")?.addEventListener("click", testFunction);
     document.getElementById!("btnGenerateTable")?.addEventListener("click", regenerateTable);
+    document.getElementById!("imgInput")?.addEventListener("change", readInputFile);
 
     initialRender();
-    
+    readInputFile();
+
     document.removeEventListener("DOMContentLoaded", initialise);
 }
 
@@ -24,16 +28,15 @@ function initialise() {
 function testFunction() { test2(); }
 
 function test2() {
-    const stringData: string | null = getInputFile("imgInput")
-    if (stringData === null) {
-        console.log("cannot load string data from fileInput");
+    const stringData: string = fileContent;
+    if (!stringData) {
+        console.log("fileContent has not been read successfully");
         return;
     }
     const jsonData: {imgData: string[][]} = JSON.parse(stringData);
     data.fromJson(jsonData);
     rederer.draw(data);
 }
-
 function test1() {
     data.testFrame();
     rederer.draw(data);
@@ -60,19 +63,25 @@ function regenerateTable() {
 //#endregion
 
 //#region inputs
-function getInputFile(inputId: string): string | null {
-    //returns the content of file selected in input (json only) as a string
-    //let reader = new FileReader; // mgl 2
-    let files: FileList | null= (<HTMLInputElement>document.getElementById(inputId)!).files;
-
-    if (files === null) {return null;}
+function readInputFile() {
+    //read the content of file selected in input (json only) as a string
+    //loads the content to global fileContent
+    //call on fileInput's change
+    let files: FileList | null = (<HTMLInputElement>document.getElementById("imgInput")).files;
     
-    for (const file of files) {
-    let content = file.text; //mgl 1 ? //funktioniert NICHT.....
-    return content.toString();
+    if (files === null) {return null;}
+    const file = files[0];
+    // I HAVE ZERO CLUE WHAT THE SUPER HORNY GRANNY FUCK IS GOING ON IN HERE AND DEBUGGING DOES NOT HELP AT ALL...
+    // setting a breakpoint inside onload can be reached, but breaking outside and trying to step in does not work
+    if (!!file) {
+        const reader = new FileReader;
+        reader.onload = () => {
+            const content = reader.result;
+            console.log(content);
+            fileContent = content as string;
+        };
+        reader.readAsText(file);
     }
-    return null;
-    //reader.readAsText(files[0]); //mgl 2 ?
 }
 
 function getInputString(inputId: string): string {

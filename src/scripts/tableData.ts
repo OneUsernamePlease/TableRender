@@ -51,14 +51,15 @@ class TableData {
 //#region en/decode
 
     public fromJson(json: {imgData: string[][]}) {
-        let height = Math.max(json.imgData.length, 1);
-        let widths: number[] = json.imgData.map((x) => x.length);
+        let data: string[][] = json.imgData;
+        let height = Math.max(data.length, 1);
+        let widths: number[] = data.map((x) => x.length); //get array of the string-arrays' lengths in imgData
         let width = Math.max(...widths, 1);
 
         this.setDimensions(height, width);
         for (let i = 0; i < height; i++) {
             for (let j = 0; j < width; j++) {
-                this.setPixelColor(i, j, json.imgData[i][j]);
+                this.setPixelColor(i, j, data[i][j]);
             };
             
         }

@@ -2,26 +2,30 @@
 /* TODO
 get rid of height, width property of tableData
 reading file does not work yet
+in tableData, create a second table, same size, of booleans, keeping track of whether a cell was updated. then use this info when drawing
 */
 //#region initialisation
 let tableContainerId = "tableContainer";
 let data;
 let rederer;
+let fileContent;
 document.addEventListener("DOMContentLoaded", initialise);
 function initialise() {
-    var _a, _b;
+    var _a, _b, _c;
     (_a = document.getElementById("testBtn")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", testFunction);
     (_b = document.getElementById("btnGenerateTable")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", regenerateTable);
+    (_c = document.getElementById("imgInput")) === null || _c === void 0 ? void 0 : _c.addEventListener("change", readInputFile);
     initialRender();
+    readInputFile();
     document.removeEventListener("DOMContentLoaded", initialise);
 }
 //#endregion
 //#region tests
 function testFunction() { test2(); }
 function test2() {
-    const stringData = getInputFile("imgInput");
-    if (stringData === null) {
-        console.log("cannot load string data from fileInput");
+    const stringData = fileContent;
+    if (!stringData) {
+        console.log("fileContent has not been read successfully");
         return;
     }
     const jsonData = JSON.parse(stringData);
@@ -48,19 +52,26 @@ function regenerateTable() {
 }
 //#endregion
 //#region inputs
-function getInputFile(inputId) {
-    //returns the content of file selected in input (json only) as a string
-    //let reader = new FileReader; // mgl 2
-    let files = document.getElementById(inputId).files;
+function readInputFile() {
+    //read the content of file selected in input (json only) as a string
+    //loads the content to global fileContent
+    //call on fileInput's change
+    let files = document.getElementById("imgInput").files;
     if (files === null) {
         return null;
     }
-    for (const file of files) {
-        let content = file.text; //mgl 1 ? //funktioniert NICHT.....
-        return content.toString();
+    const file = files[0];
+    // I HAVE ZERO CLUE WHAT THE SUPER HORNY GRANNY FUCK IS GOING ON IN HERE AND DEBUGGING DOES NOT HELP AT ALL...
+    // setting a breakpoint inside onload can be reached, but breaking outside and trying to step in does not work
+    if (!!file) {
+        const reader = new FileReader;
+        reader.onload = () => {
+            const content = reader.result;
+            console.log(content);
+            fileContent = content;
+        };
+        reader.readAsText(file);
     }
-    return null;
-    //reader.readAsText(files[0]); //mgl 2 ?
 }
 function getInputString(inputId) {
     //return value of input element by id
