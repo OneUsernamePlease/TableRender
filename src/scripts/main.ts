@@ -63,14 +63,32 @@ function regenerateTable() {
 
 //#region inputs/outputs
 function save(this: HTMLElement, ev: MouseEvent) {
-    saveAsPf1();
+    const date: Date = new Date;
+    const name: string = date.getFullYear() + date.getMonth() + date.getDate() + "_data.json";
+    const file = data.createFile(<JSON>data.encode("pf1"));
+
+    var dlink = document.createElement('a');
+    dlink.download = name;
+    dlink.href = window.URL.createObjectURL(file);
+    dlink.onclick = function(e) {
+        // revokeObjectURL needs a delay to work properly
+        var that = this;
+        setTimeout(function() {
+            window.URL.revokeObjectURL(dlink.href);
+        }, 1500);
+    };
+
+    dlink.click();
+    dlink.remove();
 }
 
 function saveAsPf1() {
     let encoded: string = JSON.stringify(data.encode("pf1"));
-    
+    const mime = "text/plain"
+
 }
 
+//inputs below
 function readInputFile() {
     //read the content of file selected in input (json only) as a string
     //loads the content to global fileContent

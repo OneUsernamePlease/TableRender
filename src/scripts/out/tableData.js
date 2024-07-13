@@ -53,6 +53,7 @@ class TableData {
         }
     }
     encode(format) {
+        //returns a json object containing tableData encoded with format
         let encoded = new Object;
         switch (format) {
             case "pf1":
@@ -64,6 +65,8 @@ class TableData {
         return encoded;
     }
     encodePf1() {
+        //returns a pf1-json object
+        //(containing tableData as string[][])
         let encoded = "";
         const start = '{"meta":{"format":"pf1"},"imgdata":';
         const end = '}';
@@ -72,6 +75,7 @@ class TableData {
         return JSON.parse(encoded);
     }
     dataAsString() {
+        //returns a string representing a string[][] containing Pixel colors
         let s = "[";
         this.pixels.forEach(row => {
             s += "[";
@@ -87,7 +91,7 @@ class TableData {
     }
     createFile(obj) {
         let content = JSON.stringify(obj);
-        let file = new Blob([content], { type: "json" });
+        let file = new Blob([content], { type: "text" });
         return file;
     }
     //#endregion
@@ -99,11 +103,12 @@ class TableData {
         this.pixels[row][col].setColor(color);
     }
     setDimensions(height, width) {
+        //resize this.pixles
         this.setHeight(height);
         this.setWidth(width);
     }
     setWidth(newWidth) {
-        //add/remove pixels to/from every row in this.pixels
+        //add/remove pixels to/from every row in this.pixels, until its length matches newWidth
         //set property this.tableWidth
         if (newWidth < 1) {
             return;

@@ -66,11 +66,12 @@ class TableData {
     }
 
     public encode(format: string): object {
+        //returns a json object containing tableData encoded with format
         let encoded: object = new Object;
 
         switch (format) {
             case "pf1":
-                encoded = this.encodePf1();            
+                encoded = this.encodePf1();
                 break;
         
             default:
@@ -79,6 +80,8 @@ class TableData {
         return encoded;
     }
     public encodePf1(): object {
+        //returns a pf1-json object
+        //(containing tableData as string[][])
         let encoded: string = "";
         const start = '{"meta":{"format":"pf1"},"imgdata":';
         const end = '}';
@@ -89,6 +92,7 @@ class TableData {
         return JSON.parse(encoded);
     }
     public dataAsString(): string {
+        //returns a string representing a string[][] containing Pixel colors
         let s = "["; 
         this.pixels.forEach(row => {
             s += "["
@@ -106,7 +110,7 @@ class TableData {
 
     public createFile(obj: JSON): Blob {
         let content = JSON.stringify(obj);
-        let file: Blob = new Blob([content], {type: "json"});
+        let file: Blob = new Blob([content], {type: "text"});
         return file;
     }
 
@@ -118,14 +122,13 @@ class TableData {
         if (this.pixels[row][col] === undefined) {return;}
         this.pixels[row][col].setColor(color);
     }
-
     public setDimensions(height: number, width: number) {
+        //resize this.pixles
         this.setHeight(height);
         this.setWidth(width);
     }
-
     public setWidth(newWidth: number) {
-        //add/remove pixels to/from every row in this.pixels
+        //add/remove pixels to/from every row in this.pixels, until its length matches newWidth
         //set property this.tableWidth
         if (newWidth < 1) {return;}
         for (let i = 0; i < this.tableHeight; i++) {
@@ -138,7 +141,6 @@ class TableData {
         }
         this.tableWidth = newWidth;
     }
-    
     public addPixels(rowIdx: number, n: number) {
         //adds n pixels to this.pixels, to row at rowIdx
         for (let i = 0; i < n; i++) {
@@ -146,14 +148,12 @@ class TableData {
             this.pixels[rowIdx][curRowLength] = new Pixel();
         }
     }
-
     public removePixels(rowIdx: number, n: number) {
         //removes n pixels from this.pixels, from row at rowIdx
         for (let i = 0; i < n; i++) {
             this.pixels[rowIdx].pop();
         }
     }
-
     public setHeight(newHeight: number) {
         if (newHeight < 1) {return;}
         if (newHeight < this.tableHeight) {
@@ -163,7 +163,6 @@ class TableData {
         }
         this.tableHeight = newHeight;
     }
-
     public addRows(n: number) {
         //adds n rows to pixels, these new rows are empty arrays
         const height = this.pixels.length;
@@ -171,7 +170,6 @@ class TableData {
             this.pixels[height + i] = [];
         }
     }
-
     public removeRows(n: number) {
         //removes n rows from pixels
         for (let i = 0; i < n; i++) {
@@ -179,5 +177,4 @@ class TableData {
         }
     }
 //#endregion
-
 }

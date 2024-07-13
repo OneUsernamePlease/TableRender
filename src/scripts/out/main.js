@@ -54,11 +54,27 @@ function regenerateTable() {
 //#endregion
 //#region inputs/outputs
 function save(ev) {
-    saveAsPf1();
+    const date = new Date;
+    const name = date.getFullYear() + date.getMonth() + date.getDate() + "_data.json";
+    const file = data.createFile(data.encode("pf1"));
+    var dlink = document.createElement('a');
+    dlink.download = name;
+    dlink.href = window.URL.createObjectURL(file);
+    dlink.onclick = function (e) {
+        // revokeObjectURL needs a delay to work properly
+        var that = this;
+        setTimeout(function () {
+            window.URL.revokeObjectURL(dlink.href);
+        }, 1500);
+    };
+    dlink.click();
+    dlink.remove();
 }
 function saveAsPf1() {
     let encoded = JSON.stringify(data.encode("pf1"));
+    const mime = "text/plain";
 }
+//inputs below
 function readInputFile() {
     //read the content of file selected in input (json only) as a string
     //loads the content to global fileContent
@@ -71,12 +87,12 @@ function readInputFile() {
     // setting a breakpoint inside onload can be reached, but breaking outside and trying to step in does not work ??
     if (file) {
         const reader = new FileReader;
-        reader.readAsText(file);
         reader.onload = () => {
             const content = reader.result;
             console.log(content);
             fileContent = content;
         };
+        reader.readAsText(file);
     }
 }
 function getInputString(inputId) {
