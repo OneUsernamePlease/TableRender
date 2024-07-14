@@ -57,7 +57,9 @@ body {
 }
 
 table {
-    border-collapse: collapse;
+    border-collapse: separate;
+    border: 5px black solid;
+    border-spacing: 0px;
 }
 
 
