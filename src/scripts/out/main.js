@@ -64,7 +64,6 @@ function save() {
     var dlink = document.createElement('a');
     dlink.download = name;
     dlink.href = window.URL.createObjectURL(file);
-    console.log(dlink.href);
     dlink.onclick = () => {
         // revokeObjectURL needs a delay to work properly
         setTimeout(() => {
@@ -115,18 +114,23 @@ function getInputNumber(inputId) {
 }
 function isNumeric(s) {
     //returns true if s is a valid number, returns false otherwise
+    //empty string is NOT considered numeric
     s = s.trim();
     return ((!isNaN(+s)) && s.length !== 0) ? true : false;
     //what? -->
     //+stringA converts stringA to number, if stringA is not numeric result = NaN, if it is numeric, result is stringA as number. "!isNan(+stringA)" is true if stringA is numeric, otherwise false
 }
-function enforceInputNumber(ev) {
+function enforceInputNumber() {
     //enforces, that value of input this, is not below its min, or above its max value
-    //enfocres, that only a numeric string can be entered
+    //enforces, that only a numeric (integer) string can be entered
     let that = this;
-    const min = isNumeric(that.min) ? +that.min : Number.MIN_VALUE; //aaaaah you can do better
-    const max = isNumeric(that.max) ? +that.max : Number.MAX_VALUE; //aaaaah you can do better
-    const curInput = that.value;
+    const min = (that.min !== "") ? +that.min : Number.MIN_VALUE;
+    const max = (that.max !== "") ? +that.max : Number.MAX_VALUE;
+    let curInput = that.value; //curInput = "" when value contains a non-numeric string
+    //while (curInput !== "" && !isNumeric(curInput.slice(-1))) {
+    //    curInput = curInput.slice(0, -1);
+    //}
+    that.value = (curInput === "") ? min.toString() : Math.min(max, Math.max(min, +curInput)).toString();
 }
 //#endregion
 //# sourceMappingURL=main.js.map

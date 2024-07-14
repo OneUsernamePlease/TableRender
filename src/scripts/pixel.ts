@@ -1,4 +1,7 @@
-//export module?? what and how and why
+/*
+export module???
+RGB ( red, green, blue ) = 65536 * Blue + 256 * Green + Red
+*/
 class Pixel {
         private color: string;
 

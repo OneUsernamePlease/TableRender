@@ -133,12 +133,13 @@ function enforceInputNumber(this: HTMLElement) {
     //enforces, that value of input this, is not below its min, or above its max value
     //enforces, that only a numeric (integer) string can be entered
     let that: HTMLInputElement = <HTMLInputElement>this;
-    const min: number = (that.min === "") ? +that.min : Number.MIN_VALUE;
-    const max: number = (that.max === "") ? +that.max : Number.MAX_VALUE;
-    let curInput = that.value;
-    while (!isNumeric(curInput.slice(-1))) {
-        curInput = curInput.slice(0, -1);
-    }
-    that.value =  (curInput === "") ? curInput : Math.min(max, Math.max(min, +curInput)).toString();
+    const min: number = (that.min !== "") ? +that.min : Number.MIN_VALUE;
+    const max: number = (that.max !== "") ? +that.max : Number.MAX_VALUE;
+    let curInput: string = that.value; //curInput = "" when value contains a non-numeric string
+
+    //while (curInput !== "" && !isNumeric(curInput.slice(-1))) {
+    //    curInput = curInput.slice(0, -1);
+    //}
+    that.value = (curInput === "") ? min.toString() : Math.min(max, Math.max(min, +curInput)).toString();
 }
 //#endregion

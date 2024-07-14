@@ -40,6 +40,7 @@ class TableData {
     }
     //#region en/decode
     fromJson(json) {
+        //load from json (has to be pf1), and draw
         let data = json.imgdata;
         let height = Math.max(data.length, 1);
         let widths = data.map((x) => x.length); //get array of the string-arrays' lengths in imgdata
@@ -90,6 +91,8 @@ class TableData {
         return s;
     }
     createBlob(obj) {
+        //create a blob from json-object (containing the encoded data)
+        //to be used in creating a file
         let content = JSON.stringify(obj);
         let file = new Blob([content], { type: "text" });
         return file;
@@ -139,6 +142,7 @@ class TableData {
         }
     }
     setHeight(newHeight) {
+        //add/remove rows until pixels[][]'s length matches newHeight
         if (newHeight < 1) {
             return;
         }

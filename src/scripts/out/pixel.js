@@ -1,7 +1,6 @@
 "use strict";
 /*
-export module?
-
+export module???
 RGB ( red, green, blue ) = 65536 * Blue + 256 * Green + Red
 */
 class Pixel {
