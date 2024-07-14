@@ -24,9 +24,9 @@ class TableData {
 //#endregion
     private initTableData(): Pixel[][] {
         let pixel: Pixel[][] = [];
-        for(let i = 0; i < this.tableHeight; i++){
+        for(let i = 0; i < this.tableHeight; i++) {
             pixel[i] = [];
-            for(let j = 0; j < this.tableWidth; j++){
+            for(let j = 0; j < this.tableWidth; j++) {
                 pixel[i][j] = new Pixel();
             }
         }
@@ -42,7 +42,8 @@ class TableData {
         }
     }
 //#region en/decode
-    public fromJson(json: {imgdata: string[][]}) {
+    public fromJson(json: {imgdata: string[][], format?: string}) {
+        //load from json (has to be pf1), and draw
         let data = json.imgdata;
         let height = Math.max(data.length, 1);
         let widths: number[] = data.map((x) => x.length); //get array of the string-arrays' lengths in imgdata
@@ -99,14 +100,17 @@ class TableData {
         return s;
     }
     public createBlob(obj: JSON): Blob {
+        //create a blob from json-object (containing the encoded data)
+        //to be used in creating a file
         let content = JSON.stringify(obj);
         let file: Blob = new Blob([content], {type: "text"});
         return file;
     }
 //#endregion
 
-//#region everyting related to drawing/updating image data
+//#region drawing/updating image data
     public setPixelColor(row: number, col: number, color: string) {
+        //0,0 is top left
         if (this.pixels[row][col] === undefined) {return;}
         this.pixels[row][col].setColor(color);
     }
@@ -143,6 +147,7 @@ class TableData {
         }
     }
     public setHeight(newHeight: number) {
+        //add/remove rows until pixels[][]'s length matches newHeight
         if (newHeight < 1) {return;}
         if (newHeight < this.tableHeight) {
             this.removeRows(this.tableHeight - newHeight);

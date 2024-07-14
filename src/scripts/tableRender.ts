@@ -6,12 +6,12 @@ class TableRender {
 //#region constructor, get, set
     constructor(parentElementId: string) {
         this.parentElementId = parentElementId;
-        this.elementId = "tableRender" + Math.floor(Math.random() * 1000)
+        this.elementId = "tableRender";
         this.htmlTable = document.createElement("table");
     }
 //#endregion
-
     public initTable(tableData: TableData) {
+        //this should be removed, and this.draw should be expanded, to work when no table exists
         let cellClassName = "pixel";
         let tableHeight = tableData.getTableHeight();
         let tableWidth = tableData.getTableWidth();
@@ -23,7 +23,7 @@ class TableRender {
                 let cell = document.createElement("td");
                 cell.classList.add(cellClassName);
                 //cell.setAttribute("style", `width: ${pixelWidth}; height: ${pixelWidth}`); //no but i dont want inline style for height and width. i want to change main.css
-                cell.setAttribute("style", "background-color: " + tableData.getPixel(i, j).getColor());
+                this.setColor(cell, tableData.getPixel(i, j).getColor());
                 row.appendChild(cell);
             }
             this.htmlTable.appendChild(row);
@@ -34,6 +34,7 @@ class TableRender {
             this.htmlTable.remove();
     }
     public draw(tableData: TableData) {
+        //draw tableData
         let pixels: Pixel[][] = tableData.getAllPixels();
         let height = tableData.getTableHeight();
         let width = tableData.getTableWidth();

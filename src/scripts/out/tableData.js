@@ -95,8 +95,9 @@ class TableData {
         return file;
     }
     //#endregion
-    //#region everyting related to drawing/updating image data
+    //#region drawing/updating image data
     setPixelColor(row, col, color) {
+        //0,0 is top left
         if (this.pixels[row][col] === undefined) {
             return;
         }

@@ -11,11 +11,14 @@ let rederer: TableRender;
 let fileContent: string;
 
 document.addEventListener("DOMContentLoaded", initialise);
+
 function initialise() {
     document.getElementById!("testBtn")?.addEventListener("click", testFunction);
     document.getElementById!("btnGenerateTable")?.addEventListener("click", regenerateTable);
     document.getElementById!("save")?.addEventListener("click", save);
     document.getElementById!("imgInput")?.addEventListener("change", readInputFile);
+    document.getElementById!("tableWidthInput")?.addEventListener("keyup", enforceInputNumber);
+
 
     initialRender();
     readInputFile();
@@ -25,8 +28,7 @@ function initialise() {
 //#endregion
 
 //#region tests
-function testFunction() { test2(); }
-
+let testFunction = () => { test2(); }
 function test2() {
     //display selected file
     const stringData: string = fileContent;
@@ -53,7 +55,6 @@ function initialRender() {
     rederer = new TableRender(tableContainerId);
     rederer.initTable(data);  
 }
-
 function regenerateTable() {
     //remove table w/ id tableId
     //draw a new table, according to spec
@@ -62,18 +63,18 @@ function regenerateTable() {
 }
 //#endregion
 
-//#region inputs/outputs
-function save(this: HTMLElement, ev: MouseEvent) {
+//#region export/outputs
+function save() {
+    //encode tableData and save/download it as json
     const name = newFilename();
     const file = data.createBlob(<JSON>data.encode("pf1"));
 
     var dlink = document.createElement('a');
     dlink.download = name;
     dlink.href = window.URL.createObjectURL(file);
-    dlink.onclick = function(e) {
+    dlink.onclick = () => {
         // revokeObjectURL needs a delay to work properly
-        var that = this;
-        setTimeout(function() {
+        setTimeout(() => {
             window.URL.revokeObjectURL(dlink.href);
         }, 1500);
     };
@@ -81,13 +82,13 @@ function save(this: HTMLElement, ev: MouseEvent) {
     dlink.remove();
 }
 function newFilename(): string {
+    //return a name which is suggested when downloading tableData
     const date: Date = new Date;
-    const name: string = "" + date.getFullYear() + date.getMonth() + date.getDate() + "_data.json";
-
-    return name;
+    return "" + date.getFullYear() + date.getMonth() + date.getDate() + "_data.json";
 } 
+//#endregion
 
-//inputs below
+//#region inputs
 function readInputFile() {
     //read the content of file selected in input (json only) as a string
     //loads the content to global fileContent
@@ -107,20 +108,37 @@ function readInputFile() {
         reader.readAsText(file);
     }
 }
-
 function getInputString(inputId: string): string {
     //return value of input element by id
     let input: HTMLElement | null;
     input = document.getElementById(inputId);
     return (!!input) ? (input as HTMLInputElement).value.trim() : "";
 }
-
 function getInputNumber(inputId: string): number {
     //returns value of input element by id
     //returns 0 if input's value is not numeric
     let inputValue: string = getInputString(inputId);
-    //because i will forget:
+    return isNumeric(inputValue) ? +inputValue : 0;
+}
+function isNumeric(s: string): boolean {
+    //returns true if s is a valid number, returns false otherwise
+    //empty string is NOT considered numeric
+    s = s.trim();
+    return ((!isNaN(+s)) && s.length !== 0) ? true : false;
+    //what? -->
     //+stringA converts stringA to number, if stringA is not numeric result = NaN, if it is numeric, result is stringA as number. "!isNan(+stringA)" is true if stringA is numeric, otherwise false
-    return (!isNaN(+inputValue)) ? +inputValue : 0;
+}
+
+function enforceInputNumber(this: HTMLElement) {
+    //enforces, that value of input this, is not below its min, or above its max value
+    //enforces, that only a numeric (integer) string can be entered
+    let that: HTMLInputElement = <HTMLInputElement>this;
+    const min: number = (that.min === "") ? +that.min : Number.MIN_VALUE;
+    const max: number = (that.max === "") ? +that.max : Number.MAX_VALUE;
+    let curInput = that.value;
+    while (!isNumeric(curInput.slice(-1))) {
+        curInput = curInput.slice(0, -1);
+    }
+    that.value =  (curInput === "") ? curInput : Math.min(max, Math.max(min, +curInput)).toString();
 }
 //#endregion
