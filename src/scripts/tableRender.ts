@@ -64,13 +64,13 @@ class TableRender {
             this.removeRows(rowCnt - newHeight);
         }
     }
-    public addRows(diff: number) {
-        for (let i = 0; i < diff; i++) {
+    public addRows(n: number) {
+        for (let i = 0; i < n; i++) {
             this.htmlTable.insertRow(-1);
         }
     }
-    public removeRows(diff: number) {
-        for (let i = 0; i < diff; i++) {
+    public removeRows(n: number) {
+        for (let i = 0; i < n; i++) {
             this.htmlTable.deleteRow(-1);
         }
     }
@@ -86,15 +86,15 @@ class TableRender {
             }
         }
     }
-    public addCells(row: HTMLTableRowElement, diff: number) {
+    public addCells(row: HTMLTableRowElement, n: number) {
         let cellClassName = "pixel";
-        for (let i = 0; i < diff; i++) {
+        for (let i = 0; i < n; i++) {
             const cell: HTMLTableCellElement = row.insertCell(-1);
             cell.classList.add(cellClassName);
         }
     }
-    public removeCells(row: HTMLTableRowElement, diff: number) {
-        for (let i = 0; i < diff; i++) {
+    public removeCells(row: HTMLTableRowElement, n: number) {
+        for (let i = 0; i < n; i++) {
             row.deleteCell(-1);
         }
     }

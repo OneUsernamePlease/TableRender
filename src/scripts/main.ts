@@ -63,7 +63,7 @@ function regenerateTable() {
 }
 //#endregion
 
-//#region export/outputs
+//#region export
 function save() {
     //encode tableData and save/download it as json
     const name = newFilename();
@@ -128,15 +128,13 @@ function isNumeric(s: string): boolean {
     //what? -->
     //+stringA converts stringA to number, if stringA is not numeric result = NaN, if it is numeric, result is stringA as number. "!isNan(+stringA)" is true if stringA is numeric, otherwise false
 }
-
 function enforceInputNumber(this: HTMLElement) {
     //enforces, that value of input this, is not below its min, or above its max value
     //enforces, that only a numeric (integer) string can be entered
     let that: HTMLInputElement = <HTMLInputElement>this;
     const min: number = (that.min !== "") ? +that.min : Number.MIN_VALUE;
     const max: number = (that.max !== "") ? +that.max : Number.MAX_VALUE;
-    let curInput: string = that.value; //curInput = "" when value contains a non-numeric string
-
+    let curInput: string = that.value; //value non-numeric --> curInput = ""
     //while (curInput !== "" && !isNumeric(curInput.slice(-1))) {
     //    curInput = curInput.slice(0, -1);
     //}
