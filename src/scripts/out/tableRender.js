@@ -2,43 +2,41 @@
 class TableRender {
     //#region constructor, get, set
     constructor(parentElementId) {
-        this.parentElementId = parentElementId;
-        this.elementId = "tableRender";
-        this.htmlTable = document.createElement("table");
+        this._parentElementId = parentElementId;
+        this._elementId = "tableRender" + Math.floor(Math.random() * (100000));
+        this._htmlTable = document.createElement("table");
+        this.initTable();
+    }
+    get elementId() {
+        return this._elementId;
+    }
+    get parentElementId() {
+        return this._parentElementId;
+    }
+    set parentElementId(id) {
+        this._parentElementId = id;
+    }
+    get htmlTable() {
+        return this._htmlTable;
     }
     //#endregion
-    initTable(tableData) {
-        //this should be removed, and this.draw should be expanded, to work when no table exists
-        let cellClassName = "pixel";
-        let tableHeight = tableData.getTableHeight();
-        let tableWidth = tableData.getTableWidth();
+    initTable() {
+        //set id and append the table to the DOM
         this.htmlTable.setAttribute("id", this.elementId);
-        for (let i = 0; i < tableHeight; i++) {
-            let row = document.createElement("tr");
-            for (let j = 0; j < tableWidth; j++) {
-                let cell = document.createElement("td");
-                cell.classList.add(cellClassName);
-                //cell.setAttribute("style", `width: ${pixelWidth}; height: ${pixelWidth}`); //no but i dont want inline style for height and width. i want to change main.css
-                this.setColor(cell, tableData.getPixel(i, j).getColor());
-                row.appendChild(cell);
-            }
-            this.htmlTable.appendChild(row);
-        }
         document.getElementById(this.parentElementId).appendChild(this.htmlTable);
     }
-    removeTable() {
-        this.htmlTable.remove();
+    clearTable() {
+        this.removeRows(this.htmlTable.rows.length);
     }
     draw(tableData) {
         //draw tableData
-        let pixels = tableData.getAllPixels();
-        let height = tableData.getTableHeight();
-        let width = tableData.getTableWidth();
+        let height = tableData.tableHeight;
+        let width = tableData.tableWidth;
         this.resizeTable(height, width);
         for (let row = 0; row < height; row++) {
             const curRow = this.htmlTable.rows[row];
-            for (let cell = 0; cell < tableData.getTableWidth(); cell++) {
-                this.setColor(curRow.cells[cell], pixels[row][cell].getColor());
+            for (let cell = 0; cell < tableData.tableWidth; cell++) {
+                this.setColor(curRow.cells[cell], tableData.getPixel(row, cell).color);
             }
         }
     }
@@ -59,13 +57,13 @@ class TableRender {
             this.removeRows(rowCnt - newHeight);
         }
     }
-    addRows(diff) {
-        for (let i = 0; i < diff; i++) {
+    addRows(n) {
+        for (let i = 0; i < n; i++) {
             this.htmlTable.insertRow(-1);
         }
     }
-    removeRows(diff) {
-        for (let i = 0; i < diff; i++) {
+    removeRows(n) {
+        for (let i = 0; i < n; i++) {
             this.htmlTable.deleteRow(-1);
         }
     }
@@ -81,15 +79,15 @@ class TableRender {
             }
         }
     }
-    addCells(row, diff) {
+    addCells(row, n) {
         let cellClassName = "pixel";
-        for (let i = 0; i < diff; i++) {
+        for (let i = 0; i < n; i++) {
             const cell = row.insertCell(-1);
             cell.classList.add(cellClassName);
         }
     }
-    removeCells(row, diff) {
-        for (let i = 0; i < diff; i++) {
+    removeCells(row, n) {
+        for (let i = 0; i < n; i++) {
             row.deleteCell(-1);
         }
     }

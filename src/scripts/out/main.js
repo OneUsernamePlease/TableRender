@@ -7,17 +7,20 @@ img format enums and interfaces
 //#region initialisation
 let tableContainerId = "tableContainer";
 let data;
-let rederer;
+let renderer;
 let fileContent;
 document.addEventListener("DOMContentLoaded", initialise);
 function initialise() {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d, _e, _f;
     (_a = document.getElementById("testBtn")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", testFunction);
     (_b = document.getElementById("btnGenerateTable")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", regenerateTable);
     (_c = document.getElementById("save")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", save);
-    (_d = document.getElementById("imgInput")) === null || _d === void 0 ? void 0 : _d.addEventListener("change", readInputFile);
-    (_e = document.getElementById("tableWidthInput")) === null || _e === void 0 ? void 0 : _e.addEventListener("keyup", enforceInputNumber);
-    initialRender();
+    (_d = document.getElementById("btnDisplayFile")) === null || _d === void 0 ? void 0 : _d.addEventListener("click", displayFile);
+    (_e = document.getElementById("imgInput")) === null || _e === void 0 ? void 0 : _e.addEventListener("change", readInputFile);
+    (_f = document.getElementById("tableWidthInput")) === null || _f === void 0 ? void 0 : _f.addEventListener("keyup", enforceInputNumber);
+    data = new TableData(getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
+    renderer = new TableRender(tableContainerId);
+    renderer.draw(data);
     readInputFile();
     document.removeEventListener("DOMContentLoaded", initialise);
 }
@@ -25,6 +28,25 @@ function initialise() {
 //#region tests
 let testFunction = () => { test2(); };
 function test2() {
+    //fill in random color
+    data.colorAll("#" + Math.floor(Math.random() * 16777215).toString(16));
+    renderer.draw(data);
+    console.log(data.encode("pf1"));
+}
+function test1() {
+    //log pf1-encoded tableData
+    console.log(data.encode("pf1"));
+    renderer.clearTable();
+}
+//#endregion
+//#region drawing table
+function regenerateTable() {
+    //remove table w/ id tableId
+    //draw a new table, according to spec
+    data.colorAll("#000000", getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
+    renderer.draw(data);
+}
+function displayFile() {
     //display selected file
     const stringData = fileContent;
     if (!stringData) {
@@ -33,30 +55,10 @@ function test2() {
     }
     const jsonData = JSON.parse(stringData);
     data.fromJson(jsonData);
-    rederer.draw(data);
-}
-function test1() {
-    //log pf1-encoded tableData
-    data.testFrame();
-    rederer.draw(data);
-    console.log(data.encode("pf1"));
+    renderer.draw(data);
 }
 //#endregion
-//#region drawing table
-function initialRender() {
-    //creates new TableData (from inputs) and TableRender
-    data = new TableData(getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
-    rederer = new TableRender(tableContainerId);
-    rederer.initTable(data);
-}
-function regenerateTable() {
-    //remove table w/ id tableId
-    //draw a new table, according to spec
-    rederer.removeTable();
-    initialRender();
-}
-//#endregion
-//#region export/outputs
+//#region export
 function save() {
     //encode tableData and save/download it as json
     const name = newFilename();
@@ -75,8 +77,8 @@ function save() {
 }
 function newFilename() {
     //return a name which is suggested when downloading tableData
-    const date = new Date;
-    return "" + date.getFullYear() + date.getMonth() + date.getDate() + "_data.json";
+    const color0 = data.getPixel(0, 0).color;
+    return color0 + "_data.json";
 }
 //#endregion
 //#region inputs
@@ -126,7 +128,7 @@ function enforceInputNumber() {
     let that = this;
     const min = (that.min !== "") ? +that.min : Number.MIN_VALUE;
     const max = (that.max !== "") ? +that.max : Number.MAX_VALUE;
-    let curInput = that.value; //curInput = "" when value contains a non-numeric string
+    let curInput = that.value; //value non-numeric --> curInput = ""
     //while (curInput !== "" && !isNumeric(curInput.slice(-1))) {
     //    curInput = curInput.slice(0, -1);
     //}

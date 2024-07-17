@@ -2,21 +2,27 @@
 class TableData {
     //#region constructor, get, set
     constructor(tableHeight, tableWidth) {
-        this.tableHeight = tableHeight;
-        this.tableWidth = tableWidth;
-        this.pixels = this.initTableData();
+        this._tableHeight = tableHeight;
+        this._tableWidth = tableWidth;
+        this._pixels = this.initTableData();
     }
-    getTableHeight() {
-        return this.tableHeight;
+    get tableHeight() {
+        return this._tableHeight;
     }
-    getTableWidth() {
-        return this.tableWidth;
+    get tableWidth() {
+        return this._tableWidth;
     }
-    getAllPixels() {
-        return this.pixels;
+    set tableHeight(height) {
+        this._tableHeight = height;
+    }
+    set tableWidth(width) {
+        this._tableWidth = width;
+    }
+    get pixels() {
+        return this._pixels;
     }
     getPixel(x, y) {
-        return this.pixels[x][y];
+        return this._pixels[x][y];
     }
     //#endregion
     initTableData() {
@@ -29,12 +35,17 @@ class TableData {
         }
         return pixel;
     }
-    testFrame() {
-        //this is a testfunction, going to be deleted at some point
-        this.setDimensions(50, 100);
+    colorAll(color, newHeight, newWidth) {
+        //color all pixles in color. if height and/or width are provided, resize.
+        if (newHeight != null) {
+            this.setHeight(newHeight);
+        }
+        if (newWidth != null) {
+            this.setWidth(newWidth);
+        }
         for (let i = 0; i < this.tableHeight; i++) {
             for (let j = 0; j < this.tableWidth; j++) {
-                this.setPixelColor(i, j, "#aa0000");
+                this.setPixelColor(i, j, color);
             }
         }
     }
@@ -81,7 +92,7 @@ class TableData {
         this.pixels.forEach(row => {
             s += "[";
             row.forEach(cell => {
-                s += "\"" + cell.getColor() + "\",";
+                s += "\"" + cell.color + "\",";
             });
             s = s.slice(0, -1);
             s += "],";
@@ -104,7 +115,7 @@ class TableData {
         if (this.pixels[row][col] === undefined) {
             return;
         }
-        this.pixels[row][col].setColor(color);
+        this.pixels[row][col].color = color;
     }
     setDimensions(height, width) {
         //resize this.pixles

@@ -38,12 +38,14 @@ class TableData {
         }
         return pixel;
     }
-    public testFrame() {
-        //this is a testfunction, going to be deleted at some point
-        this.setDimensions(50, 100);
+    public colorAll(color: string, newHeight?: number, newWidth?: number) {
+        //color all pixles in color. if height and/or width are provided, resize.
+        if (newHeight != null) { this.setHeight(newHeight);}
+        if (newWidth != null) { this.setWidth(newWidth);}
+        
         for(let i = 0; i < this.tableHeight; i++){
             for(let j = 0; j < this.tableWidth; j++) {
-                this.setPixelColor(i, j, "#aa0000");
+                this.setPixelColor(i, j, color);
             }
         }
     }

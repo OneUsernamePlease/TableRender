@@ -7,7 +7,7 @@ img format enums and interfaces
 //#region initialisation
 let tableContainerId = "tableContainer";
 let data: TableData; 
-let rederer: TableRender;
+let renderer: TableRender;
 let fileContent: string;
 
 document.addEventListener("DOMContentLoaded", initialise);
@@ -16,11 +16,14 @@ function initialise() {
     document.getElementById!("testBtn")?.addEventListener("click", testFunction);
     document.getElementById!("btnGenerateTable")?.addEventListener("click", regenerateTable);
     document.getElementById!("save")?.addEventListener("click", save);
+    document.getElementById!("btnDisplayFile")?.addEventListener("click", displayFile);
     document.getElementById!("imgInput")?.addEventListener("change", readInputFile);
     document.getElementById!("tableWidthInput")?.addEventListener("keyup", enforceInputNumber);
 
-
-    initialRender();
+    data = new TableData(getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
+    renderer = new TableRender(tableContainerId);
+    
+    renderer.draw(data);
     readInputFile();
 
     document.removeEventListener("DOMContentLoaded", initialise);
@@ -30,6 +33,26 @@ function initialise() {
 //#region tests
 let testFunction = () => { test2(); }
 function test2() {
+    //fill in random color
+    data.colorAll("#" + Math.floor(Math.random() * 16777215).toString(16));
+    renderer.draw(data);
+    console.log(data.encode("pf1"));
+}
+function test1() {
+    //log pf1-encoded tableData
+    console.log(data.encode("pf1"));
+    renderer.clearTable();
+}
+//#endregion
+
+//#region drawing table
+function regenerateTable() {
+    //remove table w/ id tableId
+    //draw a new table, according to spec
+    data.colorAll("#000000", getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
+    renderer.draw(data);
+}
+function displayFile() {
     //display selected file
     const stringData: string = fileContent;
     if (!stringData) {
@@ -38,28 +61,7 @@ function test2() {
     }
     const jsonData: {imgdata: string[][]} = JSON.parse(stringData);
     data.fromJson(jsonData);
-    rederer.draw(data);
-}
-function test1() {
-    //log pf1-encoded tableData
-    data.testFrame();
-    rederer.draw(data);
-    console.log(data.encode("pf1"));
-}
-//#endregion
-
-//#region drawing table
-function initialRender() {
-    //creates new TableData (from inputs) and TableRender
-    data = new TableData(getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
-    rederer = new TableRender(tableContainerId);
-    rederer.initTable(data);  
-}
-function regenerateTable() {
-    //remove table w/ id tableId
-    //draw a new table, according to spec
-    rederer.removeTable();
-    initialRender();
+    renderer.draw(data);
 }
 //#endregion
 
@@ -83,8 +85,8 @@ function save() {
 }
 function newFilename(): string {
     //return a name which is suggested when downloading tableData
-    const date: Date = new Date;
-    return "" + date.getFullYear() + date.getMonth() + date.getDate() + "_data.json";
+    const color0: string = data.getPixel(0,0).color;
+    return color0 + "_data.json";
 } 
 //#endregion
 

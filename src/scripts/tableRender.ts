@@ -6,8 +6,9 @@ class TableRender {
 //#region constructor, get, set
     constructor(parentElementId: string) {
         this._parentElementId = parentElementId;
-        this._elementId = "tableRender";
+        this._elementId = "tableRender" + Math.floor(Math.random() * (100000));
         this._htmlTable = document.createElement("table");
+        this.initTable();
     }
     public get elementId(): string{
         return this._elementId;
@@ -23,32 +24,16 @@ class TableRender {
     }
 
 //#endregion
-    public initTable(tableData: TableData) {
-        //this should be removed, and this.draw should be expanded, to work when no table exists
-        let cellClassName = "pixel";
-        let tableHeight = tableData.tableHeight;
-        let tableWidth = tableData.tableWidth;
-
+    private initTable() {
+        //set id and append the table to the DOM
         this.htmlTable.setAttribute("id", this.elementId);
-        for (let i = 0; i < tableHeight; i++) {
-            let row = document.createElement("tr");
-            for(let j = 0; j < tableWidth; j++) {
-                let cell = document.createElement("td");
-                cell.classList.add(cellClassName);
-                //cell.setAttribute("style", `width: ${pixelWidth}; height: ${pixelWidth}`); //no but i dont want inline style for height and width. i want to change main.css
-                this.setColor(cell, tableData.getPixel(i, j).color);
-                row.appendChild(cell);
-            }
-            this.htmlTable.appendChild(row);
-        }
         document.getElementById(this.parentElementId)!.appendChild(this.htmlTable);
     }
-    public removeTable() {
-            this.htmlTable.remove();
+    public clearTable() {
+        this.removeRows(this.htmlTable.rows.length);
     }
     public draw(tableData: TableData) {
         //draw tableData
-        let pixels: Pixel[][] = tableData.pixels;
         let height = tableData.tableHeight;
         let width = tableData.tableWidth;
         
@@ -56,7 +41,7 @@ class TableRender {
         for (let row = 0; row < height; row++) {
             const curRow: HTMLTableRowElement = this.htmlTable.rows[row];
             for (let cell = 0; cell < tableData.tableWidth; cell++) {
-                this.setColor(curRow.cells[cell], pixels[row][cell].color);
+                this.setColor(curRow.cells[cell], tableData.getPixel(row, cell).color);
             }
         }
     }
