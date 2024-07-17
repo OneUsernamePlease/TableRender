@@ -1,20 +1,33 @@
 class TableRender {
-    private elementId: string;
-    private parentElementId: string; //parentElementId could/should? be eliminated from this class
-    public htmlTable: HTMLTableElement;
+    private _elementId: string;
+    private _parentElementId: string; //parentElementId could/should? be eliminated from this class
+    public _htmlTable: HTMLTableElement;
 
 //#region constructor, get, set
     constructor(parentElementId: string) {
-        this.parentElementId = parentElementId;
-        this.elementId = "tableRender";
-        this.htmlTable = document.createElement("table");
+        this._parentElementId = parentElementId;
+        this._elementId = "tableRender";
+        this._htmlTable = document.createElement("table");
     }
+    public get elementId(): string{
+        return this._elementId;
+    }
+    public get parentElementId(): string {
+        return this._parentElementId;
+    }
+    public set parentElementId(id: string) {
+        this._parentElementId = id;
+    }
+    public get htmlTable(): HTMLTableElement {
+        return this._htmlTable;
+    }
+
 //#endregion
     public initTable(tableData: TableData) {
         //this should be removed, and this.draw should be expanded, to work when no table exists
         let cellClassName = "pixel";
-        let tableHeight = tableData.getTableHeight();
-        let tableWidth = tableData.getTableWidth();
+        let tableHeight = tableData.tableHeight;
+        let tableWidth = tableData.tableWidth;
 
         this.htmlTable.setAttribute("id", this.elementId);
         for (let i = 0; i < tableHeight; i++) {
@@ -23,7 +36,7 @@ class TableRender {
                 let cell = document.createElement("td");
                 cell.classList.add(cellClassName);
                 //cell.setAttribute("style", `width: ${pixelWidth}; height: ${pixelWidth}`); //no but i dont want inline style for height and width. i want to change main.css
-                this.setColor(cell, tableData.getPixel(i, j).getColor());
+                this.setColor(cell, tableData.getPixel(i, j).color);
                 row.appendChild(cell);
             }
             this.htmlTable.appendChild(row);
@@ -35,15 +48,15 @@ class TableRender {
     }
     public draw(tableData: TableData) {
         //draw tableData
-        let pixels: Pixel[][] = tableData.getAllPixels();
-        let height = tableData.getTableHeight();
-        let width = tableData.getTableWidth();
+        let pixels: Pixel[][] = tableData.pixels;
+        let height = tableData.tableHeight;
+        let width = tableData.tableWidth;
         
         this.resizeTable(height, width);
         for (let row = 0; row < height; row++) {
             const curRow: HTMLTableRowElement = this.htmlTable.rows[row];
-            for (let cell = 0; cell < tableData.getTableWidth(); cell++) {
-                this.setColor(curRow.cells[cell], pixels[row][cell].getColor());
+            for (let cell = 0; cell < tableData.tableWidth; cell++) {
+                this.setColor(curRow.cells[cell], pixels[row][cell].color);
             }
         }
     }

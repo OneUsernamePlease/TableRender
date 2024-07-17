@@ -1,25 +1,31 @@
 class TableData {
-    private tableHeight: number;
-    private tableWidth: number;
-    private pixels: Pixel[][];
+    private _tableHeight: number;
+    private _tableWidth: number;
+    private _pixels: Pixel[][];
 
 //#region constructor, get, set
     public constructor(tableHeight: number, tableWidth: number) {
-        this.tableHeight = tableHeight;
-        this.tableWidth = tableWidth;
-        this.pixels = this.initTableData();
+        this._tableHeight = tableHeight;
+        this._tableWidth = tableWidth;
+        this._pixels = this.initTableData();
     }
-    public getTableHeight(): number {
-        return this.tableHeight;
+    public get tableHeight(): number {
+        return this._tableHeight;
     }
-    public getTableWidth(): number {
-        return this.tableWidth;
+    public get tableWidth(): number {
+        return this._tableWidth;
+    }    
+    public set tableHeight(height: number) {
+        this._tableHeight = height;
     }
-    public getAllPixels(): Pixel[][] {
-        return this.pixels;
+    public set tableWidth(width: number) {
+        this._tableWidth = width;
+    }
+    public get pixels(): Pixel[][] {
+        return this._pixels;
     }
     public getPixel(x: number, y: number): Pixel {
-        return this.pixels[x][y];
+        return this._pixels[x][y];
     }
 //#endregion
     private initTableData(): Pixel[][] {
@@ -89,7 +95,7 @@ class TableData {
         this.pixels.forEach(row => {
             s += "["
             row.forEach(cell => {
-                s += "\"" + cell.getColor() + "\",";
+                s += "\"" + cell.color + "\",";
             })
             s = s.slice(0, -1);
             s += "],"
@@ -112,7 +118,7 @@ class TableData {
     public setPixelColor(row: number, col: number, color: string) {
         //0,0 is top left
         if (this.pixels[row][col] === undefined) {return;}
-        this.pixels[row][col].setColor(color);
+        this.pixels[row][col].color = color;
     }
     public setDimensions(height: number, width: number) {
         //resize this.pixles
