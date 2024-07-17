@@ -1,7 +1,6 @@
 /* TODO
 get rid of height, width property of tableData
-in tableData, create a second table, same size, of booleans, keeping track of whether a cell was updated. then use this info when drawing
-img format enums and interfaces
+in tableData, keeping track of whether a cell was updated. then use this info when drawing
 */
 
 //#region initialisation
@@ -31,17 +30,29 @@ function initialise() {
 //#endregion
 
 //#region tests
-let testFunction = () => { test2(); }
+let testFunction = () => { 
+    //for (let index = 0; index < 200; index++) {
+        test2(); 
+    //}
+}
 function test2() {
     //fill in random color
-    data.colorAll("#" + Math.floor(Math.random() * 16777215).toString(16));
+    const color = randomColor();
+    data.colorAll(color);
+    console.log(`color: ${color} - lenColor: ${color.length}`);
     renderer.draw(data);
-    console.log(data.encode("pf1"));
+   // console.log(data.encode("pf1"));
 }
 function test1() {
     //log pf1-encoded tableData
     console.log(data.encode("pf1"));
     renderer.clearTable();
+}
+function randomColor(): string {
+    const r = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
+    const g = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
+    const b = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
+    return "#" + r+g+b
 }
 //#endregion
 

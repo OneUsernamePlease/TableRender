@@ -141,14 +141,14 @@ class TableData {
         }
         this.tableWidth = newWidth;
     }
-    public addPixels(rowIdx: number, n: number) {
+    private addPixels(rowIdx: number, n: number) {
         //adds n pixels to this.pixels, to row at rowIdx
         for (let i = 0; i < n; i++) {
             const curRowLength: number = this.pixels[rowIdx].length;
             this.pixels[rowIdx][curRowLength] = new Pixel();
         }
     }
-    public removePixels(rowIdx: number, n: number) {
+    private removePixels(rowIdx: number, n: number) {
         //removes n pixels from this.pixels, from row at rowIdx
         for (let i = 0; i < n; i++) {
             this.pixels[rowIdx].pop();
@@ -164,14 +164,14 @@ class TableData {
         }
         this.tableHeight = newHeight;
     }
-    public addRows(n: number) {
+    private addRows(n: number) {
         //adds n rows to pixels, these new rows are empty arrays
         const height = this.pixels.length;
         for (let i = 0; i < n; i++) {
             this.pixels[height + i] = [];
         }
     }
-    public removeRows(n: number) {
+    private removeRows(n: number) {
         //removes n rows from pixels
         for (let i = 0; i < n; i++) {
             this.pixels.pop();
