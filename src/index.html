@@ -11,25 +11,37 @@
 </head>
     <body>
         <div>
-            <div id="headerInput">
-                <div>
+            <div class="sidebarControl">
+                <a href="javascript:void(0)" class="sidebarControl" id="openSidebar">&#9776; Open sidebar</a>
+            </div>
+            <div class="sidebar" id="sidebar">
+                <div class="sidebarItem">
+                    <a href="javascript:void(0)" class="sidebarControl" id="closeSidebar">&#9776; Close sidebar</a>
+                </div>
+                <div class="sidebarItem">
                     <div class="inputContainer">
                         <label for="tableWidthInput">Width:</label>
                         <input type="number" id="tableWidthInput" value="120" autocomplete="off" min="1" max="250">
-                    </div>
-                    <div class="inputContainer">
+ 
                         <label for="tableHeightInput">Height:</label>
                         <input type="number" id="tableHeightInput" value="80" autocomplete="off" min="1" max="150">
+                        
+                        <button id="btnGenerateTable">Generate Table</button>
                     </div>
                 </div>
-                <div class="inputContainer">
-                    <label for="imgInput">DATEI:</label>
-                    <input type="file" id="imgInput" accept=".json">
-                </div>
-                <div>
-                    <button id="btnDisplayFile">Datei Anzeigen</button>
-                    <button id="btnGenerateTable">Generate Table</button>
+                <div class="sidebarItem">
+                    <div class="inputContainer">
+                        <label for="imgInput">DATEI:</label>
+                        <input type="file" id="imgInput" accept=".json">
+                    </div>                    
+                    <div class="inputContainer">
+                        <button id="btnDisplayFile">Datei Anzeigen</button>
+                    </div>
+                </div>             
+                <div class="sidebarItem">
                     <button id="save">Speichern</button>
+                </div>                
+                <div class="sidebarItem">
                     <button id="testBtn">test</button>
                 </div>
                 <div>
@@ -40,7 +52,9 @@
                     </div-->
                 </div>
             </div>
-            <div id="tableContainer">
+            <div class="main" id="mainContent">
+                <div id="tableContainer">
+                </div>
             </div>
         </div>
     </body>

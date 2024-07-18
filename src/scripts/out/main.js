@@ -10,13 +10,15 @@ let renderer;
 let fileContent;
 document.addEventListener("DOMContentLoaded", initialise);
 function initialise() {
-    var _a, _b, _c, _d, _e, _f;
+    var _a, _b, _c, _d, _e, _f, _g, _h;
     (_a = document.getElementById("testBtn")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", testFunction);
     (_b = document.getElementById("btnGenerateTable")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", regenerateTable);
     (_c = document.getElementById("save")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", save);
     (_d = document.getElementById("btnDisplayFile")) === null || _d === void 0 ? void 0 : _d.addEventListener("click", displayFile);
     (_e = document.getElementById("imgInput")) === null || _e === void 0 ? void 0 : _e.addEventListener("change", readInputFile);
     (_f = document.getElementById("tableWidthInput")) === null || _f === void 0 ? void 0 : _f.addEventListener("keyup", enforceInputNumber);
+    (_g = document.getElementById("closeSidebar")) === null || _g === void 0 ? void 0 : _g.addEventListener("click", closeSidebar);
+    (_h = document.getElementById("openSidebar")) === null || _h === void 0 ? void 0 : _h.addEventListener("click", openSidebar);
     data = new TableData(getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
     renderer = new TableRender(tableContainerId);
     renderer.draw(data);
@@ -24,11 +26,21 @@ function initialise() {
     document.removeEventListener("DOMContentLoaded", initialise);
 }
 //#endregion
+//#region page layout
+function openSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    sidebar.style.width = "auto";
+    document.getElementById("mainContent").style.marginLeft = sidebar.clientWidth.toString();
+}
+function closeSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    sidebar.style.width = "0";
+    document.getElementById("mainContent").style.marginLeft = "0";
+}
+//#endregion
 //#region tests
 let testFunction = () => {
-    //for (let index = 0; index < 200; index++) {
     test2();
-    //}
 };
 function test2() {
     //fill in random color

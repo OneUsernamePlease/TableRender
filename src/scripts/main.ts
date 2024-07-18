@@ -18,6 +18,8 @@ function initialise() {
     document.getElementById!("btnDisplayFile")?.addEventListener("click", displayFile);
     document.getElementById!("imgInput")?.addEventListener("change", readInputFile);
     document.getElementById!("tableWidthInput")?.addEventListener("keyup", enforceInputNumber);
+    document.getElementById!("closeSidebar")?.addEventListener("click", closeSidebar);
+    document.getElementById!("openSidebar")?.addEventListener("click", openSidebar);
 
     data = new TableData(getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
     renderer = new TableRender(tableContainerId);
@@ -29,11 +31,22 @@ function initialise() {
 }
 //#endregion
 
+//#region page layout
+function openSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    sidebar!.style.width = "auto";
+    document.getElementById("mainContent")!.style.marginLeft = sidebar!.clientWidth.toString();
+}
+function closeSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    sidebar!.style.width = "0";
+    document.getElementById("mainContent")!.style.marginLeft = "0";
+}
+//#endregion
+
 //#region tests
 let testFunction = () => { 
-    //for (let index = 0; index < 200; index++) {
-        test2(); 
-    //}
+    test2(); 
 }
 function test2() {
     //fill in random color
