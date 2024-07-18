@@ -1,6 +1,7 @@
 "use strict";
 class TableData {
-    //#region constructor, get, set
+    //#endregion
+    //#region constructor, get, set, init
     constructor(tableHeight, tableWidth) {
         this._tableHeight = tableHeight;
         this._tableWidth = tableWidth;
@@ -24,7 +25,6 @@ class TableData {
     getPixel(x, y) {
         return this._pixels[x][y];
     }
-    //#endregion
     initTableData() {
         let pixel = [];
         for (let i = 0; i < this.tableHeight; i++) {
@@ -35,20 +35,7 @@ class TableData {
         }
         return pixel;
     }
-    colorAll(color, newHeight, newWidth) {
-        //color all pixles in color. if height and/or width are provided, resize.
-        if (newHeight != null) {
-            this.setHeight(newHeight);
-        }
-        if (newWidth != null) {
-            this.setWidth(newWidth);
-        }
-        for (let i = 0; i < this.tableHeight; i++) {
-            for (let j = 0; j < this.tableWidth; j++) {
-                this.setPixelColor(i, j, color);
-            }
-        }
-    }
+    //#endregion
     //#region en/decode
     fromJson(json) {
         //load from json (has to be pf1), and draw
@@ -110,6 +97,20 @@ class TableData {
     }
     //#endregion
     //#region drawing/updating image data
+    colorAll(color, newHeight, newWidth) {
+        //color all pixles in color. if height and/or width are provided, resize.
+        if (newHeight != null) {
+            this.setHeight(newHeight);
+        }
+        if (newWidth != null) {
+            this.setWidth(newWidth);
+        }
+        for (let i = 0; i < this.tableHeight; i++) {
+            for (let j = 0; j < this.tableWidth; j++) {
+                this.setPixelColor(i, j, color);
+            }
+        }
+    }
     setPixelColor(row, col, color) {
         //0,0 is top left
         if (this.pixels[row][col] === undefined) {

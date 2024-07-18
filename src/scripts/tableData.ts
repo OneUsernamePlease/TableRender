@@ -1,9 +1,11 @@
 class TableData {
+//#region properties
     private _tableHeight: number;
     private _tableWidth: number;
     private _pixels: Pixel[][];
+//#endregion
 
-//#region constructor, get, set
+//#region constructor, get, set, init
     public constructor(tableHeight: number, tableWidth: number) {
         this._tableHeight = tableHeight;
         this._tableWidth = tableWidth;
@@ -26,8 +28,7 @@ class TableData {
     }
     public getPixel(x: number, y: number): Pixel {
         return this._pixels[x][y];
-    }
-//#endregion
+    }    
     private initTableData(): Pixel[][] {
         let pixel: Pixel[][] = [];
         for(let i = 0; i < this.tableHeight; i++) {
@@ -38,17 +39,8 @@ class TableData {
         }
         return pixel;
     }
-    public colorAll(color: string, newHeight?: number, newWidth?: number) {
-        //color all pixles in color. if height and/or width are provided, resize.
-        if (newHeight != null) { this.setHeight(newHeight);}
-        if (newWidth != null) { this.setWidth(newWidth);}
-        
-        for(let i = 0; i < this.tableHeight; i++){
-            for(let j = 0; j < this.tableWidth; j++) {
-                this.setPixelColor(i, j, color);
-            }
-        }
-    }
+//#endregion
+
 //#region en/decode
     public fromJson(json: {imgdata: string[][], format?: string}) {
         //load from json (has to be pf1), and draw
@@ -117,6 +109,17 @@ class TableData {
 //#endregion
 
 //#region drawing/updating image data
+    public colorAll(color: string, newHeight?: number, newWidth?: number) {
+        //color all pixles in color. if height and/or width are provided, resize.
+        if (newHeight != null) { this.setHeight(newHeight);}
+        if (newWidth != null) { this.setWidth(newWidth);}
+        
+        for(let i = 0; i < this.tableHeight; i++){
+            for(let j = 0; j < this.tableWidth; j++) {
+                this.setPixelColor(i, j, color);
+            }
+        }
+    }
     public setPixelColor(row: number, col: number, color: string) {
         //0,0 is top left
         if (this.pixels[row][col] === undefined) {return;}

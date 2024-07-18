@@ -47,9 +47,6 @@ function randomColor() {
     const r = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
     const g = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
     const b = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
-    if (r.length < 2 || g.length < 2 || b.length < 2) {
-        console.log("INVALID: " + r + g + b);
-    }
     return "#" + r + g + b;
 }
 //#endregion
