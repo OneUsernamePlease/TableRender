@@ -23,7 +23,7 @@ class TableData {
         return this._pixels;
     }
     getPixel(x, y) {
-        return this._pixels[x][y];
+        return this.pixels[x][y];
     }
     initTableData() {
         let pixel = [];

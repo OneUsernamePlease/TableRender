@@ -12,6 +12,18 @@ let fileContent: string;
 document.addEventListener("DOMContentLoaded", initialise);
 
 function initialise() {
+    
+    data = new TableData(getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
+    renderer = new TableRender(tableContainerId);
+    renderer.draw(data);
+    
+    registerEvents();
+    readInputFile();
+    setToolMode();
+
+    document.removeEventListener("DOMContentLoaded", initialise);
+}
+function registerEvents() {
     document.getElementById!("testBtn")?.addEventListener("click", testFunction);
     document.getElementById!("btnGenerateTable")?.addEventListener("click", regenerateTable);
     document.getElementById!("save")?.addEventListener("click", save);
@@ -20,18 +32,14 @@ function initialise() {
     document.getElementById!("tableWidthInput")?.addEventListener("keyup", enforceInputNumber);
     document.getElementById!("closeSidebar")?.addEventListener("click", closeSidebar);
     document.getElementById!("openSidebar")?.addEventListener("click", openSidebar);
-
-    data = new TableData(getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
-    renderer = new TableRender(tableContainerId);
-    
-    renderer.draw(data);
-    readInputFile();
-
-    document.removeEventListener("DOMContentLoaded", initialise);
+    document.getElementById!(renderer.elementId)?.addEventListener("mousedown", tableMouseDown);
+    document.querySelectorAll("input[name=tools]")?.forEach(element => {
+        element.addEventListener("change", setToolMode)
+    }); 
 }
 //#endregion
 
-//#region page layout
+//#region page layout & mode
 function openSidebar() {
     const sidebar = document.getElementById("sidebar");
     sidebar!.style.width = "auto";
@@ -41,6 +49,32 @@ function closeSidebar() {
     const sidebar = document.getElementById("sidebar");
     sidebar!.style.width = "0";
     document.getElementById("mainContent")!.style.marginLeft = "0";
+}
+function setToolMode() {
+    //get selected radiobutton
+    //(hide/show specific tools)
+    //TODO: dont use queryselector, but either this or ev args
+    let mode = (<HTMLInputElement>document.querySelector('input[name="tools"]:checked')).value;
+    let test = "";
+    switch (mode) {
+        case "draw":
+            showDrawTools();
+            test = "draw";
+            break;
+        case "none":
+            hideDrawTools();
+            test = "none"
+            break;
+        default:
+            break;
+    }
+    console.log("function setToolMode, selected: " + test);
+}
+function hideDrawTools() {
+    document.getElementById("drawTools")!.style.display = "none";
+}
+function showDrawTools() {
+    document.getElementById("drawTools")!.style.removeProperty("display");
 }
 //#endregion
 
@@ -52,7 +86,6 @@ function test2() {
     //fill in random color
     const color = randomColor();
     data.colorAll(color);
-    console.log(`color: ${color} - lenColor: ${color.length}`);
     renderer.draw(data);
    // console.log(data.encode("pf1"));
 }
@@ -71,8 +104,7 @@ function randomColor(): string {
 
 //#region drawing table
 function regenerateTable() {
-    //remove table w/ id tableId
-    //draw a new table, according to spec
+    //redraw a new table, colored black, sized according to input spec
     data.colorAll("#000000", getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
     renderer.draw(data);
 }
@@ -86,6 +118,15 @@ function displayFile() {
     const jsonData: {imgdata: string[][]} = JSON.parse(stringData);
     data.fromJson(jsonData);
     renderer.draw(data);
+}
+function tableMouseDown(this: HTMLElement, ev: MouseEvent) {
+    //0. for now just log the cell
+    //depending on what tool is chosen, do something
+}
+function drawTool() {
+    //1. color the cell with chosen color
+    //2. color all cells the mouse hovers over while mouseDown
+    //3. add radius, all cells (parially) within the radius get colored
 }
 //#endregion
 
@@ -128,7 +169,6 @@ function readInputFile() {
         const reader = new FileReader;
         reader.onload = () => {
             const content = reader.result;
-            console.log(content);
             fileContent = content as string;
         };
         reader.readAsText(file);
@@ -150,9 +190,14 @@ function isNumeric(s: string): boolean {
     //returns true if s is a valid number, returns false otherwise
     //empty string is NOT considered numeric
     s = s.trim();
-    return ((!isNaN(+s)) && s.length !== 0) ? true : false;
+    return (!isNaN(+s)) && s.length !== 0;
     //what? -->
     //+stringA converts stringA to number, if stringA is not numeric result = NaN, if it is numeric, result is stringA as number. "!isNan(+stringA)" is true if stringA is numeric, otherwise false
+
+    /*/which is faster?
+    s = s.trim();
+    return /^\d*.?\d*$/.test(s); //problem is that a single dot is considered numeric
+    */
 }
 function enforceInputNumber(this: HTMLElement) {
     //enforces, that value of input this, is not below its min, or above its max value

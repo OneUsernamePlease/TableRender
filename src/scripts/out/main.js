@@ -10,7 +10,16 @@ let renderer;
 let fileContent;
 document.addEventListener("DOMContentLoaded", initialise);
 function initialise() {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
+    data = new TableData(getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
+    renderer = new TableRender(tableContainerId);
+    renderer.draw(data);
+    registerEvents();
+    readInputFile();
+    setToolMode();
+    document.removeEventListener("DOMContentLoaded", initialise);
+}
+function registerEvents() {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
     (_a = document.getElementById("testBtn")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", testFunction);
     (_b = document.getElementById("btnGenerateTable")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", regenerateTable);
     (_c = document.getElementById("save")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", save);
@@ -19,14 +28,13 @@ function initialise() {
     (_f = document.getElementById("tableWidthInput")) === null || _f === void 0 ? void 0 : _f.addEventListener("keyup", enforceInputNumber);
     (_g = document.getElementById("closeSidebar")) === null || _g === void 0 ? void 0 : _g.addEventListener("click", closeSidebar);
     (_h = document.getElementById("openSidebar")) === null || _h === void 0 ? void 0 : _h.addEventListener("click", openSidebar);
-    data = new TableData(getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
-    renderer = new TableRender(tableContainerId);
-    renderer.draw(data);
-    readInputFile();
-    document.removeEventListener("DOMContentLoaded", initialise);
+    (_j = document.getElementById(renderer.elementId)) === null || _j === void 0 ? void 0 : _j.addEventListener("mousedown", tableMouseDown);
+    (_k = document.querySelectorAll("input[name=tools]")) === null || _k === void 0 ? void 0 : _k.forEach(element => {
+        element.addEventListener("change", setToolMode);
+    });
 }
 //#endregion
-//#region page layout
+//#region page layout & mode
 function openSidebar() {
     const sidebar = document.getElementById("sidebar");
     sidebar.style.width = "auto";
@@ -37,6 +45,32 @@ function closeSidebar() {
     sidebar.style.width = "0";
     document.getElementById("mainContent").style.marginLeft = "0";
 }
+function setToolMode() {
+    //get selected radiobutton
+    //(hide/show specific tools)
+    //TODO: dont use queryselector, but either this or ev args
+    let mode = document.querySelector('input[name="tools"]:checked').value;
+    let test = "";
+    switch (mode) {
+        case "draw":
+            showDrawTools();
+            test = "draw";
+            break;
+        case "none":
+            hideDrawTools();
+            test = "none";
+            break;
+        default:
+            break;
+    }
+    console.log("function setToolMode, selected: " + test);
+}
+function hideDrawTools() {
+    document.getElementById("drawTools").style.display = "none";
+}
+function showDrawTools() {
+    document.getElementById("drawTools").style.removeProperty("display");
+}
 //#endregion
 //#region tests
 let testFunction = () => {
@@ -46,7 +80,6 @@ function test2() {
     //fill in random color
     const color = randomColor();
     data.colorAll(color);
-    console.log(`color: ${color} - lenColor: ${color.length}`);
     renderer.draw(data);
     // console.log(data.encode("pf1"));
 }
@@ -64,8 +97,7 @@ function randomColor() {
 //#endregion
 //#region drawing table
 function regenerateTable() {
-    //remove table w/ id tableId
-    //draw a new table, according to spec
+    //redraw a new table, colored black, sized according to input spec
     data.colorAll("#000000", getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
     renderer.draw(data);
 }
@@ -79,6 +111,15 @@ function displayFile() {
     const jsonData = JSON.parse(stringData);
     data.fromJson(jsonData);
     renderer.draw(data);
+}
+function tableMouseDown(ev) {
+    //0. for now just log the cell
+    //depending on what tool is chosen, do something
+}
+function drawTool() {
+    //1. color the cell with chosen color
+    //2. color all cells the mouse hovers over while mouseDown
+    //3. add radius, all cells (parially) within the radius get colored
 }
 //#endregion
 //#region export
@@ -119,7 +160,6 @@ function readInputFile() {
         const reader = new FileReader;
         reader.onload = () => {
             const content = reader.result;
-            console.log(content);
             fileContent = content;
         };
         reader.readAsText(file);
@@ -141,9 +181,13 @@ function isNumeric(s) {
     //returns true if s is a valid number, returns false otherwise
     //empty string is NOT considered numeric
     s = s.trim();
-    return ((!isNaN(+s)) && s.length !== 0) ? true : false;
+    return (!isNaN(+s)) && s.length !== 0;
     //what? -->
     //+stringA converts stringA to number, if stringA is not numeric result = NaN, if it is numeric, result is stringA as number. "!isNan(+stringA)" is true if stringA is numeric, otherwise false
+    /*/which is faster?
+    s = s.trim();
+    return /^\d*.?\d*$/.test(s); //problem is that a single dot is considered numeric
+    */
 }
 function enforceInputNumber() {
     //enforces, that value of input this, is not below its min, or above its max value

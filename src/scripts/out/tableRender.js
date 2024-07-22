@@ -1,10 +1,12 @@
 "use strict";
 class TableRender {
+    //private _drawn: boolean[][]; //keep track of whether a pixel changed since it's last been drawn
     //#region constructor, get, set
     constructor(parentElementId) {
         this._parentElementId = parentElementId;
         this._elementId = "tableRender" + Math.floor(Math.random() * (100000));
         this._htmlTable = document.createElement("table");
+        //this._drawn = [];
         this.initTable();
     }
     get elementId() {
@@ -26,6 +28,7 @@ class TableRender {
         document.getElementById(this.parentElementId).appendChild(this.htmlTable);
     }
     clearTable() {
+        //remove all row-Elements
         this.removeRows(this.htmlTable.rows.length);
     }
     draw(tableData) {
@@ -43,6 +46,28 @@ class TableRender {
     setColor(pixel, color) {
         pixel.removeAttribute("style");
         pixel.setAttribute("style", "background-color: " + color);
+    }
+    getColor(row, cell) {
+        //returns the color of cell at spcified position in hex-format
+        let colorHex;
+        colorHex = this.htmlTable.rows[row].cells[cell].style.backgroundColor;
+        return this.rgbToHex(colorHex);
+    }
+    rgbToHex(rgb) {
+        //transforms color-value rgb of form 'rgb(0,128,255)' to hex form '#0080ff' and returns it
+        if (/^#[0-9A-F]{6}$/i.test(rgb))
+            return rgb;
+        if (!(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i.test(rgb)))
+            return "";
+        let rgbValues = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i);
+        let decToHex = (d) => {
+            if (typeof (d) === "string" && /^\d+$/.test(d)) {
+                d = parseInt(d);
+            }
+            return d.toString(16);
+        };
+        return "#" + decToHex(rgbValues[1]) + decToHex(rgbValues[2])
+            + decToHex(rgbValues[3]);
     }
     resizeTable(newHeight, newWidth) {
         this.setHeight(newHeight);
@@ -90,6 +115,17 @@ class TableRender {
         for (let i = 0; i < n; i++) {
             row.deleteCell(-1);
         }
+    }
+    getCurrentTableData() {
+        let height = this.htmlTable.rows.length;
+        let width = (height > 0) ? this.htmlTable.rows[0].cells.length : 0;
+        let data = new TableData(height, width);
+        for (let rowIdx = 0; rowIdx < height; rowIdx++) {
+            for (let cellIdx = 0; cellIdx < width; cellIdx++) {
+                data.setPixelColor(rowIdx, cellIdx, this.getColor(rowIdx, cellIdx));
+            }
+        }
+        return data;
     }
 }
 //# sourceMappingURL=tableRender.js.map

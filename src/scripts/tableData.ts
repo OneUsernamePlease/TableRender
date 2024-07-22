@@ -27,7 +27,7 @@ class TableData {
         return this._pixels;
     }
     public getPixel(x: number, y: number): Pixel {
-        return this._pixels[x][y];
+        return this.pixels[x][y];
     }    
     private initTableData(): Pixel[][] {
         let pixel: Pixel[][] = [];

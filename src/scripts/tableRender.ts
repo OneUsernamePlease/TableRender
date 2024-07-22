@@ -1,16 +1,18 @@
 class TableRender {
     private _elementId: string;
-    private _parentElementId: string; //parentElementId could/should? be eliminated from this class
-    public _htmlTable: HTMLTableElement;
+    private _parentElementId: string; //parentElementId could/should? be eliminated from this class - at least as a property
+    private _htmlTable: HTMLTableElement;
+    //private _drawn: boolean[][]; //keep track of whether a pixel changed since it's last been drawn
 
 //#region constructor, get, set
     constructor(parentElementId: string) {
         this._parentElementId = parentElementId;
         this._elementId = "tableRender" + Math.floor(Math.random() * (100000));
         this._htmlTable = document.createElement("table");
+        //this._drawn = [];
         this.initTable();
     }
-    public get elementId(): string{
+    public get elementId(): string {
         return this._elementId;
     }
     public get parentElementId(): string {
@@ -22,7 +24,6 @@ class TableRender {
     public get htmlTable(): HTMLTableElement {
         return this._htmlTable;
     }
-
 //#endregion
     private initTable() {
         //set id and append the table to the DOM
@@ -30,6 +31,7 @@ class TableRender {
         document.getElementById(this.parentElementId)!.appendChild(this.htmlTable);
     }
     public clearTable() {
+        //remove all row-Elements
         this.removeRows(this.htmlTable.rows.length);
     }
     public draw(tableData: TableData) {
@@ -48,6 +50,26 @@ class TableRender {
     public setColor(pixel: HTMLTableCellElement, color: string) {
         pixel.removeAttribute("style");
         pixel.setAttribute("style", "background-color: " + color);
+    }
+    public getColor(row: number, cell: number): string {
+        //returns the color of cell at spcified position in hex-format
+        let colorHex: string;
+        colorHex = this.htmlTable.rows[row].cells[cell].style.backgroundColor;
+        return this.rgbToHex(colorHex);
+    }
+    public rgbToHex(rgb: string): string {
+        //transforms color-value rgb of form 'rgb(0,128,255)' to hex form '#0080ff' and returns it
+        if (/^#[0-9A-F]{6}$/i.test(rgb)) return rgb;
+        if (!(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i.test(rgb))) return "";
+        let rgbValues = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i);
+        let decToHex = (d: string|number): string => {
+            if (typeof(d) === "string" && /^\d+$/.test(d)) {
+                d = parseInt(d);
+            }
+            return d.toString(16);
+        }
+        return "#" + decToHex(rgbValues![1]) + decToHex(rgbValues![2]) 
+        + decToHex(rgbValues![3]); 
     }
     public resizeTable(newHeight: number, newWidth: number) {
         this.setHeight(newHeight);
@@ -95,6 +117,18 @@ class TableRender {
         for (let i = 0; i < n; i++) {
             row.deleteCell(-1);
         }
+    }
+    public getCurrentTableData(): TableData {
+        let height = this.htmlTable.rows.length;
+        let width = (height > 0) ? this.htmlTable.rows[0].cells.length : 0;
+        let data = new TableData(height, width);
+        
+        for (let rowIdx = 0; rowIdx < height; rowIdx++) {
+            for (let cellIdx = 0; cellIdx < width; cellIdx++) {
+                data.setPixelColor(rowIdx, cellIdx, this.getColor(rowIdx, cellIdx));                
+            }
+        }
+        return data;
     }
 }
 

@@ -37,7 +37,16 @@
                     <div class="inputContainer">
                         <button id="btnDisplayFile">Datei Anzeigen</button>
                     </div>
-                </div>             
+                </div>
+                <div class="sidebarItem">
+                    <p>Tools</p>
+                    <label for="rdToolsDraw">Draw</label>
+                    <input type="radio" id="rdToolsDraw" name="tools" value="draw">
+
+                    <label for="rdToolsNone">None</label>
+                    <input type="radio" id="rdToolsNone" name="tools" value="none" checked="true">
+                    
+                </div>              
                 <div class="sidebarItem">
                     <button id="save">Speichern</button>
                 </div>                
@@ -53,8 +62,15 @@
                 </div>
             </div>
             <div class="main" id="mainContent">
+                <div id="toolbarContainer" class="toolbarContainer" todo="align top right">
+                    <div id="drawTools" class="toolbar">
+                        <label for="drawToolsPen">Pen</label>
+                        <input type="radio" id="drawToolsPen" name="drawTools">
+                    </div>
+                </div>
                 <div id="tableContainer">
                 </div>
+
             </div>
         </div>
     </body>
