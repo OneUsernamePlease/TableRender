@@ -1,5 +1,6 @@
 "use strict";
 //#region variables and such
+const log = true;
 let tableContainerId = "tableContainer";
 let data;
 let renderer;
@@ -46,6 +47,7 @@ function setToolMode() {
     //hide/show specific tools, according to current selection
     //TODO: dont use queryselector, but either this or ev args
     let mode = document.querySelector('input[name="tools"]:checked').value;
+    console.log("function setToolMode, selected: " + mode);
     switch (mode) {
         case "draw":
             toolsMode = Tools.Draw;
@@ -82,14 +84,14 @@ function test1() {
     console.log(data.encode("pf1"));
     renderer.clearTable();
 }
+//#endregion
+//#region drawing table
 function randomColor() {
     const r = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
     const g = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
     const b = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
     return "#" + r + g + b;
 }
-//#endregion
-//#region drawing table
 function colorCell(cell, color) {
     let cellIdx = [cell.parentElement.rowIndex, cell.cellIndex];
     renderer.setColor(cell, color);
