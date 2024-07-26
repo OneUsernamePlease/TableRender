@@ -22,9 +22,6 @@ class TableData {
     get pixels() {
         return this._pixels;
     }
-    getPixel(x, y) {
-        return this.pixels[x][y];
-    }
     initTableData() {
         let pixel = [];
         for (let i = 0; i < this.tableHeight; i++) {

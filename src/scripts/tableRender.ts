@@ -2,7 +2,6 @@ class TableRender {
     private _elementId: string;
     private _parentElementId: string; //parentElementId could/should? be eliminated from this class - at least as a property
     private _htmlTable: HTMLTableElement;
-    //private _drawn: boolean[][]; //keep track of whether a pixel changed since it's last been drawn
 
 //#region constructor, get, set
     constructor(parentElementId: string) {
@@ -43,7 +42,7 @@ class TableRender {
         for (let row = 0; row < height; row++) {
             const curRow: HTMLTableRowElement = this.htmlTable.rows[row];
             for (let cell = 0; cell < tableData.tableWidth; cell++) {
-                this.setColor(curRow.cells[cell], tableData.getPixel(row, cell).color);
+                this.setColor(curRow.cells[cell], tableData.pixels[row][cell].color);
             }
         }
     }
@@ -68,8 +67,7 @@ class TableRender {
             }
             return d.toString(16);
         }
-        return "#" + decToHex(rgbValues![1]) + decToHex(rgbValues![2]) 
-        + decToHex(rgbValues![3]); 
+        return "#" + decToHex(rgbValues![1]) + decToHex(rgbValues![2]) + decToHex(rgbValues![3]); 
     }
     public resizeTable(newHeight: number, newWidth: number) {
         this.setHeight(newHeight);

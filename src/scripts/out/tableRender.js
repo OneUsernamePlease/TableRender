@@ -1,6 +1,5 @@
 "use strict";
 class TableRender {
-    //private _drawn: boolean[][]; //keep track of whether a pixel changed since it's last been drawn
     //#region constructor, get, set
     constructor(parentElementId) {
         this._parentElementId = parentElementId;
@@ -39,7 +38,7 @@ class TableRender {
         for (let row = 0; row < height; row++) {
             const curRow = this.htmlTable.rows[row];
             for (let cell = 0; cell < tableData.tableWidth; cell++) {
-                this.setColor(curRow.cells[cell], tableData.getPixel(row, cell).color);
+                this.setColor(curRow.cells[cell], tableData.pixels[row][cell].color);
             }
         }
     }
@@ -66,8 +65,7 @@ class TableRender {
             }
             return d.toString(16);
         };
-        return "#" + decToHex(rgbValues[1]) + decToHex(rgbValues[2])
-            + decToHex(rgbValues[3]);
+        return "#" + decToHex(rgbValues[1]) + decToHex(rgbValues[2]) + decToHex(rgbValues[3]);
     }
     resizeTable(newHeight, newWidth) {
         this.setHeight(newHeight);

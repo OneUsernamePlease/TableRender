@@ -8,6 +8,7 @@
     <script src="scripts/out/pixel.js"></script>
     <script src="scripts/out/tableData.js"></script>
     <script src="scripts/out/tableRender.js"></script>
+    <script src="scripts/out/tools.js"></script>
 </head>
     <body>
         <div>
@@ -39,17 +40,16 @@
                     </div>
                 </div>
                 <div class="sidebarItem">
+                    <button id="save">Speichern</button>
+                </div>  
+                <div class="sidebarItem">
                     <p>Tools</p>
-                    <label for="rdToolsDraw">Draw</label>
-                    <input type="radio" id="rdToolsDraw" name="tools" value="draw">
-
                     <label for="rdToolsNone">None</label>
                     <input type="radio" id="rdToolsNone" name="tools" value="none" checked="true">
                     
-                </div>              
-                <div class="sidebarItem">
-                    <button id="save">Speichern</button>
-                </div>                
+                    <label for="rdToolsDraw">Draw</label>
+                    <input type="radio" id="rdToolsDraw" name="tools" value="draw">
+                </div> 
                 <div class="sidebarItem">
                     <button id="testBtn">test</button>
                 </div>
@@ -64,8 +64,18 @@
             <div class="main" id="mainContent">
                 <div id="toolbarContainer" class="toolbarContainer" todo="align top right">
                     <div id="drawTools" class="toolbar">
-                        <label for="drawToolsPen">Pen</label>
-                        <input type="radio" id="drawToolsPen" name="drawTools">
+                        <div class="toolbarItemCollection">
+                            <div class="toolbarItem">
+                                <label for="drawToolsColorPicker">Color</label>
+                                <input type="color" id="drawToolsColorPicker" value="#000000">
+                            </div>
+                        </div>
+                        <div class="toolbarItemCollection">
+                            <div class="toolbarItem">
+                                <label for="drawToolsPen">Pen</label>
+                                <input type="radio" id="drawToolsPen" name="drawTools" checked>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div id="tableContainer">

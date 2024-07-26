@@ -1,18 +1,18 @@
-/* TODO
-get rid of height, width property of tableData
-in tableData, keeping track of whether a cell was updated. then use this info when drawing
-*/
+//#region variables and such
 
-//#region initialisation
+const log: boolean = true;
+
 let tableContainerId = "tableContainer";
 let data: TableData; 
 let renderer: TableRender;
 let fileContent: string;
+let toolsMode: number;
+//#endregion
 
+//#region initialisation
 document.addEventListener("DOMContentLoaded", initialise);
 
 function initialise() {
-    
     data = new TableData(getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
     renderer = new TableRender(tableContainerId);
     renderer.draw(data);
@@ -24,18 +24,16 @@ function initialise() {
     document.removeEventListener("DOMContentLoaded", initialise);
 }
 function registerEvents() {
-    document.getElementById!("testBtn")?.addEventListener("click", testFunction);
-    document.getElementById!("btnGenerateTable")?.addEventListener("click", regenerateTable);
-    document.getElementById!("save")?.addEventListener("click", save);
-    document.getElementById!("btnDisplayFile")?.addEventListener("click", displayFile);
-    document.getElementById!("imgInput")?.addEventListener("change", readInputFile);
-    document.getElementById!("tableWidthInput")?.addEventListener("keyup", enforceInputNumber);
-    document.getElementById!("closeSidebar")?.addEventListener("click", closeSidebar);
-    document.getElementById!("openSidebar")?.addEventListener("click", openSidebar);
-    document.getElementById!(renderer.elementId)?.addEventListener("mousedown", tableMouseDown);
-    document.querySelectorAll("input[name=tools]")?.forEach(element => {
-        element.addEventListener("change", setToolMode)
-    }); 
+    document.getElementById("testBtn")?.addEventListener("click", testFunction);
+    document.getElementById("btnGenerateTable")?.addEventListener("click", regenerateTable);
+    document.getElementById("save")?.addEventListener("click", save);
+    document.getElementById("btnDisplayFile")?.addEventListener("click", displayFile);
+    document.getElementById("imgInput")?.addEventListener("change", readInputFile);
+    document.getElementById("tableWidthInput")?.addEventListener("keyup", enforceInputNumber);
+    document.getElementById("closeSidebar")?.addEventListener("click", closeSidebar);
+    document.getElementById("openSidebar")?.addEventListener("click", openSidebar); 
+    document.getElementById(renderer.elementId)?.addEventListener("mousedown", tableMouseDown);
+    document.querySelectorAll("input[name=tools]")?.forEach(element => { element.addEventListener("change", setToolMode) });
 }
 //#endregion
 
@@ -51,24 +49,22 @@ function closeSidebar() {
     document.getElementById("mainContent")!.style.marginLeft = "0";
 }
 function setToolMode() {
-    //get selected radiobutton
-    //(hide/show specific tools)
+    //hide/show specific tools, according to current selection
     //TODO: dont use queryselector, but either this or ev args
     let mode = (<HTMLInputElement>document.querySelector('input[name="tools"]:checked')).value;
-    let test = "";
+    console.log("function setToolMode, selected: " + mode);
     switch (mode) {
         case "draw":
+            toolsMode = Tools.Draw;
             showDrawTools();
-            test = "draw";
             break;
         case "none":
+            toolsMode = Tools.None;
             hideDrawTools();
-            test = "none"
             break;
         default:
             break;
     }
-    console.log("function setToolMode, selected: " + test);
 }
 function hideDrawTools() {
     document.getElementById("drawTools")!.style.display = "none";
@@ -94,15 +90,20 @@ function test1() {
     console.log(data.encode("pf1"));
     renderer.clearTable();
 }
+//#endregion
+
+//#region drawing table
 function randomColor(): string {
     const r = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
     const g = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
     const b = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
     return "#" + r+g+b
 }
-//#endregion
-
-//#region drawing table
+function colorCell(cell: HTMLTableCellElement, color: string) {
+    let cellIdx: [row: number, col: number] = [(<HTMLTableRowElement>cell.parentElement).rowIndex, cell.cellIndex];
+    renderer.setColor(cell, color);
+    data.setPixelColor(cellIdx[0], cellIdx[1], color);
+}
 function regenerateTable() {
     //redraw a new table, colored black, sized according to input spec
     data.colorAll("#000000", getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
@@ -122,12 +123,24 @@ function displayFile() {
 function tableMouseDown(this: HTMLElement, ev: MouseEvent) {
     //0. for now just log the cell
     //depending on what tool is chosen, do something
+    const cell: HTMLTableCellElement | null = (<Element>ev.target).closest("td");
+    if (!cell) {return}
+
+    //todo: right Click only
+    switch (toolsMode) {
+        case Tools.None:
+            console.log("clicked cell: row: " + (<HTMLTableRowElement>cell.parentElement).rowIndex + "; cell: " + cell.cellIndex)
+            break;
+    
+        case Tools.Draw:
+            drawToolsPenActivated(cell);
+            break;
+
+        default:
+            break;
+    }
 }
-function drawTool() {
-    //1. color the cell with chosen color
-    //2. color all cells the mouse hovers over while mouseDown
-    //3. add radius, all cells (parially) within the radius get colored
-}
+
 //#endregion
 
 //#region export
@@ -150,7 +163,7 @@ function save() {
 }
 function newFilename(): string {
     //return a name which is suggested when downloading tableData
-    const color0: string = data.getPixel(0,0).color;
+    const color0: string = data.pixels[0][0].color;
     return color0 + "_data.json";
 } 
 //#endregion
@@ -174,6 +187,9 @@ function readInputFile() {
         reader.readAsText(file);
     }
 }
+function getInputColor(inputId: string) {
+    return (<HTMLInputElement>document.getElementById(inputId)).value;
+}
 function getInputString(inputId: string): string {
     //return value of input element by id
     let input: HTMLElement | null;
@@ -196,19 +212,16 @@ function isNumeric(s: string): boolean {
 
     /*/which is faster?
     s = s.trim();
-    return /^\d*.?\d*$/.test(s); //problem is that a single dot is considered numeric
+    return /^\d*.?\d*$/.test(s); //problem is that a single dot and empty string is considered numeric
     */
 }
 function enforceInputNumber(this: HTMLElement) {
     //enforces, that value of input this, is not below its min, or above its max value
     //enforces, that only a numeric (integer) string can be entered
     let that: HTMLInputElement = <HTMLInputElement>this;
-    const min: number = (that.min !== "") ? +that.min : Number.MIN_VALUE;
-    const max: number = (that.max !== "") ? +that.max : Number.MAX_VALUE;
+    const min: number = (that.min !== "") ? +that.min : 0;
+    const max: number = (that.max !== "") ? +that.max : 1e10;//Number.MAX_VALUE;
     let curInput: string = that.value; //value non-numeric --> curInput = ""
-    //while (curInput !== "" && !isNumeric(curInput.slice(-1))) {
-    //    curInput = curInput.slice(0, -1);
-    //}
     that.value = (curInput === "") ? min.toString() : Math.min(max, Math.max(min, +curInput)).toString();
 }
 //#endregion
