@@ -1,7 +1,7 @@
 //#region variables and such
 
-const log: boolean = true;
-
+//ADD COLOR ALL TO DRAW TOOLS
+let tableMouseDownState: boolean = false;
 let tableContainerId = "tableContainer";
 let data: TableData; 
 let renderer: TableRender;
@@ -19,7 +19,10 @@ function initialise() {
     
     registerEvents();
     readInputFile();
-    setToolMode();
+    setTimeout(() => { setToolMode() }, 50); 
+    //if a (tool-)mode other than the one defined in html is checked, setToolMode() uses the predefined value, although firefox will then check the "cached" radiobutton
+    //(this is possibly a firefox issue, it's got a few quirks, edge just does not remember the checked button, and i'm not gonna install another browser)
+    //it occurs when you duplicate the tab, with a regular reload it behaves correctly
 
     document.removeEventListener("DOMContentLoaded", initialise);
 }
@@ -33,7 +36,10 @@ function registerEvents() {
     document.getElementById("closeSidebar")?.addEventListener("click", closeSidebar);
     document.getElementById("openSidebar")?.addEventListener("click", openSidebar); 
     document.getElementById(renderer.elementId)?.addEventListener("mousedown", tableMouseDown);
+    document.getElementById(renderer.elementId)?.addEventListener("mouseup", tableMouseUp);
+    document.getElementById(renderer.elementId)?.addEventListener("mouseleave", () => {tableMouseDownState = false});
     document.querySelectorAll("input[name=tools]")?.forEach(element => { element.addEventListener("change", setToolMode) });
+    document.querySelectorAll(".pixel")?.forEach(element => { element.addEventListener("mouseenter", tableMouseMove) });
 }
 //#endregion
 
@@ -52,7 +58,6 @@ function setToolMode() {
     //hide/show specific tools, according to current selection
     //TODO: dont use queryselector, but either this or ev args
     let mode = (<HTMLInputElement>document.querySelector('input[name="tools"]:checked')).value;
-    console.log("function setToolMode, selected: " + mode);
     switch (mode) {
         case "draw":
             toolsMode = Tools.Draw;
@@ -74,16 +79,18 @@ function showDrawTools() {
 }
 //#endregion
 
-//#region tests
+//#region tests, logs
 let testFunction = () => { 
-    test2(); 
+    test3(); 
+}
+function test3() {
+    console.log("checked Tool in the sidebar: " + (<HTMLInputElement>document.querySelector('input[name="tools"]:checked')).value);
 }
 function test2() {
     //fill in random color
     const color = randomColor();
     data.colorAll(color);
     renderer.draw(data);
-   // console.log(data.encode("pf1"));
 }
 function test1() {
     //log pf1-encoded tableData
@@ -121,26 +128,47 @@ function displayFile() {
     renderer.draw(data);
 }
 function tableMouseDown(this: HTMLElement, ev: MouseEvent) {
-    //0. for now just log the cell
-    //depending on what tool is chosen, do something
+    //depending on what tool is selected, do something
     const cell: HTMLTableCellElement | null = (<Element>ev.target).closest("td");
-    if (!cell) {return}
+    if (!cell) return;
+    if (ev.button !== 0) return;
 
-    //todo: right Click only
+    tableMouseDownState = true;
     switch (toolsMode) {
         case Tools.None:
-            console.log("clicked cell: row: " + (<HTMLTableRowElement>cell.parentElement).rowIndex + "; cell: " + cell.cellIndex)
+            console.log("clicked cell: row: " + (<HTMLTableRowElement>cell.parentElement).rowIndex + "; cell: " + cell.cellIndex);
             break;
     
         case Tools.Draw:
-            drawToolsPenActivated(cell);
+            drawToolsPen(cell);
             break;
 
         default:
             break;
     }
 }
+function tableMouseMove(this: HTMLElement, ev: Event) {
+    //depending on what tool is selected, do something
+    const cell: HTMLTableCellElement = (<HTMLTableCellElement>ev.target);
+    if (!cell) return;
+    if (!tableMouseDownState) return;
+    switch (toolsMode) {
+        case Tools.None:
+            console.log("moved to cell: row: " + (<HTMLTableRowElement>cell.parentElement).rowIndex + "; cell: " + cell.cellIndex)
+            break;
+    
+        case Tools.Draw:
+            drawToolsPen(cell);
+            break;
 
+        default:
+            break;
+    }
+}
+function tableMouseUp(this: HTMLElement, ev: MouseEvent) {
+    if (ev.button !== 0) return;
+    tableMouseDownState = false;
+}
 //#endregion
 
 //#region export

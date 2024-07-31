@@ -1,6 +1,7 @@
 "use strict";
 //#region variables and such
-const log = true;
+//ADD COLOR ALL TO DRAW TOOLS
+let tableMouseDownState = false;
 let tableContainerId = "tableContainer";
 let data;
 let renderer;
@@ -15,11 +16,14 @@ function initialise() {
     renderer.draw(data);
     registerEvents();
     readInputFile();
-    setToolMode();
+    setTimeout(() => { setToolMode(); }, 50);
+    //if a (tool-)mode other than the one defined in html is checked, setToolMode() uses the predefined value, although firefox will then check the "cached" radiobutton
+    //(this is possibly a firefox issue, it's got a few quirks, edge just does not remember the checked button, and i'm not gonna install another browser)
+    //it occurs when you duplicate the tab, with a regular reload it behaves correctly
     document.removeEventListener("DOMContentLoaded", initialise);
 }
 function registerEvents() {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
     (_a = document.getElementById("testBtn")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", testFunction);
     (_b = document.getElementById("btnGenerateTable")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", regenerateTable);
     (_c = document.getElementById("save")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", save);
@@ -29,7 +33,10 @@ function registerEvents() {
     (_g = document.getElementById("closeSidebar")) === null || _g === void 0 ? void 0 : _g.addEventListener("click", closeSidebar);
     (_h = document.getElementById("openSidebar")) === null || _h === void 0 ? void 0 : _h.addEventListener("click", openSidebar);
     (_j = document.getElementById(renderer.elementId)) === null || _j === void 0 ? void 0 : _j.addEventListener("mousedown", tableMouseDown);
-    (_k = document.querySelectorAll("input[name=tools]")) === null || _k === void 0 ? void 0 : _k.forEach(element => { element.addEventListener("change", setToolMode); });
+    (_k = document.getElementById(renderer.elementId)) === null || _k === void 0 ? void 0 : _k.addEventListener("mouseup", tableMouseUp);
+    (_l = document.getElementById(renderer.elementId)) === null || _l === void 0 ? void 0 : _l.addEventListener("mouseleave", () => { tableMouseDownState = false; });
+    (_m = document.querySelectorAll("input[name=tools]")) === null || _m === void 0 ? void 0 : _m.forEach(element => { element.addEventListener("change", setToolMode); });
+    (_o = document.querySelectorAll(".pixel")) === null || _o === void 0 ? void 0 : _o.forEach(element => { element.addEventListener("mouseenter", tableMouseMove); });
 }
 //#endregion
 //#region page layout & mode
@@ -47,7 +54,6 @@ function setToolMode() {
     //hide/show specific tools, according to current selection
     //TODO: dont use queryselector, but either this or ev args
     let mode = document.querySelector('input[name="tools"]:checked').value;
-    console.log("function setToolMode, selected: " + mode);
     switch (mode) {
         case "draw":
             toolsMode = Tools.Draw;
@@ -68,16 +74,18 @@ function showDrawTools() {
     document.getElementById("drawTools").style.removeProperty("display");
 }
 //#endregion
-//#region tests
+//#region tests, logs
 let testFunction = () => {
-    test2();
+    test3();
 };
+function test3() {
+    console.log("checked Tool in the sidebar: " + document.querySelector('input[name="tools"]:checked').value);
+}
 function test2() {
     //fill in random color
     const color = randomColor();
     data.colorAll(color);
     renderer.draw(data);
-    // console.log(data.encode("pf1"));
 }
 function test1() {
     //log pf1-encoded tableData
@@ -114,23 +122,46 @@ function displayFile() {
     renderer.draw(data);
 }
 function tableMouseDown(ev) {
-    //0. for now just log the cell
-    //depending on what tool is chosen, do something
+    //depending on what tool is selected, do something
     const cell = ev.target.closest("td");
-    if (!cell) {
+    if (!cell)
         return;
-    }
-    //todo: right Click only
+    if (ev.button !== 0)
+        return;
+    tableMouseDownState = true;
     switch (toolsMode) {
         case Tools.None:
             console.log("clicked cell: row: " + cell.parentElement.rowIndex + "; cell: " + cell.cellIndex);
             break;
         case Tools.Draw:
-            drawToolsPenActivated(cell);
+            drawToolsPen(cell);
             break;
         default:
             break;
     }
+}
+function tableMouseMove(ev) {
+    //depending on what tool is selected, do something
+    const cell = ev.target;
+    if (!cell)
+        return;
+    if (!tableMouseDownState)
+        return;
+    switch (toolsMode) {
+        case Tools.None:
+            console.log("moved to cell: row: " + cell.parentElement.rowIndex + "; cell: " + cell.cellIndex);
+            break;
+        case Tools.Draw:
+            drawToolsPen(cell);
+            break;
+        default:
+            break;
+    }
+}
+function tableMouseUp(ev) {
+    if (ev.button !== 0)
+        return;
+    tableMouseDownState = false;
 }
 //#endregion
 //#region export
