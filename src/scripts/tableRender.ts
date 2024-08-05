@@ -8,7 +8,6 @@ class TableRender {
         this._parentElementId = parentElementId;
         this._elementId = "tableRender" + Math.floor(Math.random() * (100000));
         this._htmlTable = document.createElement("table");
-        //this._drawn = [];
         this.initTable();
     }
     public get elementId(): string {
@@ -27,6 +26,7 @@ class TableRender {
     private initTable() {
         //set id and append the table to the DOM
         this.htmlTable.setAttribute("id", this.elementId);
+        this.htmlTable.setAttribute("ondragstart", "return false;");
         document.getElementById(this.parentElementId)!.appendChild(this.htmlTable);
     }
     public clearTable() {
@@ -58,7 +58,7 @@ class TableRender {
     }
     public rgbToHex(rgb: string): string {
         //transforms color-value rgb of form 'rgb(0,128,255)' to hex form '#0080ff' and returns it
-        if (/^#[0-9A-F]{6}$/i.test(rgb)) return rgb;
+        if (/^#?[0-9A-F]{6}$/i.test(rgb)) return rgb;
         if (!(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i.test(rgb))) return "";
         let rgbValues = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i);
         let decToHex = (d: string|number): string => {
@@ -93,6 +93,7 @@ class TableRender {
         }
     }
     public setWidth(newWidth: number) {
+        //sets the width of each row in hmtlTable, to match newWidth
         for (let curRowIdx = 0; curRowIdx < this.htmlTable.rows.length; curRowIdx++) {
             const row = this.htmlTable.rows[curRowIdx];
             const cellCnt = row.cells.length;
@@ -105,18 +106,23 @@ class TableRender {
         }
     }
     public addCells(row: HTMLTableRowElement, n: number) {
+        //add cells to a HTMLTableRowElement
+        //also adds the eventListener for drawing
         let cellClassName = "pixel";
         for (let i = 0; i < n; i++) {
             const cell: HTMLTableCellElement = row.insertCell(-1);
             cell.classList.add(cellClassName);
+            cell.addEventListener("mouseenter", tableMouseMove); //this should probably be done somewhere in main.ts
         }
     }
     public removeCells(row: HTMLTableRowElement, n: number) {
+        //remove cells from a HTMLTableRow
         for (let i = 0; i < n; i++) {
             row.deleteCell(-1);
         }
     }
     public getCurrentTableData(): TableData {
+        //returns the current state of the HTMLTable as new TableData
         let height = this.htmlTable.rows.length;
         let width = (height > 0) ? this.htmlTable.rows[0].cells.length : 0;
         let data = new TableData(height, width);

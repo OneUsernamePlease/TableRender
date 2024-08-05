@@ -39,7 +39,7 @@ function registerEvents() {
     document.getElementById(renderer.elementId)?.addEventListener("mouseup", tableMouseUp);
     document.getElementById(renderer.elementId)?.addEventListener("mouseleave", () => {tableMouseDownState = false});
     document.querySelectorAll("input[name=tools]")?.forEach(element => { element.addEventListener("change", setToolMode) });
-    document.querySelectorAll(".pixel")?.forEach(element => { element.addEventListener("mouseenter", tableMouseMove) });
+    document.querySelectorAll(".pixel")?.forEach(element => { element.addEventListener("mouseenter", tableMouseMove) }); //only needed for draw tools - REFACTOR: only have these listeners active when needed
 }
 //#endregion
 
@@ -47,7 +47,7 @@ function registerEvents() {
 function openSidebar() {
     const sidebar = document.getElementById("sidebar");
     sidebar!.style.width = "auto";
-    document.getElementById("mainContent")!.style.marginLeft = sidebar!.clientWidth.toString();
+    document.getElementById("mainContent")!.style.marginLeft = sidebar!.clientWidth.toString() + "px";
 }
 function closeSidebar() {
     const sidebar = document.getElementById("sidebar");
@@ -100,17 +100,7 @@ function test1() {
 //#endregion
 
 //#region drawing table
-function randomColor(): string {
-    const r = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
-    const g = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
-    const b = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
-    return "#" + r+g+b
-}
-function colorCell(cell: HTMLTableCellElement, color: string) {
-    let cellIdx: [row: number, col: number] = [(<HTMLTableRowElement>cell.parentElement).rowIndex, cell.cellIndex];
-    renderer.setColor(cell, color);
-    data.setPixelColor(cellIdx[0], cellIdx[1], color);
-}
+
 function regenerateTable() {
     //redraw a new table, colored black, sized according to input spec
     data.colorAll("#000000", getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
@@ -166,6 +156,8 @@ function tableMouseMove(this: HTMLElement, ev: Event) {
     }
 }
 function tableMouseUp(this: HTMLElement, ev: MouseEvent) {
+    //call on MouseUp inside htmlTable, and mouseLeave htmlTable
+    //sets tableMouseDownState (which keeps track of lmb being down in htmlTable) to false
     if (ev.button !== 0) return;
     tableMouseDownState = false;
 }
@@ -193,7 +185,7 @@ function newFilename(): string {
     //return a name which is suggested when downloading tableData
     const color0: string = data.pixels[0][0].color;
     return color0 + "_data.json";
-} 
+}
 //#endregion
 
 //#region inputs

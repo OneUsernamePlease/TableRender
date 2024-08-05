@@ -36,7 +36,7 @@ element
 .sidebar {
     height: 100%;
     width: 0;
-    max-width: 35%;
+    /*max-width: 35%;*/
     position: fixed;
     z-index: 0;
     top: 0;

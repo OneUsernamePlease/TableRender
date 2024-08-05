@@ -36,14 +36,14 @@ function registerEvents() {
     (_k = document.getElementById(renderer.elementId)) === null || _k === void 0 ? void 0 : _k.addEventListener("mouseup", tableMouseUp);
     (_l = document.getElementById(renderer.elementId)) === null || _l === void 0 ? void 0 : _l.addEventListener("mouseleave", () => { tableMouseDownState = false; });
     (_m = document.querySelectorAll("input[name=tools]")) === null || _m === void 0 ? void 0 : _m.forEach(element => { element.addEventListener("change", setToolMode); });
-    (_o = document.querySelectorAll(".pixel")) === null || _o === void 0 ? void 0 : _o.forEach(element => { element.addEventListener("mouseenter", tableMouseMove); });
+    (_o = document.querySelectorAll(".pixel")) === null || _o === void 0 ? void 0 : _o.forEach(element => { element.addEventListener("mouseenter", tableMouseMove); }); //only needed for draw tools - REFACTOR: only have these listeners active when needed
 }
 //#endregion
 //#region page layout & mode
 function openSidebar() {
     const sidebar = document.getElementById("sidebar");
     sidebar.style.width = "auto";
-    document.getElementById("mainContent").style.marginLeft = sidebar.clientWidth.toString();
+    document.getElementById("mainContent").style.marginLeft = sidebar.clientWidth.toString() + "px";
 }
 function closeSidebar() {
     const sidebar = document.getElementById("sidebar");
@@ -94,17 +94,6 @@ function test1() {
 }
 //#endregion
 //#region drawing table
-function randomColor() {
-    const r = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
-    const g = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
-    const b = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
-    return "#" + r + g + b;
-}
-function colorCell(cell, color) {
-    let cellIdx = [cell.parentElement.rowIndex, cell.cellIndex];
-    renderer.setColor(cell, color);
-    data.setPixelColor(cellIdx[0], cellIdx[1], color);
-}
 function regenerateTable() {
     //redraw a new table, colored black, sized according to input spec
     data.colorAll("#000000", getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
@@ -159,6 +148,8 @@ function tableMouseMove(ev) {
     }
 }
 function tableMouseUp(ev) {
+    //call on MouseUp inside htmlTable, and mouseLeave htmlTable
+    //sets tableMouseDownState (which keeps track of lmb being down in htmlTable) to false
     if (ev.button !== 0)
         return;
     tableMouseDownState = false;
