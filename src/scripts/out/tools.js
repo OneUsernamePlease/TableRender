@@ -1,6 +1,6 @@
 "use strict";
 //these tools should really be part of the renderer
-let selectedColor; //use this variable instead of calling getInputColor(...) all the damn time
+let selectedColor = "#000000"; //use this variable instead of calling getInputColor(...) all the damn time
 var Tools;
 (function (Tools) {
     Tools[Tools["None"] = 0] = "None";
@@ -11,12 +11,13 @@ var DrawTools;
     DrawTools[DrawTools["Pen"] = 1] = "Pen";
 })(DrawTools || (DrawTools = {}));
 //#region DRAW (mr paint)
+/**
+ *
+ * @param cell HTMLTableCellElement
+ */
 function drawToolsPen(cell) {
-    //1. color the cell with chosen color --> OK
-    //2. color all cells the mouse hovers over while mouseDown
-    //3. add radius, all cells (partially) within the radius get colored
-    let color = getInputColor("drawToolsColorPicker");
-    colorCell(cell, color);
+    //add radius, all cells (partially) within the radius get colored
+    colorCell(cell, inputColor);
 }
 function randomColor() {
     const r = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");

@@ -1,8 +1,9 @@
 //#region variables and such
 
 //ADD COLOR ALL TO DRAW TOOLS
-let tableMouseDownState: boolean = false;
+let tableLMouseDownState: boolean = false;
 let tableContainerId = "tableContainer";
+let inputColor: string = "#000000";
 let data: TableData; 
 let renderer: TableRender;
 let fileContent: string;
@@ -11,7 +12,6 @@ let toolsMode: number;
 
 //#region initialisation
 document.addEventListener("DOMContentLoaded", initialise);
-
 function initialise() {
     data = new TableData(getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
     renderer = new TableRender(tableContainerId);
@@ -19,10 +19,9 @@ function initialise() {
     
     registerEvents();
     readInputFile();
-    setTimeout(() => { setToolMode() }, 50); 
-    //if a (tool-)mode other than the one defined in html is checked, setToolMode() uses the predefined value, although firefox will then check the "cached" radiobutton
-    //(this is possibly a firefox issue, it's got a few quirks, edge just does not remember the checked button, and i'm not gonna install another browser)
-    //it occurs when you duplicate the tab, with a regular reload it behaves correctly
+    inputColor = getInputColor("drawToolsColorPicker");
+    setTimeout(() => { setToolMode() }, 50);
+    //setTimeout is a solution for firefox, it gets confused when duplicating a tab
 
     document.removeEventListener("DOMContentLoaded", initialise);
 }
@@ -32,12 +31,12 @@ function registerEvents() {
     document.getElementById("save")?.addEventListener("click", save);
     document.getElementById("btnDisplayFile")?.addEventListener("click", displayFile);
     document.getElementById("imgInput")?.addEventListener("change", readInputFile);
-    document.getElementById("tableWidthInput")?.addEventListener("keyup", enforceInputNumber);
+    document.getElementById("drawToolsColorPicker")?.addEventListener("change", updateSelectedColor);
     document.getElementById("closeSidebar")?.addEventListener("click", closeSidebar);
     document.getElementById("openSidebar")?.addEventListener("click", openSidebar); 
     document.getElementById(renderer.elementId)?.addEventListener("mousedown", tableMouseDown);
     document.getElementById(renderer.elementId)?.addEventListener("mouseup", tableMouseUp);
-    document.getElementById(renderer.elementId)?.addEventListener("mouseleave", () => {tableMouseDownState = false});
+    document.getElementById(renderer.elementId)?.addEventListener("mouseleave", () => {tableLMouseDownState = false});
     document.querySelectorAll("input[name=tools]")?.forEach(element => { element.addEventListener("change", setToolMode) });
     document.querySelectorAll(".pixel")?.forEach(element => { element.addEventListener("mouseenter", tableMouseMove) }); //only needed for draw tools - REFACTOR: only have these listeners active when needed
 }
@@ -54,9 +53,12 @@ function closeSidebar() {
     sidebar!.style.width = "0";
     document.getElementById("mainContent")!.style.marginLeft = "0";
 }
+/**
+ * hide/show specific tools, according to current selection
+ * TODO: dont use queryselector, but either this or ev args
+ */
 function setToolMode() {
-    //hide/show specific tools, according to current selection
-    //TODO: dont use queryselector, but either this or ev args
+
     let mode = (<HTMLInputElement>document.querySelector('input[name="tools"]:checked')).value;
     switch (mode) {
         case "draw":
@@ -77,19 +79,30 @@ function hideDrawTools() {
 function showDrawTools() {
     document.getElementById("drawTools")!.style.removeProperty("display");
 }
+function activateDrawTools() {
+    //addEventListeners
+    showDrawTools();
+
+}
+function deactivateDrawTools() {
+    //removeEventListeners
+    hideDrawTools();
+}
 //#endregion
 
 //#region tests, logs
 let testFunction = () => { 
-    test3(); 
+    test2(); 
 }
 function test3() {
     console.log("checked Tool in the sidebar: " + (<HTMLInputElement>document.querySelector('input[name="tools"]:checked')).value);
 }
+/**
+ * Fill all in random color
+ */
 function test2() {
-    //fill in random color
-    const color = randomColor();
-    data.colorAll(color);
+    //fill table with random color
+    data.colorAll(randomColor());
     renderer.draw(data);
 }
 function test1() {
@@ -100,7 +113,6 @@ function test1() {
 //#endregion
 
 //#region drawing table
-
 function regenerateTable() {
     //redraw a new table, colored black, sized according to input spec
     data.colorAll("#000000", getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
@@ -123,7 +135,7 @@ function tableMouseDown(this: HTMLElement, ev: MouseEvent) {
     if (!cell) return;
     if (ev.button !== 0) return;
 
-    tableMouseDownState = true;
+    tableLMouseDownState = true;
     switch (toolsMode) {
         case Tools.None:
             console.log("clicked cell: row: " + (<HTMLTableRowElement>cell.parentElement).rowIndex + "; cell: " + cell.cellIndex);
@@ -141,7 +153,7 @@ function tableMouseMove(this: HTMLElement, ev: Event) {
     //depending on what tool is selected, do something
     const cell: HTMLTableCellElement = (<HTMLTableCellElement>ev.target);
     if (!cell) return;
-    if (!tableMouseDownState) return;
+    if (!tableLMouseDownState) return;
     switch (toolsMode) {
         case Tools.None:
             console.log("moved to cell: row: " + (<HTMLTableRowElement>cell.parentElement).rowIndex + "; cell: " + cell.cellIndex)
@@ -159,7 +171,16 @@ function tableMouseUp(this: HTMLElement, ev: MouseEvent) {
     //call on MouseUp inside htmlTable, and mouseLeave htmlTable
     //sets tableMouseDownState (which keeps track of lmb being down in htmlTable) to false
     if (ev.button !== 0) return;
-    tableMouseDownState = false;
+    tableLMouseDownState = false;
+}
+/**
+ * valid color formats are hex and rgb(r,g,b) (r,g,b being decimal values)
+ * @param testColor the string to test
+ * @returns testColor if it is a valid color format, #000000 if testColor is not a valid color format
+ */
+function testColorString(testColor: string): string {
+    let valid = /^#?[0-9A-F]{6}$/i.test(testColor) || /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i.test(testColor)
+    return valid ? testColor : "#000000";
 }
 //#endregion
 
@@ -189,15 +210,32 @@ function newFilename(): string {
 //#endregion
 
 //#region inputs
+/**
+ * set global inputColor to the selected color - the value attribute of 'this'
+ * @param this HTMLElement
+ */
+function updateSelectedColor(this: HTMLElement) {
+    let inputValue = (<HTMLInputElement>this).value;
+    inputColor = testColorString(inputValue);
+}
+/**
+ * Return value of HTMLInputElement, if it is a valid color string (hex and rgb(r,g,b) are valid formats).
+ * Returns "#000000" if value is not a valid color
+ * @param inputId 
+ */
+function getInputColor(inputId: string) {
+    let inputColor = (<HTMLInputElement>document.getElementById(inputId)).value;
+    return testColorString(inputColor);
+}
+/**
+ * read the content of file uploaded in input-element "#imgInput" as a string and loads it to global variable fileContent (main.ts).
+ * Should be called on file-input's change-event
+ */
 function readInputFile() {
-    //read the content of file selected in input (json only) as a string
-    //loads the content to global fileContent
-    //call on fileInput's change
     let files: FileList | null = (<HTMLInputElement>document.getElementById("imgInput")).files;
-    
-    if (files === null) {return null;}
+    if (files === null) return;
+
     const file = files[0];
-    // setting a breakpoint inside onload can be reached, but breaking outside and trying to step in does not work ??
     if (file) {
         const reader = new FileReader;
         reader.onload = () => {
@@ -207,41 +245,30 @@ function readInputFile() {
         reader.readAsText(file);
     }
 }
-function getInputColor(inputId: string) {
-    return (<HTMLInputElement>document.getElementById(inputId)).value;
-}
-function getInputString(inputId: string): string {
-    //return value of input element by id
+/**
+ * @param inputId elementID for input-element
+ * @returns element's value attribute (trimmed), or empty string if inputElement is not valid
+ */
+function getInputValue(inputId: string): string {
     let input: HTMLElement | null;
     input = document.getElementById(inputId);
     return (!!input) ? (input as HTMLInputElement).value.trim() : "";
 }
+/**
+ * @param inputId elementID for input-element
+ * @returns element's value attribute; 0 if value is not numeric
+ */
 function getInputNumber(inputId: string): number {
-    //returns value of input element by id
-    //returns 0 if input's value is not numeric
-    let inputValue: string = getInputString(inputId);
+    let inputValue: string = getInputValue(inputId);
     return isNumeric(inputValue) ? +inputValue : 0;
 }
+/**
+ * empty string is NOT considered numeric
+ * @param s the string to be examined
+ * @returns true if s is a valid number, returns false otherwise
+ */
 function isNumeric(s: string): boolean {
-    //returns true if s is a valid number, returns false otherwise
-    //empty string is NOT considered numeric
     s = s.trim();
     return (!isNaN(+s)) && s.length !== 0;
-    //what? -->
-    //+stringA converts stringA to number, if stringA is not numeric result = NaN, if it is numeric, result is stringA as number. "!isNan(+stringA)" is true if stringA is numeric, otherwise false
-
-    /*/which is faster?
-    s = s.trim();
-    return /^\d*.?\d*$/.test(s); //problem is that a single dot and empty string is considered numeric
-    */
-}
-function enforceInputNumber(this: HTMLElement) {
-    //enforces, that value of input this, is not below its min, or above its max value
-    //enforces, that only a numeric (integer) string can be entered
-    let that: HTMLInputElement = <HTMLInputElement>this;
-    const min: number = (that.min !== "") ? +that.min : 0;
-    const max: number = (that.max !== "") ? +that.max : 1e10;//Number.MAX_VALUE;
-    let curInput: string = that.value; //value non-numeric --> curInput = ""
-    that.value = (curInput === "") ? min.toString() : Math.min(max, Math.max(min, +curInput)).toString();
 }
 //#endregion

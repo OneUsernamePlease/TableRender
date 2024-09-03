@@ -1,8 +1,9 @@
 "use strict";
 //#region variables and such
 //ADD COLOR ALL TO DRAW TOOLS
-let tableMouseDownState = false;
+let tableLMouseDownState = false;
 let tableContainerId = "tableContainer";
+let inputColor = "#000000";
 let data;
 let renderer;
 let fileContent;
@@ -16,10 +17,9 @@ function initialise() {
     renderer.draw(data);
     registerEvents();
     readInputFile();
+    inputColor = getInputColor("drawToolsColorPicker");
     setTimeout(() => { setToolMode(); }, 50);
-    //if a (tool-)mode other than the one defined in html is checked, setToolMode() uses the predefined value, although firefox will then check the "cached" radiobutton
-    //(this is possibly a firefox issue, it's got a few quirks, edge just does not remember the checked button, and i'm not gonna install another browser)
-    //it occurs when you duplicate the tab, with a regular reload it behaves correctly
+    //setTimeout is a solution for firefox, it gets confused when duplicating a tab
     document.removeEventListener("DOMContentLoaded", initialise);
 }
 function registerEvents() {
@@ -29,12 +29,12 @@ function registerEvents() {
     (_c = document.getElementById("save")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", save);
     (_d = document.getElementById("btnDisplayFile")) === null || _d === void 0 ? void 0 : _d.addEventListener("click", displayFile);
     (_e = document.getElementById("imgInput")) === null || _e === void 0 ? void 0 : _e.addEventListener("change", readInputFile);
-    (_f = document.getElementById("tableWidthInput")) === null || _f === void 0 ? void 0 : _f.addEventListener("keyup", enforceInputNumber);
+    (_f = document.getElementById("drawToolsColorPicker")) === null || _f === void 0 ? void 0 : _f.addEventListener("change", updateSelectedColor);
     (_g = document.getElementById("closeSidebar")) === null || _g === void 0 ? void 0 : _g.addEventListener("click", closeSidebar);
     (_h = document.getElementById("openSidebar")) === null || _h === void 0 ? void 0 : _h.addEventListener("click", openSidebar);
     (_j = document.getElementById(renderer.elementId)) === null || _j === void 0 ? void 0 : _j.addEventListener("mousedown", tableMouseDown);
     (_k = document.getElementById(renderer.elementId)) === null || _k === void 0 ? void 0 : _k.addEventListener("mouseup", tableMouseUp);
-    (_l = document.getElementById(renderer.elementId)) === null || _l === void 0 ? void 0 : _l.addEventListener("mouseleave", () => { tableMouseDownState = false; });
+    (_l = document.getElementById(renderer.elementId)) === null || _l === void 0 ? void 0 : _l.addEventListener("mouseleave", () => { tableLMouseDownState = false; });
     (_m = document.querySelectorAll("input[name=tools]")) === null || _m === void 0 ? void 0 : _m.forEach(element => { element.addEventListener("change", setToolMode); });
     (_o = document.querySelectorAll(".pixel")) === null || _o === void 0 ? void 0 : _o.forEach(element => { element.addEventListener("mouseenter", tableMouseMove); }); //only needed for draw tools - REFACTOR: only have these listeners active when needed
 }
@@ -50,9 +50,11 @@ function closeSidebar() {
     sidebar.style.width = "0";
     document.getElementById("mainContent").style.marginLeft = "0";
 }
+/**
+ * hide/show specific tools, according to current selection
+ * TODO: dont use queryselector, but either this or ev args
+ */
 function setToolMode() {
-    //hide/show specific tools, according to current selection
-    //TODO: dont use queryselector, but either this or ev args
     let mode = document.querySelector('input[name="tools"]:checked').value;
     switch (mode) {
         case "draw":
@@ -73,18 +75,27 @@ function hideDrawTools() {
 function showDrawTools() {
     document.getElementById("drawTools").style.removeProperty("display");
 }
+function activateDrawTools() {
+    showDrawTools();
+}
+function deactivateDrawTools() {
+    //removeEventListeners
+    hideDrawTools();
+}
 //#endregion
 //#region tests, logs
 let testFunction = () => {
-    test3();
+    test2();
 };
 function test3() {
     console.log("checked Tool in the sidebar: " + document.querySelector('input[name="tools"]:checked').value);
 }
+/**
+ * Fill all in random color
+ */
 function test2() {
-    //fill in random color
-    const color = randomColor();
-    data.colorAll(color);
+    //fill table with random color
+    data.colorAll(randomColor());
     renderer.draw(data);
 }
 function test1() {
@@ -117,7 +128,7 @@ function tableMouseDown(ev) {
         return;
     if (ev.button !== 0)
         return;
-    tableMouseDownState = true;
+    tableLMouseDownState = true;
     switch (toolsMode) {
         case Tools.None:
             console.log("clicked cell: row: " + cell.parentElement.rowIndex + "; cell: " + cell.cellIndex);
@@ -134,7 +145,7 @@ function tableMouseMove(ev) {
     const cell = ev.target;
     if (!cell)
         return;
-    if (!tableMouseDownState)
+    if (!tableLMouseDownState)
         return;
     switch (toolsMode) {
         case Tools.None:
@@ -152,7 +163,16 @@ function tableMouseUp(ev) {
     //sets tableMouseDownState (which keeps track of lmb being down in htmlTable) to false
     if (ev.button !== 0)
         return;
-    tableMouseDownState = false;
+    tableLMouseDownState = false;
+}
+/**
+ * valid color formats are hex and rgb(r,g,b) (r,g,b being decimal values)
+ * @param testColor the string to test
+ * @returns testColor if it is a valid color format, #000000 if testColor is not a valid color format
+ */
+function testColorString(testColor) {
+    let valid = /^#?[0-9A-F]{6}$/i.test(testColor) || /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i.test(testColor);
+    return valid ? testColor : "#000000";
 }
 //#endregion
 //#region export
@@ -179,16 +199,32 @@ function newFilename() {
 }
 //#endregion
 //#region inputs
+/**
+ * set global inputColor to the selected color - the value attribute of 'this'
+ * @param this HTMLElement
+ */
+function updateSelectedColor() {
+    let inputValue = this.value;
+    inputColor = testColorString(inputValue);
+}
+/**
+ * Return value of HTMLInputElement, if it is a valid color string (hex and rgb(r,g,b) are valid formats).
+ * Returns "#000000" if value is not a valid color
+ * @param inputId
+ */
+function getInputColor(inputId) {
+    let inputColor = document.getElementById(inputId).value;
+    return testColorString(inputColor);
+}
+/**
+ * read the content of file uploaded in input-element "#imgInput" as a string and loads it to global variable fileContent (main.ts).
+ * Should be called on file-input's change-event
+ */
 function readInputFile() {
-    //read the content of file selected in input (json only) as a string
-    //loads the content to global fileContent
-    //call on fileInput's change
     let files = document.getElementById("imgInput").files;
-    if (files === null) {
-        return null;
-    }
+    if (files === null)
+        return;
     const file = files[0];
-    // setting a breakpoint inside onload can be reached, but breaking outside and trying to step in does not work ??
     if (file) {
         const reader = new FileReader;
         reader.onload = () => {
@@ -198,41 +234,31 @@ function readInputFile() {
         reader.readAsText(file);
     }
 }
-function getInputColor(inputId) {
-    return document.getElementById(inputId).value;
-}
-function getInputString(inputId) {
-    //return value of input element by id
+/**
+ * @param inputId elementID for input-element
+ * @returns element's value attribute (trimmed), or empty string if inputElement is not valid
+ */
+function getInputValue(inputId) {
     let input;
     input = document.getElementById(inputId);
     return (!!input) ? input.value.trim() : "";
 }
+/**
+ * @param inputId elementID for input-element
+ * @returns element's value attribute; 0 if value is not numeric
+ */
 function getInputNumber(inputId) {
-    //returns value of input element by id
-    //returns 0 if input's value is not numeric
-    let inputValue = getInputString(inputId);
+    let inputValue = getInputValue(inputId);
     return isNumeric(inputValue) ? +inputValue : 0;
 }
+/**
+ * empty string is NOT considered numeric
+ * @param s the string to be examined
+ * @returns true if s is a valid number, returns false otherwise
+ */
 function isNumeric(s) {
-    //returns true if s is a valid number, returns false otherwise
-    //empty string is NOT considered numeric
     s = s.trim();
     return (!isNaN(+s)) && s.length !== 0;
-    //what? -->
-    //+stringA converts stringA to number, if stringA is not numeric result = NaN, if it is numeric, result is stringA as number. "!isNan(+stringA)" is true if stringA is numeric, otherwise false
-    /*/which is faster?
-    s = s.trim();
-    return /^\d*.?\d*$/.test(s); //problem is that a single dot and empty string is considered numeric
-    */
-}
-function enforceInputNumber() {
-    //enforces, that value of input this, is not below its min, or above its max value
-    //enforces, that only a numeric (integer) string can be entered
-    let that = this;
-    const min = (that.min !== "") ? +that.min : 0;
-    const max = (that.max !== "") ? +that.max : 1e10; //Number.MAX_VALUE;
-    let curInput = that.value; //value non-numeric --> curInput = ""
-    that.value = (curInput === "") ? min.toString() : Math.min(max, Math.max(min, +curInput)).toString();
 }
 //#endregion
 //# sourceMappingURL=main.js.map
