@@ -110,7 +110,6 @@ class TableRender {
         for (let i = 0; i < n; i++) {
             const cell = row.insertCell(-1);
             cell.classList.add(cellClassName);
-            cell.addEventListener("mouseenter", tableMouseMove); //this should probably be done somewhere in main.ts
         }
     }
     removeCells(row, n) {

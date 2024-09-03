@@ -36,10 +36,10 @@ function registerEvents() {
     document.getElementById("openSidebar")?.addEventListener("click", openSidebar); 
     document.getElementById(renderer.elementId)?.addEventListener("mousedown", tableMouseDown);
     document.getElementById(renderer.elementId)?.addEventListener("mouseup", tableMouseUp);
+    document.getElementById(renderer.elementId)?.addEventListener("mouseup", tableMouseMove);
     document.getElementById(renderer.elementId)?.addEventListener("mouseleave", () => {tableLMouseDownState = false});
     document.querySelectorAll("input[name=tools]")?.forEach(element => { element.addEventListener("change", setToolMode) });
-    document.querySelectorAll(".pixel")?.forEach(element => { element.addEventListener("mouseenter", tableMouseMove) }); //only needed for draw tools - REFACTOR: only have these listeners active when needed
-}
+    }
 //#endregion
 
 //#region page layout & mode
@@ -122,7 +122,7 @@ function displayFile() {
     //display selected file
     const stringData: string = fileContent;
     if (!stringData) {
-        console.log("fileContent has not been read successfully");
+        console.log("file content has not been read successfully");
         return;
     }
     const jsonData: {imgdata: string[][]} = JSON.parse(stringData);
@@ -151,7 +151,7 @@ function tableMouseDown(this: HTMLElement, ev: MouseEvent) {
 }
 function tableMouseMove(this: HTMLElement, ev: Event) {
     //depending on what tool is selected, do something
-    const cell: HTMLTableCellElement = (<HTMLTableCellElement>ev.target);
+    const cell: HTMLTableCellElement | null = (<Element>ev.target).closest("td");
     if (!cell) return;
     if (!tableLMouseDownState) return;
     switch (toolsMode) {

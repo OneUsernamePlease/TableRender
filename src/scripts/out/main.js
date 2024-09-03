@@ -34,9 +34,9 @@ function registerEvents() {
     (_h = document.getElementById("openSidebar")) === null || _h === void 0 ? void 0 : _h.addEventListener("click", openSidebar);
     (_j = document.getElementById(renderer.elementId)) === null || _j === void 0 ? void 0 : _j.addEventListener("mousedown", tableMouseDown);
     (_k = document.getElementById(renderer.elementId)) === null || _k === void 0 ? void 0 : _k.addEventListener("mouseup", tableMouseUp);
-    (_l = document.getElementById(renderer.elementId)) === null || _l === void 0 ? void 0 : _l.addEventListener("mouseleave", () => { tableLMouseDownState = false; });
-    (_m = document.querySelectorAll("input[name=tools]")) === null || _m === void 0 ? void 0 : _m.forEach(element => { element.addEventListener("change", setToolMode); });
-    (_o = document.querySelectorAll(".pixel")) === null || _o === void 0 ? void 0 : _o.forEach(element => { element.addEventListener("mouseenter", tableMouseMove); }); //only needed for draw tools - REFACTOR: only have these listeners active when needed
+    (_l = document.getElementById(renderer.elementId)) === null || _l === void 0 ? void 0 : _l.addEventListener("mouseup", tableMouseMove);
+    (_m = document.getElementById(renderer.elementId)) === null || _m === void 0 ? void 0 : _m.addEventListener("mouseleave", () => { tableLMouseDownState = false; });
+    (_o = document.querySelectorAll("input[name=tools]")) === null || _o === void 0 ? void 0 : _o.forEach(element => { element.addEventListener("change", setToolMode); });
 }
 //#endregion
 //#region page layout & mode
@@ -76,6 +76,7 @@ function showDrawTools() {
     document.getElementById("drawTools").style.removeProperty("display");
 }
 function activateDrawTools() {
+    //addEventListeners
     showDrawTools();
 }
 function deactivateDrawTools() {
@@ -114,7 +115,7 @@ function displayFile() {
     //display selected file
     const stringData = fileContent;
     if (!stringData) {
-        console.log("fileContent has not been read successfully");
+        console.log("file content has not been read successfully");
         return;
     }
     const jsonData = JSON.parse(stringData);
@@ -142,7 +143,7 @@ function tableMouseDown(ev) {
 }
 function tableMouseMove(ev) {
     //depending on what tool is selected, do something
-    const cell = ev.target;
+    const cell = ev.target.closest("td");
     if (!cell)
         return;
     if (!tableLMouseDownState)
