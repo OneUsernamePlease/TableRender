@@ -31,9 +31,9 @@ function registerEvents() {
     document.getElementById("save")?.addEventListener("click", save);
     document.getElementById("btnDisplayFile")?.addEventListener("click", displayFile);
     document.getElementById("imgInput")?.addEventListener("change", readInputFile);
-    document.getElementById("drawToolsColorPicker")?.addEventListener("change", updateSelectedColor);
     document.getElementById("closeSidebar")?.addEventListener("click", closeSidebar);
     document.getElementById("openSidebar")?.addEventListener("click", openSidebar); 
+    document.getElementById("drawToolsColorPicker")?.addEventListener("change", updateSelectedColor);
     document.getElementById(renderer.elementId)?.addEventListener("mousedown", tableMouseDown);
     document.getElementById(renderer.elementId)?.addEventListener("mouseup", tableMouseUp);
     document.getElementById(renderer.elementId)?.addEventListener("mousemove", tableMouseMove);
@@ -53,41 +53,7 @@ function closeSidebar() {
     sidebar!.style.width = "0";
     document.getElementById("mainContent")!.style.marginLeft = "0";
 }
-/**
- * hide/show specific tools, according to current selection
- * TODO: dont use queryselector, but either this or ev args
- */
-function setToolMode() {
 
-    let mode = (<HTMLInputElement>document.querySelector('input[name="tools"]:checked')).value;
-    switch (mode) {
-        case "draw":
-            toolsMode = Tools.Draw;
-            showDrawTools();
-            break;
-        case "none":
-            toolsMode = Tools.None;
-            hideDrawTools();
-            break;
-        default:
-            break;
-    }
-}
-function hideDrawTools() {
-    document.getElementById("drawTools")!.style.display = "none";
-}
-function showDrawTools() {
-    document.getElementById("drawTools")!.style.removeProperty("display");
-}
-function activateDrawTools() {
-    //addEventListeners
-    showDrawTools();
-
-}
-function deactivateDrawTools() {
-    //removeEventListeners
-    hideDrawTools();
-}
 //#endregion
 
 //#region tests, logs

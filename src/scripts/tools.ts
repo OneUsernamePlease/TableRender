@@ -7,6 +7,40 @@ enum DrawTools {
     Pen = 1
 }
 
+//#region general tools handling
+/**
+ * hide/show specific tools, according to current selection
+ * TODO: dont use queryselector, but either this or ev args
+ */
+function setToolMode() {
+    let mode = (<HTMLInputElement>document.querySelector('input[name="tools"]:checked')).value;
+    switch (mode) {
+        case "draw":
+            toolsMode = Tools.Draw;
+            activateDrawTools();
+            break;
+        case "none":
+            toolsMode = Tools.None;
+            deactivateDrawTools();
+            break;
+        default:
+            break;
+    }
+}
+function hideDrawTools() {
+    document.getElementById("drawTools")!.style.display = "none";
+}
+function showDrawTools() {
+    document.getElementById("drawTools")!.style.removeProperty("display");
+}
+function activateDrawTools() {
+    showDrawTools();
+}
+function deactivateDrawTools() {
+    hideDrawTools();
+}
+//#endregion
+
 //#region DRAW (mr paint)
 /**
  * 

@@ -29,9 +29,9 @@ function registerEvents() {
     (_c = document.getElementById("save")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", save);
     (_d = document.getElementById("btnDisplayFile")) === null || _d === void 0 ? void 0 : _d.addEventListener("click", displayFile);
     (_e = document.getElementById("imgInput")) === null || _e === void 0 ? void 0 : _e.addEventListener("change", readInputFile);
-    (_f = document.getElementById("drawToolsColorPicker")) === null || _f === void 0 ? void 0 : _f.addEventListener("change", updateSelectedColor);
-    (_g = document.getElementById("closeSidebar")) === null || _g === void 0 ? void 0 : _g.addEventListener("click", closeSidebar);
-    (_h = document.getElementById("openSidebar")) === null || _h === void 0 ? void 0 : _h.addEventListener("click", openSidebar);
+    (_f = document.getElementById("closeSidebar")) === null || _f === void 0 ? void 0 : _f.addEventListener("click", closeSidebar);
+    (_g = document.getElementById("openSidebar")) === null || _g === void 0 ? void 0 : _g.addEventListener("click", openSidebar);
+    (_h = document.getElementById("drawToolsColorPicker")) === null || _h === void 0 ? void 0 : _h.addEventListener("change", updateSelectedColor);
     (_j = document.getElementById(renderer.elementId)) === null || _j === void 0 ? void 0 : _j.addEventListener("mousedown", tableMouseDown);
     (_k = document.getElementById(renderer.elementId)) === null || _k === void 0 ? void 0 : _k.addEventListener("mouseup", tableMouseUp);
     (_l = document.getElementById(renderer.elementId)) === null || _l === void 0 ? void 0 : _l.addEventListener("mousemove", tableMouseMove);
@@ -49,39 +49,6 @@ function closeSidebar() {
     const sidebar = document.getElementById("sidebar");
     sidebar.style.width = "0";
     document.getElementById("mainContent").style.marginLeft = "0";
-}
-/**
- * hide/show specific tools, according to current selection
- * TODO: dont use queryselector, but either this or ev args
- */
-function setToolMode() {
-    let mode = document.querySelector('input[name="tools"]:checked').value;
-    switch (mode) {
-        case "draw":
-            toolsMode = Tools.Draw;
-            showDrawTools();
-            break;
-        case "none":
-            toolsMode = Tools.None;
-            hideDrawTools();
-            break;
-        default:
-            break;
-    }
-}
-function hideDrawTools() {
-    document.getElementById("drawTools").style.display = "none";
-}
-function showDrawTools() {
-    document.getElementById("drawTools").style.removeProperty("display");
-}
-function activateDrawTools() {
-    //addEventListeners
-    showDrawTools();
-}
-function deactivateDrawTools() {
-    //removeEventListeners
-    hideDrawTools();
 }
 //#endregion
 //#region tests, logs
