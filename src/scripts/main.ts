@@ -36,7 +36,7 @@ function registerEvents() {
     document.getElementById("openSidebar")?.addEventListener("click", openSidebar); 
     document.getElementById(renderer.elementId)?.addEventListener("mousedown", tableMouseDown);
     document.getElementById(renderer.elementId)?.addEventListener("mouseup", tableMouseUp);
-    document.getElementById(renderer.elementId)?.addEventListener("mouseup", tableMouseMove);
+    document.getElementById(renderer.elementId)?.addEventListener("mousemove", tableMouseMove);
     document.getElementById(renderer.elementId)?.addEventListener("mouseleave", () => {tableLMouseDownState = false});
     document.querySelectorAll("input[name=tools]")?.forEach(element => { element.addEventListener("change", setToolMode) });
     }

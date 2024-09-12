@@ -34,7 +34,7 @@ function registerEvents() {
     (_h = document.getElementById("openSidebar")) === null || _h === void 0 ? void 0 : _h.addEventListener("click", openSidebar);
     (_j = document.getElementById(renderer.elementId)) === null || _j === void 0 ? void 0 : _j.addEventListener("mousedown", tableMouseDown);
     (_k = document.getElementById(renderer.elementId)) === null || _k === void 0 ? void 0 : _k.addEventListener("mouseup", tableMouseUp);
-    (_l = document.getElementById(renderer.elementId)) === null || _l === void 0 ? void 0 : _l.addEventListener("mouseup", tableMouseMove);
+    (_l = document.getElementById(renderer.elementId)) === null || _l === void 0 ? void 0 : _l.addEventListener("mousemove", tableMouseMove);
     (_m = document.getElementById(renderer.elementId)) === null || _m === void 0 ? void 0 : _m.addEventListener("mouseleave", () => { tableLMouseDownState = false; });
     (_o = document.querySelectorAll("input[name=tools]")) === null || _o === void 0 ? void 0 : _o.forEach(element => { element.addEventListener("change", setToolMode); });
 }
