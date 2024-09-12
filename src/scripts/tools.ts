@@ -34,12 +34,70 @@ function showDrawTools() {
     document.getElementById("drawTools")!.style.removeProperty("display");
 }
 function activateDrawTools() {
+    document.getElementById("drawToolsColorPicker")?.addEventListener("change", updateSelectedColor);
+    
+    document.getElementById(renderer.elementId)?.addEventListener("mousedown", tableMouseDown);
+    document.getElementById(renderer.elementId)?.addEventListener("mouseup", tableMouseUp);
+    document.getElementById(renderer.elementId)?.addEventListener("mousemove", tableMouseMove);
+    document.getElementById(renderer.elementId)?.addEventListener("mouseleave", () => {tableLMouseDownState = false});
+
+    //touch screen -> callbacks need to allow TouchEvent too. either extend function or make new ones. problem for future me
+    //document.getElementById(renderer.elementId)?.addEventListener("touchstart", tableMouseDown);
+    //document.getElementById(renderer.elementId)?.addEventListener("touchend", tableMouseUp);
+    //document.getElementById(renderer.elementId)?.addEventListener("touchmove", tableMouseMove);
+    //document.getElementById(renderer.elementId)?.addEventListener("mouseleave", () => {tableLMouseDownState = false});
     showDrawTools();
 }
 function deactivateDrawTools() {
+    document.getElementById("drawToolsColorPicker")?.removeEventListener("change", updateSelectedColor);
+    document.getElementById(renderer.elementId)?.removeEventListener("mousedown", tableMouseDown);
+    document.getElementById(renderer.elementId)?.removeEventListener("mouseup", tableMouseUp);
+    document.getElementById(renderer.elementId)?.removeEventListener("mousemove", tableMouseMove);
+    document.getElementById(renderer.elementId)?.removeEventListener("mouseleave", () => {tableLMouseDownState = false});
     hideDrawTools();
 }
 //#endregion
+
+//#region Handling Mouse Events for table
+function tableMouseDown(this: HTMLElement, ev: MouseEvent) {
+    //depending on what tool is selected, do something
+    const cell: HTMLTableCellElement | null = (<Element>ev.target).closest("td");
+    if (!cell) return;
+    if (ev.button !== 0) return;
+
+    tableLMouseDownState = true;
+    switch (toolsMode) {   
+        case Tools.Draw:
+            drawToolsPen(cell);
+            break;
+
+        default:
+            break;
+    }
+}
+function tableMouseMove(this: HTMLElement, ev: Event) {
+    //depending on what tool is selected, do something
+    const cell: HTMLTableCellElement | null = (<Element>ev.target).closest("td");
+    if (!cell) return;
+    if (!tableLMouseDownState) return;
+    switch (toolsMode) {
+        case Tools.Draw:
+            drawToolsPen(cell);
+            break;
+
+        default:
+            break;
+    }
+}
+function tableMouseUp(this: HTMLElement, ev: MouseEvent) {
+    //call on MouseUp inside htmlTable, and mouseLeave htmlTable
+    //sets tableMouseDownState (which keeps track of lmb being down in htmlTable) to false
+    if (ev.button !== 0) return;
+    tableLMouseDownState = false;
+}
+
+//#endregion
+
 
 //#region DRAW (mr paint)
 /**

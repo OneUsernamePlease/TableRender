@@ -23,7 +23,7 @@ function initialise() {
     document.removeEventListener("DOMContentLoaded", initialise);
 }
 function registerEvents() {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
+    var _a, _b, _c, _d, _e, _f, _g, _h;
     (_a = document.getElementById("testBtn")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", testFunction);
     (_b = document.getElementById("btnGenerateTable")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", regenerateTable);
     (_c = document.getElementById("save")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", save);
@@ -31,12 +31,7 @@ function registerEvents() {
     (_e = document.getElementById("imgInput")) === null || _e === void 0 ? void 0 : _e.addEventListener("change", readInputFile);
     (_f = document.getElementById("closeSidebar")) === null || _f === void 0 ? void 0 : _f.addEventListener("click", closeSidebar);
     (_g = document.getElementById("openSidebar")) === null || _g === void 0 ? void 0 : _g.addEventListener("click", openSidebar);
-    (_h = document.getElementById("drawToolsColorPicker")) === null || _h === void 0 ? void 0 : _h.addEventListener("change", updateSelectedColor);
-    (_j = document.getElementById(renderer.elementId)) === null || _j === void 0 ? void 0 : _j.addEventListener("mousedown", tableMouseDown);
-    (_k = document.getElementById(renderer.elementId)) === null || _k === void 0 ? void 0 : _k.addEventListener("mouseup", tableMouseUp);
-    (_l = document.getElementById(renderer.elementId)) === null || _l === void 0 ? void 0 : _l.addEventListener("mousemove", tableMouseMove);
-    (_m = document.getElementById(renderer.elementId)) === null || _m === void 0 ? void 0 : _m.addEventListener("mouseleave", () => { tableLMouseDownState = false; });
-    (_o = document.querySelectorAll("input[name=tools]")) === null || _o === void 0 ? void 0 : _o.forEach(element => { element.addEventListener("change", setToolMode); });
+    (_h = document.querySelectorAll("input[name=tools]")) === null || _h === void 0 ? void 0 : _h.forEach(element => { element.addEventListener("change", setToolMode); });
 }
 //#endregion
 //#region page layout & mode
@@ -88,50 +83,6 @@ function displayFile() {
     const jsonData = JSON.parse(stringData);
     data.fromJson(jsonData);
     renderer.draw(data);
-}
-function tableMouseDown(ev) {
-    //depending on what tool is selected, do something
-    const cell = ev.target.closest("td");
-    if (!cell)
-        return;
-    if (ev.button !== 0)
-        return;
-    tableLMouseDownState = true;
-    switch (toolsMode) {
-        case Tools.None:
-            console.log("clicked cell: row: " + cell.parentElement.rowIndex + "; cell: " + cell.cellIndex);
-            break;
-        case Tools.Draw:
-            drawToolsPen(cell);
-            break;
-        default:
-            break;
-    }
-}
-function tableMouseMove(ev) {
-    //depending on what tool is selected, do something
-    const cell = ev.target.closest("td");
-    if (!cell)
-        return;
-    if (!tableLMouseDownState)
-        return;
-    switch (toolsMode) {
-        case Tools.None:
-            console.log("moved to cell: row: " + cell.parentElement.rowIndex + "; cell: " + cell.cellIndex);
-            break;
-        case Tools.Draw:
-            drawToolsPen(cell);
-            break;
-        default:
-            break;
-    }
-}
-function tableMouseUp(ev) {
-    //call on MouseUp inside htmlTable, and mouseLeave htmlTable
-    //sets tableMouseDownState (which keeps track of lmb being down in htmlTable) to false
-    if (ev.button !== 0)
-        return;
-    tableLMouseDownState = false;
 }
 /**
  * valid color formats are hex and rgb(r,g,b) (r,g,b being decimal values)
