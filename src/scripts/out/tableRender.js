@@ -44,7 +44,16 @@ class TableRender {
     }
     setColor(pixel, color) {
         pixel.removeAttribute("style");
-        pixel.setAttribute("style", "background-color: " + color);
+        if (typeof (color) === "string") {
+            if (color.trim() === "") {
+                return;
+            }
+            pixel.setAttribute("style", "background-color: " + color);
+        }
+        else if (typeof (color) === "number") {
+            color = JSFunctions.rgbIntToHex(color);
+            pixel.setAttribute("style", "background-color: " + color);
+        }
     }
     getColor(row, cell) {
         //returns the color of cell at spcified position in hex-format

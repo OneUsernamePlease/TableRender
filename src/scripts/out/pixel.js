@@ -1,12 +1,18 @@
 "use strict";
 class Pixel {
-    constructor(color = "#000000") {
+    constructor(color = "") {
         this.color = color;
         this._color = this.color;
     }
-    set color(hexCode) {
+    set color(newColor) {
         //if hexCode is not a valid rgb hex code, this.color is set to #000000
-        this._color = /^#?[0-9a-f]{6}$/i.test(hexCode) ? hexCode : "#000000";
+        if (typeof (newColor) === "string") {
+            newColor = newColor.trim();
+            this._color = /(^#?[0-9a-f]{6}$)|(^\s*$)/i.test(newColor) ? newColor : "#000000";
+        }
+        else if (typeof (newColor) === "number") {
+            this._color = Math.max(0, Math.min(newColor, 16777216));
+        }
     }
     get color() {
         return this._color;

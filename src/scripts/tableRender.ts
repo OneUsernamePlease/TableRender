@@ -46,10 +46,15 @@ class TableRender {
             }
         }
     }
-    public setColor(pixel: HTMLTableCellElement, color: string) {
-        if (color.trim() === "") { return; }
+    public setColor(pixel: HTMLTableCellElement, color: string | number) {
         pixel.removeAttribute("style");
-        pixel.setAttribute("style", "background-color: " + color);
+        if (typeof(color) === "string") {
+            if (color.trim() === "") { return; }
+            pixel.setAttribute("style", "background-color: " + color);
+        } else if (typeof(color) === "number") {
+            color = JSFunctions.rgbIntToHex(color);
+            pixel.setAttribute("style", "background-color: " + color);
+        }
     }
     public getColor(row: number, cell: number): string {
         //returns the color of cell at spcified position in hex-format

@@ -6,6 +6,7 @@ let tableContainerId = "tableContainer";
 let inputColor = "#000000";
 let data;
 let renderer;
+//let helperFunctions: JSFunctions;
 let fileContent;
 let toolsMode;
 //#endregion
@@ -80,6 +81,8 @@ function displayFile() {
         console.log("file content has not been read successfully");
         return;
     }
+    //todo get file name
+    //switch: file type
     const jsonData = JSON.parse(stringData);
     data.fromJson(jsonData);
     renderer.draw(data);
@@ -89,10 +92,6 @@ function displayFile() {
  * @param testColor the string to test
  * @returns testColor if it is a valid color format, #000000 if testColor is not a valid color format
  */
-function testColorString(testColor) {
-    let valid = /^#?[0-9A-F]{6}$/i.test(testColor) || /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i.test(testColor);
-    return valid ? testColor : "#000000";
-}
 //#endregion
 //#region export
 function save() {
@@ -124,7 +123,7 @@ function newFilename() {
  */
 function updateSelectedColor() {
     let inputValue = this.value;
-    inputColor = testColorString(inputValue);
+    inputColor = JSFunctions.normalizeColor(inputValue);
 }
 /**
  * Return value of HTMLInputElement, if it is a valid color string (hex and rgb(r,g,b) are valid formats).
@@ -133,7 +132,7 @@ function updateSelectedColor() {
  */
 function getInputColor(inputId) {
     let inputColor = document.getElementById(inputId).value;
-    return testColorString(inputColor);
+    return JSFunctions.normalizeColor(inputColor);
 }
 /**
  * read the content of file uploaded in input-element "#imgInput" as a string and loads it to global variable fileContent (main.ts).
@@ -158,9 +157,8 @@ function readInputFile() {
  * @returns element's value attribute (trimmed), or empty string if inputElement is not valid
  */
 function getInputValue(inputId) {
-    let input;
-    input = document.getElementById(inputId);
-    return (!!input) ? input.value.trim() : "";
+    let input = document.getElementById(inputId);
+    return (input instanceof HTMLInputElement) ? input.value.trim() : "";
 }
 /**
  * @param inputId elementID for input-element

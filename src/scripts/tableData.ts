@@ -6,7 +6,7 @@ class TableData {
 //#endregion
 
 //#region constructor, get, set, init
-    public constructor(tableHeight: number, tableWidth: number) {
+    public constructor(tableHeight: number = 0, tableWidth: number = 0) {
         this._tableHeight = tableHeight;
         this._tableWidth = tableWidth;
         this._pixels = this.initTableData();

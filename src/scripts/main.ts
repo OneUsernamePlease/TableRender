@@ -97,10 +97,6 @@ function displayFile() {
  * @param testColor the string to test
  * @returns testColor if it is a valid color format, #000000 if testColor is not a valid color format
  */
-function normalizeColor(testColor: string): string {
-    let valid = /^#?[0-9A-F]{6}$/i.test(testColor) || /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i.test(testColor);
-    return valid ? testColor : "#000000";
-}
 //#endregion
 
 //#region export
@@ -123,7 +119,7 @@ function save() {
 }
 function newFilename(): string {
     //return a name which is suggested when downloading tableData
-    const color0: string = data.pixels[0][0].color;
+    const color0 = data.pixels[0][0].color;
     return color0 + "_data.json";
 }
 //#endregion
@@ -135,7 +131,7 @@ function newFilename(): string {
  */
 function updateSelectedColor(this: HTMLElement) {
     let inputValue = (<HTMLInputElement>this).value;
-    inputColor = normalizeColor(inputValue);
+    inputColor = JSFunctions.normalizeColor(inputValue);
 }
 /**
  * Return value of HTMLInputElement, if it is a valid color string (hex and rgb(r,g,b) are valid formats).
@@ -144,7 +140,7 @@ function updateSelectedColor(this: HTMLElement) {
  */
 function getInputColor(inputId: string) {
     let inputColor = (<HTMLInputElement>document.getElementById(inputId)).value;
-    return normalizeColor(inputColor);
+    return JSFunctions.normalizeColor(inputColor);
 }
 /**
  * read the content of file uploaded in input-element "#imgInput" as a string and loads it to global variable fileContent (main.ts).
