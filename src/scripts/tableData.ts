@@ -38,63 +38,9 @@ class TableData {
     }
 //#endregion
 
-//#region en/decode
-
-    public encode(format: string): object {
-        //returns a json object containing tableData encoded with format
-        format = format.toLowerCase();
-        let encoded: object = new Object;
-
-        switch (format) {
-            case "pf1":
-                encoded = this.encodePf1();
-                break;
-        
-            default:
-                break;
-        }
-        return encoded;
-    }
-    public encodePf1(): object {
-        //returns a pf1-json object
-        //(containing tableData as string[][] named imgdata)
-        let encoded: string = "";
-        const start = '{"meta":{"format":"pf1"},"imgdata":';
-        const end = '}';
-        
-        let data = this.dataAsString();
-        encoded = start + data + end;
-
-        return JSON.parse(encoded);
-    }
-    public dataAsString(): string {
-        //returns a string representing a string[][] containing Pixel colors in hex
-        let s = "["; 
-        this.pixels.forEach(row => {
-            s += "["
-            row.forEach(cell => {
-                s += "\"" + cell.color + "\",";
-            })
-            s = s.slice(0, -1);
-            s += "],"
-        });
-        s = s.slice(0, -1);
-        s += "]";
-
-        return s;
-    }
-    public createBlob(obj: JSON): Blob {
-        //create a blob from json-object (containing the encoded data)
-        //to be used in creating a file
-        let content = JSON.stringify(obj);
-        let file: Blob = new Blob([content], {type: "text"});
-        return file;
-    }
-//#endregion
-
 //#region drawing/updating image data
     public colorAll(color: string, newHeight?: number, newWidth?: number) {
-        //color all pixles in color. if height and/or width are provided, resize.
+        //color all pixels in color. if height and/or width are provided, resize.
         if (newHeight != null) { this.setHeight(newHeight); }
         if (newWidth != null) { this.setWidth(newWidth); }
         
@@ -110,7 +56,7 @@ class TableData {
         this.pixels[row][col].color = color;
     }
     public setDimensions(height: number, width: number) {
-        //resize this.pixles
+        //resize this.pixels
         this.setHeight(height);
         this.setWidth(width);
     }

@@ -1,10 +1,10 @@
 class JSFunctions {
     /*
     Just Some functions
-    (hopefully moderatly helpful)
+    (hopefully moderately helpful)
     */
    
-   private constructor () {} //to prevent instatiation
+   private constructor () {} //to prevent instantiation
    
    public static normalizeColor(testColor: string): string {
        let valid = /^#?[0-9A-F]{6}$/i.test(testColor) || /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i.test(testColor);

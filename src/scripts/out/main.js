@@ -9,9 +9,9 @@ let renderer;
 let fileContent;
 let toolsMode;
 //#endregion
-//#region initialisation
-document.addEventListener("DOMContentLoaded", initialise);
-function initialise() {
+//#region initialization
+document.addEventListener("DOMContentLoaded", initialize);
+function initialize() {
     data = new TableData(getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
     renderer = new TableRender(tableContainerId);
     renderer.draw(data);
@@ -20,7 +20,7 @@ function initialise() {
     inputColor = getInputColor("drawToolsColorPicker");
     setTimeout(() => { setToolMode(); }, 50);
     //setTimeout is a solution for firefox, it gets confused when duplicating a tab
-    document.removeEventListener("DOMContentLoaded", initialise);
+    document.removeEventListener("DOMContentLoaded", initialize);
 }
 function registerEvents() {
     var _a, _b, _c, _d, _e, _f, _g, _h;
@@ -63,7 +63,7 @@ function test2() {
 }
 function test1() {
     //log pf1-encoded tableData
-    console.log(data.encode("pf1"));
+    console.log(Images.encode(data, "pf1"));
     renderer.clearTable();
 }
 //#endregion
@@ -96,18 +96,18 @@ function displayFile() {
 function save() {
     //encode tableData and save/download it as json
     const name = newFilename();
-    const file = data.createBlob(data.encode("pf1"));
-    var dlink = document.createElement('a');
-    dlink.download = name;
-    dlink.href = window.URL.createObjectURL(file);
-    dlink.onclick = () => {
+    const file = Images.createBlob((Images.encode(data, "pf1")));
+    var dLink = document.createElement('a');
+    dLink.download = name;
+    dLink.href = window.URL.createObjectURL(file);
+    dLink.onclick = () => {
         // revokeObjectURL needs a delay to work properly
         setTimeout(() => {
-            window.URL.revokeObjectURL(dlink.href);
+            window.URL.revokeObjectURL(dLink.href);
         }, 1500);
     };
-    dlink.click();
-    dlink.remove();
+    dLink.click();
+    dLink.remove();
 }
 function newFilename() {
     //return a name which is suggested when downloading tableData

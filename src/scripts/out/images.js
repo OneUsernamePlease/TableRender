@@ -1,14 +1,11 @@
 "use strict";
 class Images {
-    /*
-    This thing should at one point encode and decode images
-    */
     //#region decode
-    /**
-     * For now this should work for: (coming soon tho)
-     *  bottom-up 24-bit bmps
-     *  */
     static fromBMP(bitmap) {
+        /*
+        For now this should work for: (coming soon tho)
+         bottom-up, 24-bit bmps
+        */
         throw new Error("Method not implemented.");
         if (!!bitmap) {
             return null;
@@ -31,19 +28,63 @@ class Images {
         }
         return tableData;
     }
+    /**
+     * returns a string representing a string[][] containing Pixel colors in hex, formatted like a json-array.
+     */
+    static pixelDataAsString(data) {
+        let s = "[";
+        data.pixels.forEach(row => {
+            s += "[";
+            row.forEach(cell => {
+                s += "\"" + cell.color + "\",";
+            });
+            s = s.slice(0, -1);
+            s += "],";
+        });
+        s = s.slice(0, -1);
+        s += "]";
+        return s;
+    }
     //#endregion
-    //#region todo ...
-    /*
-    move all the encoding stuff to here
-    
-    */
-    encodeTableData(type) {
+    //#region encode
+    static encode(tableData, format) {
+        //returns a json object containing tableData encoded with format
+        format = format.toLowerCase();
+        let encoded = new Object;
+        switch (format) {
+            case "pf1":
+                encoded = Images.encodePf1(tableData);
+                break;
+            default:
+                break;
+        }
+        return encoded;
+    }
+    static encodePf1(tableData) {
+        //returns a pf1-json object
+        //(containing tableData as string[][] named imgdata)
+        let encoded = "";
+        const start = '{"meta":{"format":"pf1"},"imgdata":';
+        const end = '}';
+        let data = Images.pixelDataAsString(tableData);
+        encoded = start + data + end;
+        return JSON.parse(encoded);
+    }
+    static encodeTableData(type) {
         switch (type.toLowerCase().trim()) {
             case "pf1":
                 break;
             default:
                 break;
         }
+    }
+    //#endregion
+    static createBlob(obj) {
+        //create a blob from json-object (containing the encoded data)
+        //to be used in creating a file
+        let content = JSON.stringify(obj);
+        let file = new Blob([content], { type: "text" });
+        return file;
     }
 }
 //# sourceMappingURL=images.js.map

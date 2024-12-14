@@ -56,7 +56,7 @@ class TableRender {
         }
     }
     getColor(row, cell) {
-        //returns the color of cell at spcified position in hex-format
+        //returns the color of cell at specified position in hex-format
         let colorHex;
         colorHex = this.htmlTable.rows[row].cells[cell].style.backgroundColor;
         return JSFunctions.rgbToHex(colorHex);
@@ -85,7 +85,7 @@ class TableRender {
         }
     }
     setWidth(newWidth) {
-        //sets the width of each row in hmtlTable, to match newWidth
+        //sets the width of each row in htmlTable, to match newWidth
         for (let curRowIdx = 0; curRowIdx < this.htmlTable.rows.length; curRowIdx++) {
             const row = this.htmlTable.rows[curRowIdx];
             const cellCnt = row.cells.length;

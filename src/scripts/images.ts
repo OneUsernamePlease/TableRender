@@ -1,16 +1,10 @@
 class Images {
-    /*
-    This thing should at one point encode and decode images
-    */
-
-
 //#region decode
-/**
- * For now this should work for: (coming soon tho)
- *  bottom-up 24-bit bmps  
- *  */
     public static fromBMP(bitmap: Blob): TableData | null {
-        
+    /*
+    For now this should work for: (coming soon tho)
+     bottom-up, 24-bit bmps  
+    */
         
         throw new Error("Method not implemented.");
         
@@ -41,17 +35,54 @@ class Images {
         }
         return tableData;
     }
+    /**
+     * returns a string representing a string[][] containing Pixel colors in hex, formatted like a json-array.
+     */
+    public static pixelDataAsString(data: TableData): string {
+        let s = "["; 
+        data.pixels.forEach(row => {
+            s += "["
+            row.forEach(cell => {
+                s += "\"" + cell.color + "\",";
+            })
+            s = s.slice(0, -1);
+            s += "],"
+        });
+        s = s.slice(0, -1);
+        s += "]";
 
+        return s;
+    }
 //#endregion
+//#region encode
+    public static encode(tableData: TableData, format: string): object {
+        //returns a json object containing tableData encoded with format
+        format = format.toLowerCase();
+        let encoded: object = new Object;
 
-//#region todo ...
-/*
-move all the encoding stuff to here
+        switch (format) {
+            case "pf1":
+                encoded = Images.encodePf1(tableData);
+                break;
+        
+            default:
+                break;
+        }
+        return encoded;
+    }
+    public static encodePf1(tableData: TableData): object {
+        //returns a pf1-json object
+        //(containing tableData as string[][] named imgdata)
+        let encoded: string = "";
+        const start = '{"meta":{"format":"pf1"},"imgdata":';
+        const end = '}';
+        
+        let data = Images.pixelDataAsString(tableData);
+        encoded = start + data + end;
 
-*/
-
-
-    public encodeTableData(type: string) {
+        return JSON.parse(encoded);
+    }
+    public static encodeTableData(type: string) {
         switch (type.toLowerCase().trim()) {
             case "pf1":
 
@@ -61,5 +92,11 @@ move all the encoding stuff to here
         }
     }
 //#endregion
-
+    public static createBlob(obj: JSON): Blob {
+        //create a blob from json-object (containing the encoded data)
+        //to be used in creating a file
+        let content = JSON.stringify(obj);
+        let file: Blob = new Blob([content], {type: "text"});
+        return file;
+    }
 }
