@@ -86,6 +86,8 @@ function displayFile() {
         console.log("file content has not been read successfully");
         return;
     }
+    //todo get file name
+    //switch: file type
     const jsonData: {imgdata: string[][]} = JSON.parse(stringData);
     data.fromJson(jsonData);
     renderer.draw(data);
@@ -95,8 +97,8 @@ function displayFile() {
  * @param testColor the string to test
  * @returns testColor if it is a valid color format, #000000 if testColor is not a valid color format
  */
-function testColorString(testColor: string): string {
-    let valid = /^#?[0-9A-F]{6}$/i.test(testColor) || /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i.test(testColor)
+function normalizeColor(testColor: string): string {
+    let valid = /^#?[0-9A-F]{6}$/i.test(testColor) || /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i.test(testColor);
     return valid ? testColor : "#000000";
 }
 //#endregion
@@ -133,7 +135,7 @@ function newFilename(): string {
  */
 function updateSelectedColor(this: HTMLElement) {
     let inputValue = (<HTMLInputElement>this).value;
-    inputColor = testColorString(inputValue);
+    inputColor = normalizeColor(inputValue);
 }
 /**
  * Return value of HTMLInputElement, if it is a valid color string (hex and rgb(r,g,b) are valid formats).
@@ -142,7 +144,7 @@ function updateSelectedColor(this: HTMLElement) {
  */
 function getInputColor(inputId: string) {
     let inputColor = (<HTMLInputElement>document.getElementById(inputId)).value;
-    return testColorString(inputColor);
+    return normalizeColor(inputColor);
 }
 /**
  * read the content of file uploaded in input-element "#imgInput" as a string and loads it to global variable fileContent (main.ts).
@@ -167,9 +169,8 @@ function readInputFile() {
  * @returns element's value attribute (trimmed), or empty string if inputElement is not valid
  */
 function getInputValue(inputId: string): string {
-    let input: HTMLElement | null;
-    input = document.getElementById(inputId);
-    return (!!input) ? (input as HTMLInputElement).value.trim() : "";
+    let input = document.getElementById(inputId);
+    return (input instanceof HTMLInputElement) ? (input as HTMLInputElement).value.trim() : "";
 }
 /**
  * @param inputId elementID for input-element

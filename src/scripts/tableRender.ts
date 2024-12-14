@@ -47,6 +47,7 @@ class TableRender {
         }
     }
     public setColor(pixel: HTMLTableCellElement, color: string) {
+        if (color.trim() === "") { return; }
         pixel.removeAttribute("style");
         pixel.setAttribute("style", "background-color: " + color);
     }

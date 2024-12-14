@@ -108,10 +108,10 @@ class TableData {
 //#region drawing/updating image data
     public colorAll(color: string, newHeight?: number, newWidth?: number) {
         //color all pixles in color. if height and/or width are provided, resize.
-        if (newHeight != null) { this.setHeight(newHeight);}
-        if (newWidth != null) { this.setWidth(newWidth);}
+        if (newHeight != null) { this.setHeight(newHeight); }
+        if (newWidth != null) { this.setWidth(newWidth); }
         
-        for(let i = 0; i < this.tableHeight; i++){
+        for(let i = 0; i < this.tableHeight; i++) {
             for(let j = 0; j < this.tableWidth; j++) {
                 this.setPixelColor(i, j, color);
             }
