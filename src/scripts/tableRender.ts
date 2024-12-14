@@ -60,20 +60,7 @@ class TableRender {
         //returns the color of cell at spcified position in hex-format
         let colorHex: string;
         colorHex = this.htmlTable.rows[row].cells[cell].style.backgroundColor;
-        return this.rgbToHex(colorHex);
-    }
-    public rgbToHex(rgb: string): string {
-        //transforms color-value rgb of form 'rgb(0,128,255)' to hex form '#0080ff' and returns it
-        if (/^#?[0-9A-F]{6}$/i.test(rgb)) return rgb;
-        if (!(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i.test(rgb))) return "";
-        let rgbValues = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i);
-        let decToHex = (d: string|number): string => {
-            if (typeof(d) === "string" && /^\d+$/.test(d)) {
-                d = parseInt(d);
-            }
-            return d.toString(16);
-        }
-        return "#" + decToHex(rgbValues![1]) + decToHex(rgbValues![2]) + decToHex(rgbValues![3]); 
+        return JSFunctions.rgbToHex(colorHex);
     }
     public resizeTable(newHeight: number, newWidth: number) {
         this.setHeight(newHeight);

@@ -34,22 +34,9 @@ class TableData {
     }
     //#endregion
     //#region en/decode
-    fromJson(json) {
-        //load from json (has to be pf1), and draw
-        let data = json.imgdata;
-        let height = Math.max(data.length, 1);
-        let widths = data.map((x) => x.length); //get array of the string-arrays' lengths in imgdata
-        let width = Math.max(...widths, 1);
-        this.setDimensions(height, width);
-        for (let i = 0; i < height; i++) {
-            for (let j = 0; j < width; j++) {
-                this.setPixelColor(i, j, data[i][j]);
-            }
-            ;
-        }
-    }
     encode(format) {
         //returns a json object containing tableData encoded with format
+        format = format.toLowerCase();
         let encoded = new Object;
         switch (format) {
             case "pf1":

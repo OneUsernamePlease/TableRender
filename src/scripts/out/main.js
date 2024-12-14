@@ -6,7 +6,6 @@ let tableContainerId = "tableContainer";
 let inputColor = "#000000";
 let data;
 let renderer;
-//let helperFunctions: JSFunctions;
 let fileContent;
 let toolsMode;
 //#endregion
@@ -84,7 +83,7 @@ function displayFile() {
     //todo get file name
     //switch: file type
     const jsonData = JSON.parse(stringData);
-    data.fromJson(jsonData);
+    data = Images.fromJson(jsonData);
     renderer.draw(data);
 }
 /**

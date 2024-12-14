@@ -89,7 +89,7 @@ function displayFile() {
     //todo get file name
     //switch: file type
     const jsonData: {imgdata: string[][]} = JSON.parse(stringData);
-    data.fromJson(jsonData);
+    data = Images.fromJson(jsonData);
     renderer.draw(data);
 }
 /**

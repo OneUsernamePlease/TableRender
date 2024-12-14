@@ -7,7 +7,6 @@ class Pixel {
     set color(newColor) {
         //if hexCode is not a valid rgb hex code, this.color is set to #000000
         if (typeof (newColor) === "string") {
-            newColor = newColor.trim();
             this._color = /(^#?[0-9a-f]{6}$)|(^\s*$)/i.test(newColor) ? newColor : "#000000";
         }
         else if (typeof (newColor) === "number") {
