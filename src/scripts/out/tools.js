@@ -109,6 +109,7 @@ function drawToolsPen(cell) {
     colorCell(cell, inputColor);
 }
 function randomColor() {
+    //generate n: 0 <= n <=16777215 -> jsFunctions.colorRgbIntToHex
     const r = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
     const g = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");
     const b = (Math.floor(Math.random() * 255).toString(16)).padStart(2, "0");

@@ -10,7 +10,7 @@ class Pixel {
             this._color = /(^#?[0-9a-f]{6}$)|(^\s*$)/i.test(newColor) ? newColor : "#000000";
         }
         else if (typeof (newColor) === "number") {
-            this._color = Math.max(0, Math.min(newColor, 16777216));
+            this._color = JSFunctions.ensureNumberInRange(newColor, 0 /*COLOR_CONSTANTS.COLOR_INT_MIN*/, 16777215 /*COLOR_CONSTANTS.COLOR_INT_MAX*/);
         }
     }
     get color() {

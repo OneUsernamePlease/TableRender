@@ -52,7 +52,7 @@ class TableRender {
             if (color.trim() === "") { return; }
             pixel.setAttribute("style", "background-color: " + color);
         } else if (typeof(color) === "number") {
-            color = JSFunctions.rgbIntToHex(color);
+            color = JSFunctions.colorRgbIntToHex(color);
             pixel.setAttribute("style", "background-color: " + color);
         }
     }
@@ -60,7 +60,7 @@ class TableRender {
         //returns the color of cell at specified position in hex-format
         let colorHex: string;
         colorHex = this.htmlTable.rows[row].cells[cell].style.backgroundColor;
-        return JSFunctions.rgbToHex(colorHex);
+        return JSFunctions.colorRgbToHex(colorHex);
     }
     public resizeTable(newHeight: number, newWidth: number) {
         this.setHeight(newHeight);

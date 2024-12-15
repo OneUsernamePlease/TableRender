@@ -2,20 +2,15 @@ class Images {
 //#region decode
     public static fromBMP(bitmap: Blob): TableData | null {
     /*
-    For now this should work for: (coming soon tho)
-     bottom-up, 24-bit bmps  
+    use typed arrays to manipulate binary data
+    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Typed_arrays  
     */
         
         throw new Error("Method not implemented.");
         
         if (!!bitmap) { return null; }
 
-
         let tableData = new TableData();
-
-
-
-
 
         return tableData;
     }
@@ -55,14 +50,14 @@ class Images {
     }
 //#endregion
 //#region encode
-    public static encode(tableData: TableData, format: string): object {
+    public static encodeTableData(tableData: TableData, format: string): object {
         //returns a json object containing tableData encoded with format
-        format = format.toLowerCase();
+        format = format.toLowerCase().trim();
         let encoded: object = new Object;
 
         switch (format) {
             case "pf1":
-                encoded = Images.encodePf1(tableData);
+                encoded = this.encodePf1(tableData);
                 break;
         
             default:
@@ -77,19 +72,10 @@ class Images {
         const start = '{"meta":{"format":"pf1"},"imgdata":';
         const end = '}';
         
-        let data = Images.pixelDataAsString(tableData);
+        let data = this.pixelDataAsString(tableData);
         encoded = start + data + end;
 
         return JSON.parse(encoded);
-    }
-    public static encodeTableData(type: string) {
-        switch (type.toLowerCase().trim()) {
-            case "pf1":
-
-                break;  
-            default:
-                break;
-        }
     }
 //#endregion
     public static createBlob(obj: JSON): Blob {

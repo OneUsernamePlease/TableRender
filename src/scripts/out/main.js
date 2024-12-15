@@ -63,7 +63,7 @@ function test2() {
 }
 function test1() {
     //log pf1-encoded tableData
-    console.log(Images.encode(data, "pf1"));
+    console.log(Images.encodeTableData(data, "pf1"));
     renderer.clearTable();
 }
 //#endregion
@@ -96,7 +96,7 @@ function displayFile() {
 function save() {
     //encode tableData and save/download it as json
     const name = newFilename();
-    const file = Images.createBlob((Images.encode(data, "pf1")));
+    const file = Images.createBlob((Images.encodeTableData(data, "pf1")));
     var dLink = document.createElement('a');
     dLink.download = name;
     dLink.href = window.URL.createObjectURL(file);
@@ -165,16 +165,7 @@ function getInputValue(inputId) {
  */
 function getInputNumber(inputId) {
     let inputValue = getInputValue(inputId);
-    return isNumeric(inputValue) ? +inputValue : 0;
-}
-/**
- * empty string is NOT considered numeric
- * @param s the string to be examined
- * @returns true if s is a valid number, returns false otherwise
- */
-function isNumeric(s) {
-    s = s.trim();
-    return (!isNaN(+s)) && s.length !== 0;
+    return JSFunctions.isNumeric(inputValue) ? +inputValue : 0;
 }
 //#endregion
 //# sourceMappingURL=main.js.map

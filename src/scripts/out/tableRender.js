@@ -51,7 +51,7 @@ class TableRender {
             pixel.setAttribute("style", "background-color: " + color);
         }
         else if (typeof (color) === "number") {
-            color = JSFunctions.rgbIntToHex(color);
+            color = JSFunctions.colorRgbIntToHex(color);
             pixel.setAttribute("style", "background-color: " + color);
         }
     }
@@ -59,7 +59,7 @@ class TableRender {
         //returns the color of cell at specified position in hex-format
         let colorHex;
         colorHex = this.htmlTable.rows[row].cells[cell].style.backgroundColor;
-        return JSFunctions.rgbToHex(colorHex);
+        return JSFunctions.colorRgbToHex(colorHex);
     }
     resizeTable(newHeight, newWidth) {
         this.setHeight(newHeight);
