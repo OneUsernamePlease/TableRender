@@ -34,6 +34,22 @@ class TableData {
     }
     //#endregion
     //#region drawing/updating image data
+    setTableData(pixels) {
+        let newHeight = Math.max(pixels.length, 1);
+        let widths = pixels.map((x) => x.length);
+        let newWidth = Math.max(...widths, 1);
+        if (newHeight != null) {
+            this.setHeight(newHeight);
+        }
+        if (newWidth != null) {
+            this.setWidth(newWidth);
+        }
+        for (let y = 0; y < this.tableHeight; y++) {
+            for (let x = 0; x < this.tableWidth; x++) {
+                this.setPixelColor(y, x, pixels[y][x].color);
+            }
+        }
+    }
     colorAll(color, newHeight, newWidth) {
         //color all pixels in color. if height and/or width are provided, resize.
         if (newHeight != null) {

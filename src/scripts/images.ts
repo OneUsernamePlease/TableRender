@@ -1,19 +1,63 @@
 class Images {
 //#region decode
-    public static fromBMP(bitmap: Blob): TableData | null {
-    /*
-    use typed arrays to manipulate binary data
-    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Typed_arrays  
-    */
-        
-        throw new Error("Method not implemented.");
-        
-        if (!!bitmap) { return null; }
-
-        let tableData = new TableData();
+    public static parseCanvasImageData(imgData: ImageData): TableData {
+        let tableData: TableData = new TableData();
 
         return tableData;
     }
+
+    public static async fromBMP(bitmap: Blob): Promise<TableData> {
+        const imageBitmap = await createImageBitmap(bitmap);
+        const offscreenCanvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height);
+        const canvasCtx = offscreenCanvas.getContext("2d");
+        canvasCtx?.drawImage(imageBitmap, 0, 0);
+        const imageData = canvasCtx?.getImageData(0, 0, offscreenCanvas.width, offscreenCanvas.height).data;
+        let tableFromBmp = new TableData(); 
+        if (imageData === undefined) { return tableFromBmp; }
+
+        let pixels = [];
+        for (let y = 0; y < imageBitmap.height; y++) {
+            const row = [];
+            for (let x = 0; x < imageBitmap.width; x++) {
+                const imageDataIndex = (y * imageBitmap.width + x) * 4; //4 byte per pixel (rgba)
+                const r = imageData[imageDataIndex];
+                const g = imageData[imageDataIndex + 1];
+                const b = imageData[imageDataIndex + 2];
+                //we don't have alpha values (yet)
+                const pixel = new Pixel(JSFunctions.calculateRgbInt(r, g, b));
+                row.push(pixel);
+            }
+            pixels.push(row);
+        }
+        tableFromBmp.setTableData(pixels);
+        return tableFromBmp; 
+    }
+    /*
+    public static async fromBMP(bitmap: Blob): Promise<TableData> {
+        
+        //use typed arrays to manipulate binary data
+        //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Typed_arrays  
+        
+        createImageBitmap(bitmap).then(imageBitmap => {
+            const offscreenCanvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height)
+            const canvasCtx = offscreenCanvas.getContext("2d");
+            canvasCtx?.drawImage(imageBitmap, 0, 0);
+            const imageData = canvasCtx?.getImageData(0, 0, offscreenCanvas.width, offscreenCanvas.height).data;
+
+            let tableData = new TableData();
+
+            return tableData;
+
+        }).catch(error => {
+            console.log("Error creating imageBitmap", error);
+            return null;
+        });
+
+        let tableData = new TableData();
+
+        //return tableData;
+    }
+    */
     public static fromJson(json: {imgdata: string[][], format?: string}): TableData {
         //load from json (has to be pf1), and draw
         let data = json.imgdata;

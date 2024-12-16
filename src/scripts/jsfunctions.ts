@@ -35,7 +35,6 @@ class JSFunctions {
         let hex = "#" + this.decimalToHex(r).padStart(2, "0") + this.decimalToHex(g).padStart(2, "0") + this.decimalToHex(b).padStart(2, "0")
         return hex;
     }
-    
     public static colorHexToRgbInt(colorHex: string): number {
         let colorInt: number = 0;
         let validHex = /^#?[0-9A-F]{6}$/i.test(colorHex);
@@ -45,8 +44,14 @@ class JSFunctions {
         let gHex = colorHex.slice(2,4);
         let bHex = colorHex.slice(4);
 
-        colorInt = this.hexToDecimal(rHex) + (256 * this.hexToDecimal(gHex)) + (65536 * this.hexToDecimal(bHex));
+        colorInt = this.calculateRgbInt(this.hexToDecimal(rHex), this.hexToDecimal(gHex), this.hexToDecimal(bHex))
         return colorInt;
+    }
+    public static calculateRgbInt(r: number, g: number, b: number) {
+        r = this.ensureNumberInRange(r, 0, 255);
+        g = this.ensureNumberInRange(g, 0, 255);
+        b = this.ensureNumberInRange(b, 0, 255);
+        return r + (256 * g) + (65536 * b);
     }
     //#endregion
 

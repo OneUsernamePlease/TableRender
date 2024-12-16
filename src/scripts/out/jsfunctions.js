@@ -44,8 +44,14 @@ class JSFunctions {
         let rHex = colorHex.slice(0, 2);
         let gHex = colorHex.slice(2, 4);
         let bHex = colorHex.slice(4);
-        colorInt = this.hexToDecimal(rHex) + (256 * this.hexToDecimal(gHex)) + (65536 * this.hexToDecimal(bHex));
+        colorInt = this.calculateRgbInt(this.hexToDecimal(rHex), this.hexToDecimal(gHex), this.hexToDecimal(bHex));
         return colorInt;
+    }
+    static calculateRgbInt(r, g, b) {
+        r = this.ensureNumberInRange(r, 0, 255);
+        g = this.ensureNumberInRange(g, 0, 255);
+        b = this.ensureNumberInRange(b, 0, 255);
+        return r + (256 * g) + (65536 * b);
     }
     //#endregion
     //#region math stuff
