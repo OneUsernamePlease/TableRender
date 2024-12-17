@@ -27,7 +27,9 @@ class JSFunctions {
         if (!(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i.test(rgb)))
             return "";
         let rgbValues = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i);
-        return "#" + JSFunctions.decimalToHex(rgbValues[1]) + JSFunctions.decimalToHex(rgbValues[2]) + JSFunctions.decimalToHex(rgbValues[3]);
+        return "#" + JSFunctions.decimalToHex(rgbValues[1]).padStart(2, "0") +
+            JSFunctions.decimalToHex(rgbValues[2]).padStart(2, "0") +
+            JSFunctions.decimalToHex(rgbValues[3]).padStart(2, "0");
     }
     static colorRgbIntToHex(colorInt) {
         colorInt = this.ensureNumberInRange(colorInt, 0 /*COLOR_CONSTANTS.COLOR_INT_MIN*/, 16777215 /*COLOR_CONSTANTS.COLOR_INT_MAX*/);
