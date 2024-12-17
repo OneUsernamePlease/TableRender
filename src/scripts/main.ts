@@ -6,7 +6,7 @@ let tableContainerId = "tableContainer";
 let inputColor: string = "#000000";
 let data: TableData; 
 let renderer: TableRender;
-let fileContent: string;
+let uploadedFile: { mimeType: string, content: string | Blob } = { mimeType: "", content: ""};
 let toolsMode: number;
 //#endregion
 
@@ -81,22 +81,34 @@ function regenerateTable() {
 }
 function displayFile() {
     //display selected file
-    const stringData: string = fileContent;
-    if (!stringData) {
+    if (!uploadedFile) {
         console.log("file content has not been read successfully");
         return;
     }
-    //todo get file name
-    //switch: file type
-    const jsonData: {imgdata: string[][]} = JSON.parse(stringData);
-    data = Images.fromJson(jsonData);
-    renderer.draw(data);
+    switch (uploadedFile.mimeType) {
+        case "application/json":
+                const jsonData: {imgdata: string[][]} = JSON.parse(uploadedFile.content as string);
+                data = Images.fromJson(jsonData);
+                
+                renderer.draw(data);
+            break;
+    
+        case "image/bmp":
+                Images.fromBMP(uploadedFile.content as Blob).then((result: TableData) => {
+                    data = result;
+                    renderer.draw(data);
+                }).catch((error) => {
+                    console.log(error)
+                });
+
+            break;
+
+        default:
+            console.log("mime not supported")
+            break;
+    }
+
 }
-/**
- * valid color formats are hex and rgb(r,g,b) (r,g,b being decimal values)
- * @param testColor the string to test
- * @returns testColor if it is a valid color format, #000000 if testColor is not a valid color format
- */
 //#endregion
 
 //#region export
@@ -153,11 +165,30 @@ function readInputFile() {
     const file = files[0];
     if (file) {
         const reader = new FileReader;
-        reader.onload = () => {
-            const content = reader.result;
-            fileContent = content as string;
-        };
-        reader.readAsText(file);
+        switch (file.type) {
+            case "application/json":
+                reader.onload = () => {
+                    const content = reader.result;
+                    uploadedFile.mimeType = file.type;
+                    uploadedFile.content = content as string;
+                };
+                reader.readAsText(file);
+                break;
+                
+            case "image/bmp":
+                reader.onload = () => {
+                    const content = reader.result as ArrayBuffer;
+                    // Store the binary data as a Blob or ArrayBuffer
+                    uploadedFile.mimeType = file.type;
+                    uploadedFile.content = new Blob([content], { type: file.type });
+                };
+                reader.readAsArrayBuffer(file);
+                break;
+            default:
+                break;
+        }
+
+    
     }
 }
 /**

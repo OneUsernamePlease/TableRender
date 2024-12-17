@@ -8,6 +8,11 @@ class JSFunctions {
     private constructor () {} //to prevent instantiation
    
     //#region color stuff
+    /**
+     * valid color formats are hex and rgb(r,g,b) (r,g,b being decimal values)
+     * @param testColor the string to test
+     * @returns testColor if it is a valid color format, #000000 if testColor is not a valid color format
+     */
     public static normalizeColor(testColor: string): string {
        let valid = /^#?[0-9A-F]{6}$/i.test(testColor) || /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i.test(testColor);
        return valid ? testColor : "#000000";

@@ -1,57 +1,49 @@
 class Images {
 //#region decode
-    public static parseCanvasImageData(imgData: ImageData): TableData {
-        let tableData: TableData = new TableData();
-
-        return tableData;
-    }
-
-    public static async fromBMP(bitmap: Blob): Promise<TableData> {
-        const imageBitmap = await createImageBitmap(bitmap);
-        const offscreenCanvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height);
-        const canvasCtx = offscreenCanvas.getContext("2d");
-        canvasCtx?.drawImage(imageBitmap, 0, 0);
-        const imageData = canvasCtx?.getImageData(0, 0, offscreenCanvas.width, offscreenCanvas.height).data;
-        let tableFromBmp = new TableData(); 
-        if (imageData === undefined) { return tableFromBmp; }
+    public static parseImageData(imageData: ImageData): TableData {
+        const pixelData = imageData.data;
+        let newTableData = new TableData(); 
+        if (pixelData === undefined) { return newTableData; }
 
         let pixels = [];
-        for (let y = 0; y < imageBitmap.height; y++) {
+        for (let y = 0; y < imageData.height; y++) {
             const row = [];
-            for (let x = 0; x < imageBitmap.width; x++) {
-                const imageDataIndex = (y * imageBitmap.width + x) * 4; //4 byte per pixel (rgba)
-                const r = imageData[imageDataIndex];
-                const g = imageData[imageDataIndex + 1];
-                const b = imageData[imageDataIndex + 2];
+            for (let x = 0; x < imageData.width; x++) {
+                const imageDataIndex = (y * imageData.width + x) * 4; //4 byte per pixel (rgba)
+                const r = pixelData[imageDataIndex];
+                const g = pixelData[imageDataIndex + 1];
+                const b = pixelData[imageDataIndex + 2];
                 //we don't have alpha values (yet)
                 const pixel = new Pixel(JSFunctions.calculateRgbInt(r, g, b));
                 row.push(pixel);
             }
             pixels.push(row);
         }
-        tableFromBmp.setTableData(pixels);
-        return tableFromBmp; 
+        newTableData.setTableData(pixels);
+        return newTableData; 
+    }
+    /**
+     * Turns a bitmap-blob into a TableData-Object.
+     * (this functions cheats by using a canvas to parse the blob)
+     * @param bitmap a blob in which a bitmap file's content has been read
+     * @returns a resolved Promise of TableData
+     */
+    public static async fromBMP(bitmap: Blob): Promise<TableData> {
+        const imageBitmap = await createImageBitmap(bitmap);
+        const offscreenCanvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height);
+        const canvasCtx = offscreenCanvas.getContext("2d");
+        canvasCtx?.drawImage(imageBitmap, 0, 0);
+        const imageData = canvasCtx?.getImageData(0, 0, offscreenCanvas.width, offscreenCanvas.height);
+        if (imageData === undefined) { return new TableData(); }
+        return this.parseImageData(imageData); 
     }
     /*
-    public static async fromBMP(bitmap: Blob): Promise<TableData> {
+    public static fromBMP(bitmap: Blob): TableData {
         
         //use typed arrays to manipulate binary data
         //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Typed_arrays  
         
-        createImageBitmap(bitmap).then(imageBitmap => {
-            const offscreenCanvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height)
-            const canvasCtx = offscreenCanvas.getContext("2d");
-            canvasCtx?.drawImage(imageBitmap, 0, 0);
-            const imageData = canvasCtx?.getImageData(0, 0, offscreenCanvas.width, offscreenCanvas.height).data;
-
-            let tableData = new TableData();
-
-            return tableData;
-
-        }).catch(error => {
-            console.log("Error creating imageBitmap", error);
-            return null;
-        });
+        yeayeayea i'll parse the blob myself later. jesus...
 
         let tableData = new TableData();
 
