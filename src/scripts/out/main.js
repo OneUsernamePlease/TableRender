@@ -85,8 +85,10 @@ function displayFile() {
             data = Images.fromJson(jsonData);
             renderer.draw(data);
             break;
+        case "image/jpeg":
+        case "image/png":
         case "image/bmp":
-            Images.fromBMP(uploadedFile.content).then((result) => {
+            Images.fromImage(uploadedFile.content).then((result) => {
                 data = result;
                 renderer.draw(data);
             }).catch((error) => {
@@ -160,6 +162,8 @@ function readInputFile() {
                 };
                 reader.readAsText(file);
                 break;
+            case "image/jpeg":
+            case "image/png":
             case "image/bmp":
                 reader.onload = () => {
                     const content = reader.result;

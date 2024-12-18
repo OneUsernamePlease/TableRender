@@ -87,22 +87,20 @@ function displayFile() {
     }
     switch (uploadedFile.mimeType) {
         case "application/json":
-                const jsonData: {imgdata: string[][]} = JSON.parse(uploadedFile.content as string);
-                data = Images.fromJson(jsonData);
-                
-                renderer.draw(data);
+            const jsonData: {imgdata: string[][]} = JSON.parse(uploadedFile.content as string);
+            data = Images.fromJson(jsonData);
+            renderer.draw(data);
             break;
-    
+        case "image/jpeg":
+        case "image/png":
         case "image/bmp":
-                Images.fromBMP(uploadedFile.content as Blob).then((result: TableData) => {
-                    data = result;
-                    renderer.draw(data);
-                }).catch((error) => {
-                    console.log(error)
-                });
-
+            Images.fromImage(uploadedFile.content as Blob).then((result: TableData) => {
+                data = result;
+                renderer.draw(data);
+            }).catch((error) => {
+                console.log(error)
+            });
             break;
-
         default:
             console.log("mime not supported")
             break;
@@ -174,7 +172,9 @@ function readInputFile() {
                 };
                 reader.readAsText(file);
                 break;
-                
+        
+            case "image/jpeg":
+            case "image/png":
             case "image/bmp":
                 reader.onload = () => {
                     const content = reader.result as ArrayBuffer;
@@ -184,6 +184,7 @@ function readInputFile() {
                 };
                 reader.readAsArrayBuffer(file);
                 break;
+
             default:
                 break;
         }

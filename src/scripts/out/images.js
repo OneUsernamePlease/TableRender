@@ -27,11 +27,11 @@ class Images {
     /**
      * Turns a bitmap-blob into a TableData-Object.
      * (this functions cheats by using a canvas to parse the blob)
-     * @param bitmap a blob in which a bitmap file's content has been read
+     * @param imageBlob a blob in which a bitmap file's content has been read
      * @returns a resolved Promise of TableData
      */
-    static async fromBMP(bitmap) {
-        const imageBitmap = await createImageBitmap(bitmap);
+    static async fromImage(imageBlob) {
+        const imageBitmap = await createImageBitmap(imageBlob);
         const offscreenCanvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height);
         const canvasCtx = offscreenCanvas.getContext("2d");
         canvasCtx === null || canvasCtx === void 0 ? void 0 : canvasCtx.drawImage(imageBitmap, 0, 0);
@@ -41,19 +41,6 @@ class Images {
         }
         return this.parseImageData(imageData);
     }
-    /*
-    public static fromBMP(bitmap: Blob): TableData {
-        
-        //use typed arrays to manipulate binary data
-        //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Typed_arrays
-        
-        yeayeayea i'll parse the blob myself later. jesus...
-
-        let tableData = new TableData();
-
-        //return tableData;
-    }
-    */
     static fromJson(json) {
         //load from json (has to be pf1), and draw
         let data = json.imgdata;
