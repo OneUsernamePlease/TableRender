@@ -15,7 +15,7 @@ class Images {
                 const r = pixelData[imageDataIndex];
                 const g = pixelData[imageDataIndex + 1];
                 const b = pixelData[imageDataIndex + 2];
-                //we don't have alpha values (yet)
+                //const a = pixelData[imageDataIndex + 3]; //we don't have alpha values (yet)
                 const pixel = new Pixel(JSFunctions.calculateRgbInt(r, g, b));
                 row.push(pixel);
             }
@@ -25,9 +25,8 @@ class Images {
         return newTableData;
     }
     /**
-     * Turns a bitmap-blob into a TableData-Object.
-     * (this functions cheats by using a canvas to parse the blob)
-     * @param imageBlob a blob in which a bitmap file's content has been read
+     * Turns an image-file-blob into a TableData-object.
+     * @param imageBlob a blob containing an image file's content
      * @returns a resolved Promise of TableData
      */
     static async fromImage(imageBlob) {

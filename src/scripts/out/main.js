@@ -6,12 +6,13 @@ let tableContainerId = "tableContainer";
 let inputColor = "#000000";
 let data;
 let renderer;
-let uploadedFile = { mimeType: "", content: "" };
+let uploadedFile;
 let toolsMode;
 //#endregion
 //#region initialization
 document.addEventListener("DOMContentLoaded", initialize);
 function initialize() {
+    uploadedFile = { mimeType: "", content: "" };
     data = new TableData(getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
     renderer = new TableRender(tableContainerId);
     renderer.draw(data);

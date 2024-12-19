@@ -6,13 +6,14 @@ let tableContainerId = "tableContainer";
 let inputColor: string = "#000000";
 let data: TableData; 
 let renderer: TableRender;
-let uploadedFile: { mimeType: string, content: string | Blob } = { mimeType: "", content: ""};
+let uploadedFile: { mimeType: string, content: string | Blob };
 let toolsMode: number;
 //#endregion
 
 //#region initialization
 document.addEventListener("DOMContentLoaded", initialize);
 function initialize() {
+    uploadedFile = { mimeType: "", content: ""};
     data = new TableData(getInputNumber("tableHeightInput"), getInputNumber("tableWidthInput"));
     renderer = new TableRender(tableContainerId);
     renderer.draw(data);
@@ -105,7 +106,6 @@ function displayFile() {
             console.log("mime not supported")
             break;
     }
-
 }
 //#endregion
 
